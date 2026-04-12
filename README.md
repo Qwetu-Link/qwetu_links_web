@@ -1,73 +1,133 @@
 # React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## The Project Structure
+src/
+│
+├── app/                        # App-wide setup
+│   ├── router.tsx
+│   ├── providers.tsx
+│   ├── store.ts               # Zustand / Redux
+│   └── queryClient.ts         # React Query config
+│
+├── config/                    # Global configs
+│   ├── env.ts
+│   ├── routes.ts
+│   └── constants.ts
+│
+├── lib/                       # External libs setup
+│   ├── axios.ts               # API instance
+│   ├── react-query.ts
+│   └── utils.ts
+│
+├── components/                # Global reusable UI
+│   ├── ui/                    # shadcn components
+│   └── common/
+│       ├── Loader.tsx
+│       ├── EmptyState.tsx
+│       ├── ConfirmDialog.tsx
+│       ├── PageHeader.tsx
+│       └── DataTableWrapper.tsx
+│
+├── layouts/                   # Layout system
+│   ├── DashboardLayout.tsx
+│   ├── AuthLayout.tsx
+│   └── MinimalLayout.tsx
+│
+├── features/                  # 🔥 BUSINESS DOMAINS
+│
+│   ├── auth/
+│   │   ├── components/
+│   │   │   ├── LoginForm.tsx
+│   │   │   └── RegisterForm.tsx
+│   │   │
+│   │   ├── hooks/
+│   │   │   └── useAuth.ts
+│   │   │
+│   │   ├── services/
+│   │   │   └── auth.api.ts
+│   │   │
+│   │   ├── store/
+│   │   │   └── auth.store.ts
+│   │   │
+│   │   ├── types.ts
+│   │   └── routes.tsx
+│
+│   ├── dashboard/
+│   │   ├── components/
+│   │   │   ├── StatsCard.tsx
+│   │   │   └── RevenueChart.tsx
+│   │   │
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   │   └── dashboard.api.ts
+│   │   │
+│   │   ├── pages/
+│   │   │   └── DashboardPage.tsx
+│   │   └── types.ts
+│
+│   ├── tenants/
+│   │   ├── components/
+│   │   │   ├── TenantTable.tsx
+│   │   │   ├── TenantForm.tsx
+│   │   │   └── TenantCard.tsx
+│   │   │
+│   │   ├── hooks/
+│   │   │   └── useTenants.ts
+│   │   │
+│   │   ├── services/
+│   │   │   └── tenant.api.ts
+│   │   │
+│   │   ├── store/
+│   │   │   └── tenant.store.ts
+│   │   │
+│   │   ├── pages/
+│   │   │   ├── TenantsPage.tsx
+│   │   │   ├── TenantDetailsPage.tsx
+│   │   │   └── TenantEditPage.tsx
+│   │   │
+│   │   ├── types.ts
+│   │   └── routes.tsx
+│
+│   ├── properties/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   ├── pages/
+│   │   ├── store/
+│   │   └── types.ts
+│
+│   ├── units/
+│   │   ├── components/       # UI only
+│   │   ├── hooks/            # logic (React Query, etc.)
+│   │   ├── services/         # API calls
+│   │   ├── store/            # Zustand/Redux state
+│   │   ├── pages/            # route screens
+│   │   ├── types.ts          # types for this feature
+│   │   └── routes.tsx        # feature routes
+│   
+│   ├── payments/
+│   ├── maintenance/
+│   ├── messaging/
+│   ├── reports/
+│
+│   └── notifications/
+│
+├── hooks/                     # Global hooks
+│   ├── useDebounce.ts
+│   ├── usePagination.ts
+│   └── useDisclosure.ts
+│
+├── types/                     # Global shared types
+│   ├── api.types.ts
+│   └── common.types.ts
+│
+├── utils/                     # Helpers
+│   ├── formatCurrency.ts
+│   ├── formatDate.ts
+│   └── validators.ts
+│
+├── styles/                    # Global styles
+│   └── globals.css
+│
+├── App.tsx
+└── main.tsx

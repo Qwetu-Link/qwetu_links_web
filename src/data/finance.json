@@ -1,0 +1,319 @@
+{
+  "leases": [
+    {
+      "id": "lease-1",
+      "tenant": "user-1",
+      "unit": "unit-1",
+      "business": "business-1",
+      "start_date": "2025-01-01",
+      "end_date": "2025-12-31",
+      "rent_amount": 25000,
+      "utility_amount": 3000,
+      "deposit_amount": 25000,
+      "payment_frequency": "monthly",
+      "status": "active"
+    },
+    {
+      "id": "lease-2",
+      "tenant": "user-2",
+      "unit": "unit-2",
+      "business": "business-1",
+      "start_date": "2025-02-01",
+      "end_date": "2025-12-31",
+      "rent_amount": 30000,
+      "utility_amount": 3500,
+      "deposit_amount": 30000,
+      "payment_frequency": "monthly",
+      "status": "active"
+    },
+    {
+      "id": "lease-3",
+      "tenant": "user-3",
+      "unit": "unit-3",
+      "business": "business-1",
+      "start_date": "2025-03-01",
+      "end_date": "2025-12-31",
+      "rent_amount": 20000,
+      "utility_amount": 2500,
+      "deposit_amount": 20000,
+      "payment_frequency": "monthly",
+      "status": "active"
+    },
+    {
+      "id": "lease-4",
+      "tenant": "user-4",
+      "unit": "unit-4",
+      "business": "business-1",
+      "start_date": "2025-01-15",
+      "end_date": "2025-10-15",
+      "rent_amount": 28000,
+      "utility_amount": 3200,
+      "deposit_amount": 28000,
+      "payment_frequency": "monthly",
+      "status": "active"
+    },
+    {
+      "id": "lease-5",
+      "tenant": "user-5",
+      "unit": "unit-5",
+      "business": "business-1",
+      "start_date": "2025-04-01",
+      "end_date": "2025-12-31",
+      "rent_amount": 35000,
+      "utility_amount": 4000,
+      "deposit_amount": 35000,
+      "payment_frequency": "monthly",
+      "status": "active"
+    }
+  ],
+
+  "invoices": [
+    {
+      "id": "inv-1",
+      "invoice_number": "INV-001",
+      "tenant": "tenant-profile-1",
+      "lease": "lease-1",
+      "business": "business-1",
+      "rent_amount": 25000,
+      "utility_amount": 3000,
+      "other_charges": 0,
+      "total_amount": 28000,
+      "due_date": "2025-04-05",
+      "status": "paid",
+      "amount_paid": 28000,
+      "balance": 0
+    },
+    {
+      "id": "inv-2",
+      "invoice_number": "INV-002",
+      "tenant": "tenant-profile-2",
+      "lease": "lease-2",
+      "business": "business-1",
+      "rent_amount": 30000,
+      "utility_amount": 3500,
+      "other_charges": 500,
+      "total_amount": 34000,
+      "due_date": "2025-04-05",
+      "status": "partial",
+      "amount_paid": 20000,
+      "balance": 14000
+    },
+    {
+      "id": "inv-3",
+      "invoice_number": "INV-003",
+      "tenant": "tenant-profile-3",
+      "lease": "lease-3",
+      "business": "business-1",
+      "rent_amount": 20000,
+      "utility_amount": 2500,
+      "other_charges": 0,
+      "total_amount": 22500,
+      "due_date": "2025-04-05",
+      "status": "pending",
+      "amount_paid": 0,
+      "balance": 22500
+    },
+    {
+      "id": "inv-4",
+      "invoice_number": "INV-004",
+      "tenant": "tenant-profile-4",
+      "lease": "lease-4",
+      "business": "business-1",
+      "rent_amount": 28000,
+      "utility_amount": 3200,
+      "other_charges": 0,
+      "total_amount": 31200,
+      "due_date": "2025-04-05",
+      "status": "paid",
+      "amount_paid": 31200,
+      "balance": 0
+    },
+    {
+      "id": "inv-5",
+      "invoice_number": "INV-005",
+      "tenant": "tenant-profile-5",
+      "lease": "lease-5",
+      "business": "business-1",
+      "rent_amount": 35000,
+      "utility_amount": 4000,
+      "other_charges": 1000,
+      "total_amount": 40000,
+      "due_date": "2025-04-05",
+      "status": "overdue",
+      "amount_paid": 10000,
+      "balance": 30000
+    }
+  ],
+
+  "payments": [
+    {
+      "id": "pay-1",
+      "invoice": "inv-1",
+      "business": "business-1",
+      "amount": 28000,
+      "payment_method": "mpesa",
+      "status": "success",
+      "reference": "MPESA123"
+    },
+    {
+      "id": "pay-2",
+      "invoice": "inv-2",
+      "business": "business-1",
+      "amount": 20000,
+      "payment_method": "bank",
+      "status": "success",
+      "reference": "BANK456"
+    },
+    {
+      "id": "pay-3",
+      "invoice": "inv-5",
+      "business": "business-1",
+      "amount": 10000,
+      "payment_method": "cash",
+      "status": "success",
+      "reference": "CASH789"
+    },
+    {
+      "id": "pay-4",
+      "invoice": "inv-3",
+      "business": "business-1",
+      "amount": 5000,
+      "payment_method": "mpesa",
+      "status": "failed",
+      "reference": "FAIL001"
+    },
+    {
+      "id": "pay-5",
+      "invoice": "inv-4",
+      "business": "business-1",
+      "amount": 31200,
+      "payment_method": "bank",
+      "status": "success",
+      "reference": "BANK999"
+    }
+  ],
+
+  "transactions": [
+    {
+      "id": "txn-1",
+      "lease": "lease-1",
+      "business": "business-1",
+      "transaction_type": "credit",
+      "amount": 28000
+    },
+    {
+      "id": "txn-2",
+      "lease": "lease-2",
+      "business": "business-1",
+      "transaction_type": "credit",
+      "amount": 20000
+    },
+    {
+      "id": "txn-3",
+      "lease": "lease-3",
+      "business": "business-1",
+      "transaction_type": "debit",
+      "amount": 5000
+    },
+    {
+      "id": "txn-4",
+      "lease": "lease-4",
+      "business": "business-1",
+      "transaction_type": "credit",
+      "amount": 31200
+    },
+    {
+      "id": "txn-5",
+      "lease": "lease-5",
+      "business": "business-1",
+      "transaction_type": "credit",
+      "amount": 10000
+    }
+  ],
+
+  "payslips": [
+    {
+      "id": "ps-1",
+      "user": "staff-1",
+      "managed_property": "property-1",
+      "business": "business-1",
+      "month": "2025-03-01",
+      "basic_salary": 50000,
+      "deductions": 5000,
+      "status": "paid"
+    },
+    {
+      "id": "ps-2",
+      "user": "staff-2",
+      "managed_property": "property-2",
+      "business": "business-1",
+      "month": "2025-03-01",
+      "basic_salary": 45000,
+      "deductions": 3000,
+      "status": "paid"
+    },
+    {
+      "id": "ps-3",
+      "user": "staff-3",
+      "managed_property": "property-3",
+      "business": "business-1",
+      "month": "2025-03-01",
+      "basic_salary": 40000,
+      "deductions": 2000,
+      "status": "pending"
+    },
+    {
+      "id": "ps-4",
+      "user": "staff-4",
+      "managed_property": "property-4",
+      "business": "business-1",
+      "month": "2025-03-01",
+      "basic_salary": 38000,
+      "deductions": 1000,
+      "status": "paid"
+    },
+    {
+      "id": "ps-5",
+      "user": "staff-5",
+      "managed_property": "property-5",
+      "business": "business-1",
+      "month": "2025-03-01",
+      "basic_salary": 42000,
+      "deductions": 1500,
+      "status": "pending"
+    }
+  ],
+
+  "utility_charges": [
+    {
+      "id": "util-1",
+      "property": "property-1",
+      "utility_type": "water",
+      "amount": 5000
+    },
+    {
+      "id": "util-2",
+      "property": "property-2",
+      "utility_type": "electricity",
+      "amount": 7000
+    },
+    {
+      "id": "util-3",
+      "property": "property-3",
+      "utility_type": "internet",
+      "amount": 3000
+    },
+    {
+      "id": "util-4",
+      "property": "property-4",
+      "utility_type": "gas",
+      "amount": 2500
+    },
+    {
+      "id": "util-5",
+      "property": "property-5",
+      "utility_type": "garbage",
+      "amount": 1500
+    }
+  ]
+}
