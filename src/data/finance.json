@@ -71,8 +71,30 @@
     {
       "id": "inv-1",
       "invoice_number": "INV-001",
-      "tenant": "tenant-profile-1",
-      "lease": "lease-1",
+      "tenant": {
+        "id": "user-1",
+        "name": "John Kamau",
+        "phone": "0712345678",
+        "email": "john@example.com"
+      },
+      "lease": {
+        "id": "lease-1",
+        "tenant": {
+          "id": "user-1",
+          "name": "John Kamau",
+          "phone": "0712345678",
+          "email": "john@example.com"
+        },
+        "unit": "unit-1",
+        "business": "business-1",
+        "start_date": "2025-04-01",
+        "end_date": "2025-12-31",
+        "rent_amount": 25000,
+        "utility_amount": 3000,
+        "deposit_amount": 25000,
+        "payment_frequency": "monthly",
+        "status": "active"
+      },
       "business": "business-1",
       "rent_amount": 25000,
       "utility_amount": 3000,
@@ -86,62 +108,150 @@
     {
       "id": "inv-2",
       "invoice_number": "INV-002",
-      "tenant": "tenant-profile-2",
-      "lease": "lease-2",
+      "tenant": {
+        "id": "user-2",
+        "name": "Mary Wanjiku",
+        "phone": "0722334455",
+        "email": "mary@example.com"
+      },
+      "lease": {
+        "id": "lease-2",
+        "tenant": {
+          "id": "user-2",
+          "name": "Mary Wanjiku",
+          "phone": "0722334455",
+          "email": "mary@example.com"
+        },
+        "unit": "unit-2",
+        "business": "business-1",
+        "start_date": "2025-03-01",
+        "end_date": "2025-11-30",
+        "rent_amount": 30000,
+        "utility_amount": 3500,
+        "deposit_amount": 30000,
+        "payment_frequency": "quarterly",
+        "status": "active"
+      },
       "business": "business-1",
       "rent_amount": 30000,
       "utility_amount": 3500,
       "other_charges": 500,
-      "total_amount": 34000,
-      "due_date": "2025-04-05",
+      "total_amount": 102000,
+      "due_date": "2025-06-05",
       "status": "partial",
       "amount_paid": 20000,
-      "balance": 14000
+      "balance": 82000
     },
     {
       "id": "inv-3",
       "invoice_number": "INV-003",
-      "tenant": "tenant-profile-3",
-      "lease": "lease-3",
+      "tenant": {
+        "id": "user-3",
+        "name": "Peter Omondi",
+        "phone": "0733445566",
+        "email": "peter@example.com"
+      },
+      "lease": {
+        "id": "lease-3",
+        "tenant": {
+          "id": "user-3",
+          "name": "Peter Omondi",
+          "phone": "0733445566",
+          "email": "peter@example.com"
+        },
+        "unit": "unit-3",
+        "business": "business-1",
+        "start_date": "2025-02-01",
+        "end_date": "2025-10-31",
+        "rent_amount": 20000,
+        "utility_amount": 2500,
+        "deposit_amount": 20000,
+        "payment_frequency": "semi_annual",
+        "status": "active"
+      },
       "business": "business-1",
       "rent_amount": 20000,
       "utility_amount": 2500,
       "other_charges": 0,
-      "total_amount": 22500,
-      "due_date": "2025-04-05",
+      "total_amount": 135000,
+      "due_date": "2025-08-05",
       "status": "pending",
       "amount_paid": 0,
-      "balance": 22500
+      "balance": 135000
     },
     {
       "id": "inv-4",
       "invoice_number": "INV-004",
-      "tenant": "tenant-profile-4",
-      "lease": "lease-4",
+      "tenant": {
+        "id": "user-4",
+        "name": "Grace Njeri",
+        "phone": "0744556677",
+        "email": "grace@example.com"
+      },
+      "lease": {
+        "id": "lease-4",
+        "tenant": {
+          "id": "user-4",
+          "name": "Grace Njeri",
+          "phone": "0744556677",
+          "email": "grace@example.com"
+        },
+        "unit": "unit-4",
+        "business": "business-1",
+        "start_date": "2025-01-01",
+        "end_date": "2025-09-30",
+        "rent_amount": 28000,
+        "utility_amount": 3200,
+        "deposit_amount": 28000,
+        "payment_frequency": "third_quarter",
+        "status": "active"
+      },
       "business": "business-1",
       "rent_amount": 28000,
       "utility_amount": 3200,
       "other_charges": 0,
-      "total_amount": 31200,
-      "due_date": "2025-04-05",
+      "total_amount": 124800,
+      "due_date": "2025-10-05",
       "status": "paid",
-      "amount_paid": 31200,
+      "amount_paid": 124800,
       "balance": 0
     },
     {
       "id": "inv-5",
       "invoice_number": "INV-005",
-      "tenant": "tenant-profile-5",
-      "lease": "lease-5",
+      "tenant": {
+        "id": "user-5",
+        "name": "Sarah Mwangi",
+        "phone": "0755667788",
+        "email": "sarah@example.com"
+      },
+      "lease": {
+        "id": "lease-5",
+        "tenant": {
+          "id": "user-5",
+          "name": "Sarah Mwangi",
+          "phone": "0755667788",
+          "email": "sarah@example.com"
+        },
+        "unit": "unit-5",
+        "business": "business-1",
+        "start_date": "2025-04-01",
+        "end_date": "2025-12-31",
+        "rent_amount": 35000,
+        "utility_amount": 4000,
+        "deposit_amount": 35000,
+        "payment_frequency": "yearly",
+        "status": "active"
+      },
       "business": "business-1",
       "rent_amount": 35000,
       "utility_amount": 4000,
       "other_charges": 1000,
-      "total_amount": 40000,
-      "due_date": "2025-04-05",
+      "total_amount": 480000,
+      "due_date": "2026-04-05",
       "status": "overdue",
       "amount_paid": 10000,
-      "balance": 30000
+      "balance": 470000
     }
   ],
 

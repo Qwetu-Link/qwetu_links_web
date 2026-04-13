@@ -1,17 +1,17 @@
-import DummySidebar from '@/components/sidebar/DummySidebar'
+// import DummySidebar from '@/components/sidebar/DummySidebar'
+import InvoicePage from "@/features/invoices/pages/InvoicePage";
 
 export default function AdminLayout() {
   return (
     <div className="flex min-h-screen">
-      <aside className="w-72 border-r bg-background">
-        {/* sidebar items */}
+      {/* <aside className="fixed w-72 border-r bg-background">
         <DummySidebar/>
-      </aside>
+      </aside> */}
 
       <main className="flex-1 p-6">
         {/* dashboard pages */}
-        
+        <InvoicePage />
       </main>
     </div>
-  )
+  );
 }
