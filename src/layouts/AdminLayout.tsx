@@ -1,5 +1,6 @@
 // import DummySidebar from '@/components/sidebar/DummySidebar'
 import InvoicePage from "@/features/invoices/pages/InvoicePage";
+import PropertyPage from "@/features/properties/pages/PropertyPage";
 
 export default function AdminLayout() {
   return (
@@ -8,8 +9,9 @@ export default function AdminLayout() {
         <DummySidebar/>
       </aside> */}
 
-      <main className="flex-1 p-6">
+      <main className="flex-1 ">
         {/* dashboard pages */}
+        <PropertyPage/>
         <InvoicePage />
       </main>
     </div>
