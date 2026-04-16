@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
+import { useNavigate } from "react-router";
 
 export default function LoginForm() {
   const [identifier, setIdentifier] = useState("");
@@ -20,11 +21,13 @@ export default function LoginForm() {
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) return;
+    navigate("/dashboard/");
 
     // Handle login logic
   };

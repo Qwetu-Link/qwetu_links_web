@@ -88,6 +88,7 @@ export default function PropertyDetail({
               src={property.images[selectedImageIndex]?.image_url}
               alt={property.name}
               className="w-full h-[380px] object-cover"
+              loading="lazy"
             />
 
             {/* Navigation Arrows */}
@@ -119,6 +120,7 @@ export default function PropertyDetail({
                   src={img.image_url}
                   alt={`View ${idx + 1}`}
                   className="w-full h-20 object-cover"
+                  loading="lazy"
                 />
               </button>
             ))}
@@ -188,6 +190,7 @@ export default function PropertyDetail({
                     src={highlight.image_url}
                     alt={highlight.title}
                     className="w-full h-50 object-cover"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-2">
                     <span className="text-white text-md">

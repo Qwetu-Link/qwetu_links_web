@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {
   AreaChart,
   Area,
@@ -8,7 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-export default function InvoicesCollectionChart({
+function InvoicesCollectionChart({
   collectionData,
 }: {
   collectionData: { month: string; expected: number; collected: number }[];
@@ -104,3 +105,5 @@ export default function InvoicesCollectionChart({
     </div>
   );
 }
+
+export default memo(InvoicesCollectionChart);

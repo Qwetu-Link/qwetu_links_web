@@ -1,6 +1,4 @@
-
-
-export default function AuthContext() {
+export default function PublicRoute() {
   return (
     <div>
       

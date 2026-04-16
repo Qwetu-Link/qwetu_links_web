@@ -25,6 +25,7 @@ export default function PropertyCard({
           src={property.images[0]?.image_url || "/placeholder.jpg"}
           alt={property.name}
           className="w-24 h-24 object-cover rounded-lg flex-shrink-0"
+          loading="lazy"
         />
         <div className="flex-1 min-w-0">
           <h3 className="text-md mb-1 truncate">{property.name}</h3>

@@ -202,7 +202,7 @@ export default function LandingPage() {
                 delays, and stay in control of their income.
               </p>
               <div className="flex flex-row gap-4">
-                <Link to="/register">
+                <Link to="/auth/login">
                   <Button size="lg" className="text-base gap-2">
                     Get Started
                     <ArrowRight className="h-4 w-4" />
