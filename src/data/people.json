@@ -1,0 +1,26 @@
+{
+  "tenants": [
+    { "name": "Ronald Richards", "phone": "+1 888-888-8888", "avatar": "avatar-1", "properties": 5, "unit": 10, "lease": "Multi manual", "status": "active" },
+    { "name": "Leslie Alexander", "phone": "+1 888-888-8888", "avatar": "avatar-2", "properties": 5, "unit": 10, "lease": "Multi manual", "status": "active" },
+    { "name": "Darlene Robertson", "phone": "+1 888-888-8888", "avatar": "avatar-3", "properties": 5, "unit": 10, "lease": "Multi manual", "status": "active" },
+    { "name": "Jenny Wilson", "phone": "+1 888-888-8888", "avatar": "avatar-4", "properties": 5, "unit": 10, "lease": "Multi manual", "status": "active" },
+    { "name": "Arlene McCoy", "phone": "+1 888-888-8888", "avatar": "avatar-5", "properties": 5, "unit": 10, "lease": "Multi manual", "status": "active" },
+    { "name": "Esther Howard", "phone": "+1 888-888-8888", "avatar": "avatar-6", "properties": 5, "unit": 10, "lease": "Multi manual", "status": "active" },
+    { "name": "Guy Hawkins", "phone": "+1 888-888-8888", "avatar": "avatar-7", "properties": 5, "unit": 10, "lease": "Multi manual", "status": "active" },
+    { "name": "Marvin McKinney", "phone": "+1 888-888-8888", "avatar": "avatar-8", "properties": 5, "unit": 10, "lease": "Multi manual", "status": "active" },
+    { "name": "Jacob Jones", "phone": "+1 888-888-8888", "avatar": "avatar-9", "properties": 5, "unit": 10, "lease": "Multi manual", "status": "active" },
+    { "name": "Dianne Russell", "phone": "+1 888-888-8888", "avatar": "avatar-10", "properties": 5, "unit": 10, "lease": "Multi manual", "status": "active" },
+    { "name": "Cameron Williamson", "phone": "+1 888-888-8888", "avatar": "avatar-11", "properties": 5, "unit": 10, "lease": "Multi manual", "status": "active" },
+    { "name": "Brooklyn Simmons", "phone": "+1 888-888-8888", "avatar": "avatar-12", "properties": 5, "unit": 10, "lease": "Multi manual", "status": "active" }
+  ],
+  "owners": [
+    { "name": "Wade Warren", "phone": "+1 888-101-2233", "avatar": "avatar-2", "properties": 12, "unit": 28, "lease": "Owner equity", "status": "active" },
+    { "name": "Kathryn Murphy", "phone": "+1 888-101-2244", "avatar": "avatar-4", "properties": 8, "unit": 16, "lease": "Owner equity", "status": "active" },
+    { "name": "Albert Flores", "phone": "+1 888-101-2255", "avatar": "avatar-8", "properties": 4, "unit": 9, "lease": "Owner equity", "status": "active" },
+    { "name": "Eleanor Pena", "phone": "+1 888-101-2266", "avatar": "avatar-6", "properties": 6, "unit": 12, "lease": "Owner equity", "status": "active" },
+    { "name": "Theresa Webb", "phone": "+1 888-101-2277", "avatar": "avatar-10", "properties": 3, "unit": 5, "lease": "Owner equity", "status": "active" },
+    { "name": "Floyd Miles", "phone": "+1 888-101-2288", "avatar": "avatar-7", "properties": 9, "unit": 22, "lease": "Owner equity", "status": "active" },
+    { "name": "Courtney Henry", "phone": "+1 888-101-2299", "avatar": "avatar-3", "properties": 2, "unit": 4, "lease": "Owner equity", "status": "active" },
+    { "name": "Savannah Nguyen", "phone": "+1 888-101-2300", "avatar": "avatar-12", "properties": 7, "unit": 14, "lease": "Owner equity", "status": "active" }
+  ]
+}

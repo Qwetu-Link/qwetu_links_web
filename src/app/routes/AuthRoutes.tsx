@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import AuthLayout from "@/layouts/AuthLayout";
-import LoginForm from "@/features/auth/components/LoginForm";
-import RegisterForm from "@/features/auth/components/RegisterForm";
+import LoginForm from "@/features/auth/pages/LoginForm";
+import RegisterForm from "@/features/auth/pages/RegisterForm";
 
 export default function AuthRoutes() {
   return (

@@ -1,8 +1,5 @@
+import PageUnderDevelopment from "@/components/CommingSoon";
 
 export default function TenantPage() {
-  return (
-    <div>
-      <h1>Tenant Page</h1>
-    </div>
-  )
+  return <PageUnderDevelopment title="Tenants Page" />;
 }

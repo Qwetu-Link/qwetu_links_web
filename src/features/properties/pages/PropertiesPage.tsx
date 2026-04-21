@@ -4,7 +4,7 @@ import PropertyListings from "../components/PropertyListings";
 import PropertyDetail from "../components/PropertyDetails";
 import type { Property } from "../properties.types";
 
-export default function PropertyPage() {
+export default function PropertiesPage() {
   const [selectedProperty, setSelectedProperty] = useState<Property>(
     popularListings[0],
   );
