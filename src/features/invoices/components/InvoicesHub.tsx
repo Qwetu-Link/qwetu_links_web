@@ -1,27 +1,29 @@
 import { Printer, Calendar } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-
-import type { PaymentPlan } from "../invoices.types";
 import { toast } from "sonner";
 import { statusConfig } from "../config/StatusConfig";
+import type { InvoicePlanUI } from "../invoices.types";
+import { formatDate } from "@/utils/date";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
-  paymentPlans: PaymentPlan[];
+  invoices: InvoicePlanUI[];
 }
 
-export default function InvoicesHub({ paymentPlans = [] }: Props) {
+export default function InvoicesHub({ invoices = [] }: Props) {
+  const navigate = useNavigate();
   return (
     <div className="space-y-4">
-      {paymentPlans.map((plan) => {
-        const config = statusConfig[plan.status] ?? statusConfig["pending"];
+      {invoices.map((inv) => {
+        const config = statusConfig[inv.status] ?? statusConfig["pending"];
         const StatusIcon = config.icon;
 
         const progress =
-          plan.totalAmount > 0 ? (plan.paidAmount / plan.totalAmount) * 100 : 0;
+          inv.totalAmount > 0 ? (inv.amountPaid / inv.totalAmount) * 100 : 0;
 
         return (
           <div
-            key={plan.id}
+            key={inv.id}
             className="bg-background border border-border rounded-lg p-6 hover:shadow-md transition-shadow"
           >
             <div className="flex flex-col lg:flex-row gap-6">
@@ -32,7 +34,7 @@ export default function InvoicesHub({ paymentPlans = [] }: Props) {
                     {/* Avatar */}
                     <Avatar className="h-15 w-15">
                       <AvatarFallback className="bg-primary/10 text-primary font-medium text-2xl">
-                        {plan.customer
+                        {inv.tenantName
                           .split(" ")
                           .map((n) => n[0])
                           .join("")
@@ -43,15 +45,15 @@ export default function InvoicesHub({ paymentPlans = [] }: Props) {
                     {/* Info */}
                     <div className="min-w-0">
                       <h3 className="font-semibold text-foreground truncate">
-                        {plan.customer}
+                        {inv.tenantName}
                       </h3>
 
                       <p className="text-sm text-muted-foreground mt-0.5 truncate">
-                        {plan.id} • Lease: {plan.lease}
+                        {inv.invoiceNumber} • Lease: {inv.leaseId}
                       </p>
 
                       <p className="text-xs text-muted-foreground">
-                        Apartment • Unit: {plan.unit}
+                        Apartment • Unit: {inv.leaseUnit}
                       </p>
                     </div>
                   </div>
@@ -75,38 +77,31 @@ export default function InvoicesHub({ paymentPlans = [] }: Props) {
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                   <div>
                     <p className="text-xs text-muted-foreground">Total</p>
                     <p className="font-semibold">
-                      KES {plan.totalAmount.toLocaleString()}
+                      KES {inv.totalAmount.toLocaleString()}
                     </p>
                   </div>
 
                   <div>
                     <p className="text-xs text-muted-foreground">Paid</p>
                     <p className="font-semibold text-green-600">
-                      KES {plan.paidAmount.toLocaleString()}
+                      KES {inv.amountPaid.toLocaleString()}
                     </p>
                   </div>
 
                   <div>
                     <p className="text-xs text-muted-foreground">Remaining</p>
                     <p className="font-semibold text-red-600">
-                      KES {plan.remainingAmount.toLocaleString()}
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className="text-xs text-muted-foreground">Installment</p>
-                    <p className="font-semibold">
-                      KES {plan.installmentAmount.toLocaleString()}
+                      KES {inv.balance.toLocaleString()}
                     </p>
                   </div>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground pt-4 font-medium">
-                    Start Date: {plan.startDate}
+                    Start Date: {formatDate(inv.leaseStartDate)}
                   </p>
                 </div>
               </div>
@@ -119,14 +114,10 @@ export default function InvoicesHub({ paymentPlans = [] }: Props) {
                     <p className="text-xs font-medium">{config.label}</p>
                   </div>
                   <p className="text-lg font-semibold mb-1">{config.label}</p>
-                  <p className="text-xs">
-                    {plan.installments} Installements
-                    {plan.daysOverdue ? ` (${plan.daysOverdue}d)` : ""}
-                  </p>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar className="w-4 h-4" />
-                  22 April 2026
+                  {formatDate(inv.dueDate)}
                 </div>
                 <div className="flex gap-2">
                   <button
@@ -139,13 +130,20 @@ export default function InvoicesHub({ paymentPlans = [] }: Props) {
 
                   <button
                     onClick={() =>
-                      toast.info("Viewing Invoice Page Under Development!")
+                      navigate(`/dashboard/payments/details/${inv.id}`)
                     }
                     className="flex-1 px-3 py-2 text-sm border rounded-lg hover:bg-muted/50"
                   >
                     View
                   </button>
                 </div>
+                {inv.status === "paid" && (
+                  <div>
+                    <button className="w-full flex px-3 py-2 text-sm bg-primary/90 text-white rounded-lg hover:bg-primary/90 flex items-center justify-center gap-1.5">
+                      Generate Receipt
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

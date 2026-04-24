@@ -5,8 +5,9 @@ import {
   Loader,
   XCircle,
 } from "lucide-react";
+import type { InvoiceStatus, StatusConfigItem } from "../invoices.types";
 
-export const statusConfig = {
+export const statusConfig: Record<InvoiceStatus, StatusConfigItem> = {
   partial: {
     label: "Partial Payment",
     color: "bg-blue-100 text-blue-700",

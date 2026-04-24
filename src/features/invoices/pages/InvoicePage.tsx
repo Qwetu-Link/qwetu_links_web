@@ -1,54 +1,37 @@
 import { lazy, Suspense, useState } from "react";
 import { useMemo } from "react";
 import { Search } from "lucide-react";
-import { toast } from "sonner";
-import { InvoicesPaymentModal } from "../components/InvoicesPaymentModal";
+// import { toast } from "sonner";
+// import { InvoicesPaymentModal } from "../components/InvoicesPaymentModal";
 const InvoicesCollectionChart = lazy(
   () => import("../components/InvoicesCollectionChart"),
 );
-const InvoicesView = lazy(() => import("../components/InvoicesView"));
-import data from "@/data/finance.json";
-import type {
-  PaymentPlan,
-  PaymentFrequency,
-  StatusChoices,
-} from "../invoices.types";
+// const InvoicesView = lazy(() => import("../components/InvoiceView"));
+import jsonData from "@/data/finance.json";
 const InvoicesHub = lazy(() => import("../components/InvoicesHub"));
 import InvoiceFallback from "../components/InvoiceFallback";
 import PaginationFooter from "../components/PaginatedFooter";
+import type {
+  InvoicePlanUI,
+  InvoiceStatus,
+  PaymentUI,
+} from "../invoices.types";
 import InvoiceStats from "../components/InvoiceStats";
 
-interface PaymentPayload {
-  planId?: string;
-  amount: number;
-  paymentMethod: string;
-  transactionId: string;
-  paymentDate: string;
-  notes: string;
-  recordedAt: string;
-}
-
-type SelectedPlan = {
-  id: string;
-  customer: string;
-  installmentAmount: number;
-  paymentMethod: string;
-} | null;
-
-const FREQUENCY_MAP: Record<PaymentFrequency, { installments: number }> = {
-  monthly: { installments: 12 },
-  quarterly: { installments: 4 },
-  semi_annual: { installments: 2 },
-  third_quarter: { installments: 3 },
-  yearly: { installments: 1 },
-};
+// const FREQUENCY_MAP: Record<PaymentFrequency, { installments: number }> = {
+//   monthly: { installments: 12 },
+//   quarterly: { installments: 4 },
+//   semi_annual: { installments: 2 },
+//   third_quarter: { installments: 3 },
+//   yearly: { installments: 1 },
+// };
 
 export default function InvoicePage() {
   const [selectedTab, setSelectedTab] = useState<
-    "plans" | "collections" | "invoices"
-  >("plans");
-  const [showRecordPaymentModal, setShowRecordPaymentModal] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<SelectedPlan>(null);
+    "invoices" | "payments" | "collections"
+  >("invoices");
+  // const [showRecordPaymentModal, setShowRecordPaymentModal] = useState(false);
+  // const [selectedPlan, setSelectedPlan] = useState<SelectedPlan>(null);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -67,86 +50,106 @@ export default function InvoicePage() {
     [],
   );
 
-  const paymentPlans: PaymentPlan[] = useMemo(() => {
-    return data.invoices.map((invoice) => {
-      const frequency = invoice.lease.payment_frequency as PaymentFrequency;
+  const response = jsonData[0];
+  const rawInvoices = response.invoices ?? [];
+  const rawPayments = response.payments ?? [];
 
-      const installments = FREQUENCY_MAP[frequency].installments;
-      const installmentAmount = invoice.total_amount / installments;
+    const today = new Date();
 
-      const today = new Date();
-
-      return {
-        id: invoice.invoice_number,
-        customer: invoice.tenant.name,
-        unit: invoice.lease.unit,
-        lease: invoice.lease.id,
-        totalAmount: invoice.total_amount,
-        paidAmount: invoice.total_amount - invoice.balance,
-        remainingAmount: invoice.balance,
-        installments,
-        installmentAmount,
-        frequency,
-        nextPaymentDate: invoice.due_date,
-        status: invoice.status as StatusChoices,
-        daysOverdue:
-          invoice.status === "overdue"
+  //Normolize invoice
+  const invoiceData: InvoicePlanUI[] = rawInvoices.map((inv) => ({
+    id: inv.id,
+    tenantName: `${inv.tenant.first_name} ${inv.tenant.last_name}`,
+    tenantEmail: inv.tenant.email,
+    tenantPhone: inv.tenant.phone_number,
+    leaseId: inv.lease.id,
+    leaseUnit: inv.lease.unit,
+    leaseStartDate: inv.lease.start_date,
+    leaseEndDate: inv.lease.end_date,
+    leaseRentAmount: inv.lease.rent_amount,
+    leaseUtilityAmount: inv.lease.utility_amount,
+    leaseTerms: inv.lease.payment_frequency,
+    businessName: inv.business.name,
+    businessEmail: inv.business.email,
+    businessPhone: inv.business.phone_number,
+    businessAdress: inv.business.address,
+    businessLogo: inv.business.logo_url,
+    invoiceNumber: inv.invoice_number,
+    rentAmount: inv.rent_amount,
+    utilityAmount: inv.utility_amount,
+    otherCharges: inv.other_charges,
+    totalAmount: inv.total_amount,
+    dueDate: inv.due_date,
+    daysOverdue:
+          inv.status === "overdue"
             ? Math.floor(
-                (today.getTime() - new Date(invoice.due_date).getTime()) /
+                (today.getTime() - new Date(inv.due_date).getTime()) /
                   (1000 * 60 * 60 * 24),
               )
-            : undefined,
-        paymentMethod: "M-Pesa",
-        startDate: invoice.lease.start_date,
-      };
-    });
-  }, []);
+            : 0,
+    status: inv.status  as InvoiceStatus,
+    issuedDate: inv.issued_date,
+    paidAt: inv.paid_at ?? undefined,
+    amountPaid: inv.amount_paid,
+    balance: inv.balance,
+    createdAt: inv.created_at,
+  }));
+
+  const paymentData: PaymentUI[] = rawPayments.map((pay) => ({
+    id: pay.id,
+    amount: pay.amount,
+    method: pay.payment_method,
+    status: pay.status,
+    reference: pay.reference,
+    invoiceIds: pay.invoice.map((inv) => inv.id),
+    date:pay.created_at
+  }));
 
   // Search Functionality
-  const filteredPlans = paymentPlans.filter((plan) => {
+  const filteredPlans = invoiceData.filter((plan) => {
     const query = searchQuery.toLowerCase();
     return (
-      plan.customer.toLowerCase().includes(query) ||
+      plan.tenantName.toLowerCase().includes(query) ||
       plan.id.toLowerCase().includes(query) ||
-      plan.lease.toLowerCase().includes(query) ||
-      (plan.unit ?? "").toLowerCase().includes(query)
+      plan.leaseId.toLowerCase().includes(query) ||
+      (plan.leaseUnit ?? "").toLowerCase().includes(query)
     );
   });
 
   //View and Hub Invoices
-  const activeInvoicePlans = filteredPlans.filter(
-    (invoice) => invoice.status !== "paid",
-  );
-  const allInvoicePlans = filteredPlans;
+  // const activeInvoicePlans = filteredPlans.filter(
+  //   (invoice) => invoice.status !== "paid",
+  // );
+  // const allInvoicePlans = filteredPlans;
 
-  const handleRecordPayment = (payment: PaymentPayload) => {
-    console.log("Payment recorded:", payment);
-    toast.success("Payment recorded successfully!");
-  };
+  // const handleRecordPayment = (payment: PaymentPayload) => {
+  //   console.log("Payment recorded:", payment);
+  //   toast.success("Payment recorded successfully!");
+  // };
 
-  const handleOpenRecordPayment = (plan: PaymentPlan) => {
-    setSelectedPlan({
-      id: plan.id,
-      customer: plan.customer,
-      installmentAmount: plan.installmentAmount,
-      paymentMethod: plan.paymentMethod ?? "M-Pesa",
-    });
-    setShowRecordPaymentModal(true);
-  };
+  // const handleOpenRecordPayment = (plan: PaymentPlan) => {
+  //   setSelectedPlan({
+  //     id: plan.id,
+  //     customer: plan.customer,
+  //     installmentAmount: plan.installmentAmount,
+  //     paymentMethod: plan.paymentMethod ?? "M-Pesa",
+  //   });
+  //   setShowRecordPaymentModal(true);
+  // };
 
   // Pagination
-  const paginatedActivePlans = activeInvoicePlans.slice(
+  // const paginatedActivePlans = activeInvoicePlans.slice(
+  //   (currentPage - 1) * pageSize,
+  //   currentPage * pageSize,
+  // );
+
+  const paginatedInvoices = filteredPlans.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize,
   );
 
-  const paginatedAllPlans = allInvoicePlans.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize,
-  );
-
-  const totalActivePages = Math.ceil(activeInvoicePlans.length / pageSize);
-  const totalAllPages = Math.ceil(allInvoicePlans.length / pageSize);
+  // const totalActivePages = Math.ceil(activeInvoicePlans.length / pageSize);
+  const totalPages = Math.ceil(paginatedInvoices.length / pageSize);
 
   return (
     <div className="space-y-6 p-6">
@@ -161,7 +164,7 @@ export default function InvoicePage() {
       </div>
 
       {/* Stats */}
-      <InvoiceStats paymentPlans={paymentPlans} />
+      <InvoiceStats paymentPlans={invoiceData} />
 
       {/* Search Input */}
       <div className="relative">
@@ -183,15 +186,26 @@ export default function InvoicePage() {
       <div className="border-b border-border">
         <div className="flex gap-6">
           <button
-            onClick={() => setSelectedTab("plans")}
+            onClick={() => setSelectedTab("invoices")}
             className={`pb-3 px-1 border-b-2 transition-colors ${
-              selectedTab === "plans"
+              selectedTab === "invoices"
                 ? "border-primary text-primary font-medium"
                 : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
-            Payment Plans
+            Invoices Hub
           </button>
+          <button
+            onClick={() => setSelectedTab("payments")}
+            className={`pb-3 px-1 border-b-2 transition-colors ${
+              selectedTab === "payments"
+                ? "border-primary text-primary font-medium"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Payments
+          </button>
+
           <button
             onClick={() => setSelectedTab("collections")}
             className={`pb-3 px-1 border-b-2 transition-colors ${
@@ -202,59 +216,12 @@ export default function InvoicePage() {
           >
             Collections
           </button>
-
-          <button
-            onClick={() => setSelectedTab("invoices")}
-            className={`pb-3 px-1 border-b-2 transition-colors ${
-              selectedTab === "invoices"
-                ? "border-primary text-primary font-medium"
-                : "border-transparent text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Invoices Hub
-          </button>
         </div>
       </div>
 
       {/* Payment Plans Tab */}
-      {selectedTab === "plans" &&
-        (activeInvoicePlans.length === 0 ? (
-          searchQuery ? (
-            <div className="text-center text-muted-foreground py-10">
-              No invoice payment plans found matching "{searchQuery}"
-            </div>
-          ) : (
-            <InvoiceFallback />
-          )
-        ) : (
-          <>
-            <Suspense fallback={<div>Loading payment plans...</div>}>
-              <InvoicesView
-                activeInvoicePlans={paginatedActivePlans}
-                handleOpenRecordPayment={handleOpenRecordPayment}
-              />
-            </Suspense>
-
-            <PaginationFooter
-              currentPage={currentPage}
-              totalPages={totalActivePages}
-              onPageChange={setCurrentPage}
-            />
-          </>
-        ))}
-      {/* collection tab */}
-      {selectedTab === "collections" &&
-        (!collectionData.length ? (
-          <InvoiceFallback />
-        ) : (
-          <Suspense fallback={<div>Loading chart...</div>}>
-            <InvoicesCollectionChart collectionData={collectionData} />
-          </Suspense>
-        ))}
-
-      {/* Invoices Hub Tab */}
       {selectedTab === "invoices" &&
-        (allInvoicePlans.length === 0 ? (
+        (invoiceData.length === 0 ? (
           searchQuery ? (
             <div className="text-center text-muted-foreground py-10">
               No invoice payment plans found matching "{searchQuery}"
@@ -265,20 +232,42 @@ export default function InvoicePage() {
         ) : (
           <>
             <Suspense fallback={<div>Loading Invoices...</div>}>
-              <InvoicesHub paymentPlans={paginatedAllPlans} />
+              <InvoicesHub invoices={invoiceData} />
             </Suspense>
 
             <PaginationFooter
               currentPage={currentPage}
-              totalPages={totalAllPages}
+              totalPages={totalPages}
               onPageChange={setCurrentPage}
             />
           </>
         ))}
 
+      {/* Invoices Hub Tab */}
+      {selectedTab === "invoices" &&
+        (paymentData.length === 0 ? (
+          searchQuery ? (
+            <div className="text-center text-muted-foreground py-10">
+              No invoice payment plans found matching "{searchQuery}"
+            </div>
+          ) : (
+            <InvoiceFallback />
+          )
+        ) : (
+          <>
+            {/* <PageUnderDevelopment/>
+            <Suspense fallback={<div>Loading payment plans...</div>}>
+              <InvoicesView
+                activeInvoicePlans={paginatedActivePlans}
+                handleOpenRecordPayment={handleOpenRecordPayment}
+              />
+            </Suspense> */}
+          </>
+        ))}
+
       {/* payment Model */}
       <div>
-        <Suspense fallback={<div>Loading Invoices...</div>}>
+        {/* <Suspense fallback={<div>Loading Invoices...</div>}>
           <InvoicesPaymentModal
             isOpen={showRecordPaymentModal}
             onClose={() => {
@@ -288,8 +277,18 @@ export default function InvoicePage() {
             onSave={handleRecordPayment}
             planDetails={selectedPlan}
           />
-        </Suspense>
+        </Suspense> */}
       </div>
+
+      {/* collection tab */}
+      {selectedTab === "collections" &&
+        (!collectionData.length ? (
+          <InvoiceFallback />
+        ) : (
+          <Suspense fallback={<div>Loading chart...</div>}>
+            <InvoicesCollectionChart collectionData={collectionData} />
+          </Suspense>
+        ))}
     </div>
   );
 }

@@ -1,25 +1,25 @@
 import { AlertCircle, CheckCircle, CreditCard, DollarSign } from "lucide-react";
-import type { PaymentPlan } from "../invoices.types";
 import { useMemo } from "react";
+import type { InvoicePlanUI } from "../invoices.types";
 
 export default function InvoiceStats({
   paymentPlans,
 }: {
-  paymentPlans: PaymentPlan[];
+  paymentPlans: InvoicePlanUI[];
 }) {
   const stats = useMemo(() => {
     const totalActive = paymentPlans.filter(
-      (p) => p.status === "pending",
+      (p) => p.status !== "paid",
     ).length;
     const totalOverdue = paymentPlans.filter(
       (p) => p.status === "overdue",
     ).length;
     const totalExpected = paymentPlans.reduce(
-      (sum, p) => sum + p.installmentAmount,
+      (sum, p) => sum + p.totalAmount,
       0,
     );
     const totalOutstanding = paymentPlans.reduce(
-      (sum, p) => sum + p.remainingAmount,
+      (sum, p) => sum + p.balance,
       0,
     );
     return { totalActive, totalOverdue, totalExpected, totalOutstanding };

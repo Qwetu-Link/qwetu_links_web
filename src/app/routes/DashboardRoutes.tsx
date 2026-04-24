@@ -1,12 +1,15 @@
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import { RoleGuard } from "@/features/auth/components/RoleGuard";
+import InvoiceView from "@/features/invoices/components/InvoiceView";
 
 // Pages
 const OverviewPage = lazy(() => import("@/features/dashboard/OverViewPage"));
 const TenantsPage = lazy(() => import("@/features/tenants/pages/TenantPage"));
 const UnitsPage = lazy(() => import("@/features/units/pages/UnitsPage"));
-const MaintenancePage = lazy(() => import("@/features/maintainance/MaintenancePage"));
+const MaintenancePage = lazy(
+  () => import("@/features/maintainance/MaintenancePage"),
+);
 const DocumentsPage = lazy(() => import("@/features/businesses/DocumentsPage"));
 const Guidepage = lazy(() => import("@/features/businesses/Guidepage"));
 const ReportsPage = lazy(() => import("@/features/reports/pages/ReportsPage"));
@@ -14,10 +17,18 @@ const SettingsPage = lazy(() => import("@/features/businesses/SettingsPage"));
 const SupportPage = lazy(() => import("@/features/businesses/SupportPage"));
 const LeasesPage = lazy(() => import("@/features/leases/pages/LeasesPage"));
 const Userspage = lazy(() => import("@/features/accounts/pages/UsersPage"));
-const PaymentsPage = lazy(() => import("@/features/payments/pages/PaymentsPage"));
-const FeaturesPage = lazy(() => import("@/features/properties/pages/FeaturesPage"));
-const PropertiesPage = lazy(() => import("@/features/properties/pages/PropertiesPage"));
-const TransactionsPage = lazy(() => import("@/features/transactions/pages/TransactionsPage"));
+const PaymentsPage = lazy(
+  () => import("@/features/payments/pages/PaymentsPage"),
+);
+const FeaturesPage = lazy(
+  () => import("@/features/properties/pages/FeaturesPage"),
+);
+const PropertiesPage = lazy(
+  () => import("@/features/properties/pages/PropertiesPage"),
+);
+const TransactionsPage = lazy(
+  () => import("@/features/transactions/pages/TransactionsPage"),
+);
 const UserProfile = lazy(() => import("@/features/accounts/UserProfile"));
 
 export default function DashboardRoutes() {
@@ -50,7 +61,10 @@ export default function DashboardRoutes() {
           element={<RoleGuard allowedRoles={["admin", "landlord", "tenant"]} />}
         >
           <Route path="leases" element={<LeasesPage />} />
-          <Route path="payments" element={<PaymentsPage />} />
+          <Route path="payments">
+            <Route index element={<PaymentsPage />} />
+            <Route path="details/:invoiceId" element={<InvoiceView />} />
+          </Route>
           <Route path="documents" element={<DocumentsPage />} />
         </Route>
 

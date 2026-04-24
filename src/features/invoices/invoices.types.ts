@@ -1,5 +1,8 @@
+import type { Role } from "../auth/auth.types";
+import type { LucideIcon } from "lucide-react";
+
 // Invoices related types
-export type StatusChoices =
+export type InvoiceStatus =
   | "pending"
   | "paid"
   | "partial"
@@ -14,19 +17,30 @@ export type PaymentFrequency =
   | "yearly";
 
 type LeaseStatus = "active" | "terminated" | "pending" | "expired";
-
+export type PaymentStatus = "paid" | "pending" | "partial" | "overdue";
 type UUID = string;
 
-export interface Tenant {
+export interface StatusConfigItem {
+  label: string;
+  color: string;
+  icon: LucideIcon;
+}
+
+export interface User {
   id: UUID;
-  name: string;
-  phone: string;
   email: string;
+  business: Business;
+  role: Role;
+  first_name: string;
+  last_name: string;
+  gender: "male" | "female" | "other";
+  phone_number: string;
+  id_passport: string;
 }
 
 export interface Lease {
   id: UUID;
-  tenant: Tenant;
+  tenant: User;
   unit: string;
   business: string;
   start_date: Date;
@@ -41,16 +55,16 @@ export interface Lease {
 
 export interface InvoicePlan {
   id: UUID;
-  tenant: Tenant;
+  tenant: User;
   lease: string;
-  business: string;
+  business: Business;
   invoice_number: string;
   rent_amount: number;
   utility_amount: number;
   other_charges: number;
   total_amount: number;
   due_date: Date; // date
-  status: StatusChoices;
+  status: InvoiceStatus;
   issued_date: Date;
   paid_at: Date | null;
   amount_paid: number;
@@ -58,23 +72,75 @@ export interface InvoicePlan {
   created_at: Date;
 }
 
+//business
+export interface Business {
+  id: UUID;
+  name: string;
+  short_name: string;
+  email: string;
+  phone_number: string;
+  address: string;
+  primary_activity: string;
+  description: string;
+  logo_url: string;
+  is_active: boolean;
+  created_at: Date;
+  updated_at: Date;
+}
 
-// invoice test
+//payment
+export interface Payment {
+  id: UUID;
+  invoice: InvoicePlan[];
+  business: Business;
+  amount: number;
+  payment_method: string;
+  status: PaymentStatus;
+  reference: string;
+  verified: boolean;
+  created_at: Date;
+  paid_at: Date | null;
+}
 
-export interface PaymentPlan {
+// invoiceui
+export interface InvoicePlanUI {
   id: string;
-  customer: string;
-  unit: string;
-  lease: string;
+  tenantName: string;
+  tenantEmail: string;
+  tenantPhone: string;
+  leaseId: string;
+  leaseUnit: string;
+  leaseStartDate: string;
+  leaseEndDate: string;
+  leaseRentAmount: number;
+  leaseUtilityAmount: number;
+  leaseTerms: string;
+  businessName: string;
+  businessEmail: string;
+  businessPhone: string;
+  businessAdress: string;
+  businessLogo: string;
+  invoiceNumber: string;
+  rentAmount: number;
+  utilityAmount: number;
+  otherCharges: number;
   totalAmount: number;
-  paidAmount: number;
-  remainingAmount: number;
-  installments: number;
-  installmentAmount: number;
-  frequency: PaymentFrequency;
-  nextPaymentDate: string;
-  status: StatusChoices;
+  dueDate: string; // date
   daysOverdue?: number;
-  paymentMethod?: "M-Pesa" | "Airtel Money" | "Bank Transfer";
-  startDate: string;
+  status: InvoiceStatus;
+  issuedDate: string;
+  paidAt?: string;
+  amountPaid: number;
+  balance: number;
+  createdAt: string;
+}
+
+export interface PaymentUI {
+  id: string;
+  invoiceIds: string[];
+  amount: number;
+  method: string;
+  status: string;
+  reference: string;
+  date: string;
 }
