@@ -1,0 +1,223 @@
+import {
+  LayoutGrid,
+  Building2,
+  Users2,
+  Users,
+  CreditCard,
+  BarChart3,
+  Home,
+  FileText,
+  Wrench,
+  Wallet,
+  Layers,
+  FileBox,
+  BookOpen,
+  Headphones,
+  Settings,
+  HomeIcon,
+} from "lucide-react";
+
+export const links = {
+  admin: [
+    {
+      icon: LayoutGrid,
+      label: "Dashboard",
+      href: "/dashboard",
+    },
+    {
+      icon: Building2,
+      label: "Properties",
+      href: "/admin/property",
+    },
+    {
+      icon: HomeIcon,
+      label: "Units",
+      href: "/admin/property/unit",
+    },
+    {
+      icon: Layers,
+      label: "Property Features",
+      href: "/admin/feature",
+    },
+    {
+      icon: Users2,
+      label: "Tenants",
+      href: "/admin/tenant",
+    },
+    {
+      icon: CreditCard,
+      label: "Finance",
+      href: "/admin/finance/payments",
+    },
+
+    {
+      icon: BarChart3,
+      label: "Reports",
+      href: "/admin/reports",
+    },
+    {
+      icon: Users,
+      label: "Accounts",
+      href: "/admin/user",
+    },
+
+    {
+      icon: FileBox,
+      label: "Documents",
+      href: "/admin/document",
+    },
+  ],
+
+  landlord: [
+    {
+      icon: LayoutGrid,
+      label: "Dashboard",
+      href: "/dashboard",
+    },
+    {
+      icon: Building2,
+      label: "Properties",
+      href: "/landlord/property",
+    },
+    {
+      icon: Home,
+      label: "Units",
+      href: "/landlord/unit",
+    },
+    {
+      icon: Users2,
+      label: "Tenants",
+      href: "/landlord/tenant",
+    },
+    {
+      icon: FileText,
+      label: "Invoices",
+      href: "/landlord/invoices",
+    },
+    {
+      icon: Wrench,
+      label: "Maintenance",
+      href: "/landlord/maintenance",
+    },
+    {
+      icon: Wallet,
+      label: "Transactions",
+      href: "/landlord/transactions",
+    },
+    {
+      icon: BarChart3,
+      label: "Reports",
+      href: "/landlord/reports",
+    },
+  ],
+
+  caretaker: [
+    {
+      icon: LayoutGrid,
+      label: "Dashboard",
+      href: "/dashboard",
+    },
+    {
+      icon: Building2,
+      label: "Properties",
+      href: "/caretaker/property",
+    },
+    {
+      icon: Home,
+      label: "Units",
+      href: "/caretaker/unit",
+    },
+    {
+      icon: Wrench,
+      label: "Maintenance",
+      href: "/caretaker/maintenance",
+    },
+    {
+      icon: Users2,
+      label: "Tenants",
+      href: "/caretaker/tenant",
+    },
+  ],
+
+  tenant: [
+    {
+      icon: LayoutGrid,
+      label: "Dashboard",
+      href: "/dashboard",
+    },
+    {
+      icon: Building2,
+      label: "Available Properties",
+      href: "/tenant/property",
+    },
+    {
+      icon: Home,
+      label: "My Unit",
+      href: "/tenant/my-unit",
+    },
+    {
+      icon: FileText,
+      label: "Invoices",
+      href: "/tenant/invoices",
+    },
+    {
+      icon: CreditCard,
+      label: "Payments",
+      href: "/tenant/payments",
+    },
+    {
+      icon: Wrench,
+      label: "Maintenance",
+      href: "/tenant/maintenance",
+    },
+  ],
+};
+
+export const helpLinks = {
+  admin: [
+    {
+      icon: BookOpen,
+      label: "User Guide",
+      href: "/guide",
+    },
+    {
+      icon: Headphones,
+      label: "Support",
+      href: "/support",
+    },
+    {
+      icon: Settings,
+      label: "Settings",
+      href: "/settings",
+    },
+  ],
+
+  landlord: [
+    {
+      icon: Headphones,
+      label: "Support",
+      href: "/support",
+    },
+    {
+      icon: Settings,
+      label: "Settings",
+      href: "/settings",
+    },
+  ],
+
+  caretaker: [
+    {
+      icon: Headphones,
+      label: "Support",
+      href: "/support",
+    },
+  ],
+
+  tenant: [
+    {
+      icon: Headphones,
+      label: "Support",
+      href: "/support",
+    },
+  ],
+};

@@ -1,4 +1,4 @@
-import LandingPage from "./features/portfolio/portfolio";
+import LandingPage from "./(features)/_portfolio/portfolio";
 
 export default function Home() {
   return (

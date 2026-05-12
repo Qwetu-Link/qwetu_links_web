@@ -1,3 +1,6 @@
+"use client";
+
+
 import {
   Accordion,
   AccordionContent,
@@ -202,7 +205,7 @@ export default function LandingPage() {
                 delays, and stay in control of their income.
               </p>
               <div className="flex flex-row gap-4">
-                <Link href="/auth/login">
+                <Link href="/login">
                   <Button size="lg" className="text-base gap-2">
                     Get Started
                     <ArrowRight className="h-4 w-4" />
@@ -223,7 +226,7 @@ export default function LandingPage() {
                   height={760}
                   className="hidden md:block"
                   alt="Qwetu Links"
-                  loading="lazy"
+                  loading="eager"
                 />
                 <Image
                   src="/images/qwetu_logo.webp"
@@ -231,7 +234,7 @@ export default function LandingPage() {
                   height={620}
                   className="block md:hidden"
                   alt="Qwetu Links"
-                  loading="lazy"
+                  loading="eager"
                 />
               </div>
             </div>
