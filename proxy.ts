@@ -1,0 +1,59 @@
+// middleware.ts
+import { NextRequest, NextResponse } from "next/server";
+import { Role } from "@/app/(features)/(auth)/definitions";
+import { getDashboardForRole, isRoleAllowedOnPath } from "@/app/lib/roles";
+
+const PUBLIC_PATHS = ["/login", "/register", "/"];
+
+interface PersistedAuthState {
+  user: { role: Role } | null;
+  token: string | null;
+}
+
+function getAuthFromCookies(request: NextRequest): PersistedAuthState | null {
+  const raw = request.cookies.get("auth-store")?.value;
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw);
+    // Zustand persist wraps state under a "state" key
+    return parsed?.state ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // 1. Always allow public paths through
+  if (PUBLIC_PATHS.some((p) => pathname.startsWith(p))) {
+    return NextResponse.next();
+  }
+
+  const auth = getAuthFromCookies(request);
+
+  // 2. Not authenticated → send to login
+  if (!auth?.user || !auth?.token) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("callbackUrl", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  const userRole = auth.user.role;
+
+  // 3. Role not allowed on this path → redirect to their own dashboard
+  if (!isRoleAllowedOnPath(userRole, pathname)) {
+    const ownDashboard = getDashboardForRole(userRole);
+    return NextResponse.redirect(new URL(ownDashboard, request.url));
+  }
+
+  // 4. All checks passed
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: [
+    // Protect all paths except Next.js internals and static files
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$).*)",
+  ],
+};

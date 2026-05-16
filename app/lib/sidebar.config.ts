@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 export const links = {
-  admin: [
+  owner: [
     {
       icon: LayoutGrid,
       label: "Dashboard",
@@ -68,7 +68,7 @@ export const links = {
     },
   ],
 
-  landlord: [
+  staff: [
     {
       icon: LayoutGrid,
       label: "Dashboard",
@@ -174,7 +174,7 @@ export const links = {
 };
 
 export const helpLinks = {
-  admin: [
+  owner: [
     {
       icon: BookOpen,
       label: "User Guide",
@@ -192,7 +192,7 @@ export const helpLinks = {
     },
   ],
 
-  landlord: [
+  staff: [
     {
       icon: Headphones,
       label: "Support",

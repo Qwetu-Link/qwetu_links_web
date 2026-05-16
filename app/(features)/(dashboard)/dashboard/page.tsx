@@ -1,27 +1,56 @@
+"use client";
+
+import { JSX, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/app/stores/useAuthStore";
+import { Role } from "@/app/(features)/(auth)/definitions";
 import AdminDashboard from "./_pages/admindashboard";
 import LandlordDashboard from "./_pages/landlorddashboard";
 import CaretakerDashboard from "./_pages/caretakerdashboard";
 import TenantDashboard from "./_pages/tenantdashboard";
-import { ReactNode } from "react";
 
-type Role = "admin" | "landlord" | "caretaker" | "tenant";
-
-const dashboards: Record<Role, ReactNode> = {
-  admin: <AdminDashboard />,
-  landlord: <LandlordDashboard />,
-  caretaker: <CaretakerDashboard />,
-  tenant: <TenantDashboard />,
+// Lazy map of role to dashboard component
+const DASHBOARD_MAP: Record<Role, () => JSX.Element> = {
+  owner: () => <AdminDashboard />,
+  staff: () => <LandlordDashboard />,
+  caretaker: () => <CaretakerDashboard />,
+  tenant: () => <TenantDashboard />,
 };
 
-function getDashboard(role: Role) {
-  return dashboards[role];
-}
+export default function DashboardPage() {
+  const router = useRouter();
+  const user = useAuthStore((state) => state.user);
 
-export default function Page() {
-  // const { user } = useAuth();
+  // Defense-in-depth: middleware is the real guard,
+  // this catches edge cases like a manual store wipe
+  useEffect(() => {
+    if (!user) {
+      router.replace("/login");
+    }
+  }, [user, router]);
 
-  // const currentUserRole: Role = user?.role ?? "tenant";
-  const currentUserRole: Role = "admin";  // later get from auth user
+  // Avoid flash of broken UI while redirect fires
+  if (!user) return null;
 
-  return getDashboard(currentUserRole);
+  const DashboardComponent = DASHBOARD_MAP[user.role];
+
+  // Role from API doesn't match any known role
+  if (!DashboardComponent) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="rounded border border-red-200 bg-red-50 p-6 text-center">
+          <p className="text-red-600 font-medium">
+            Unknown role: <code>{user.role}</code>
+          </p>
+          <p className="text-sm text-red-400 mt-1">Please contact support.</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex min-h-full w-full flex-col">
+      <DashboardComponent />
+    </div>
+  );
 }

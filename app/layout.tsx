@@ -4,19 +4,9 @@ import { inter } from "@/app/fonts/fonts";
 import "./styles/globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
+import QueryProvider from "@/providers/query-provider";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
-
-
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
 
 export const metadata: Metadata = {
   title: "Qwetu Links",
@@ -36,7 +26,8 @@ export default function RootLayout({
       <body
         className={`${inter.className} min-h-full flex flex-col antialiased`}
       >
-        {children}
+        {/* {children} */}
+         <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );

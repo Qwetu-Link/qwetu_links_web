@@ -1,0 +1,54 @@
+import axios from "axios";
+
+/**
+ * Create axios instance with default configuration
+ */
+export const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
+});
+
+// ── Helper: read and parse the auth cookie ──────────────────────────────────
+function getAuthCookie(): { token: string | null } {
+  try {
+    const raw = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("auth-store="))
+      ?.split("=")
+      .slice(1)
+      .join("=");
+
+    if (!raw) return { token: null };
+
+    const parsed = JSON.parse(decodeURIComponent(raw));
+    return { token: parsed?.state?.token ?? null };
+  } catch {
+    return { token: null };
+  }
+}
+
+// ── Request interceptor: attach Bearer token from cookie ────────────────────
+api.interceptors.request.use((config) => {
+  const { token } = getAuthCookie();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// ── Response interceptor: handle expired / invalid token ────────────────────
+api.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Remove the auth cookie and redirect to login
+      document.cookie =
+        "auth-store=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  },
+);
