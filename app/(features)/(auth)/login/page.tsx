@@ -4,17 +4,18 @@ import Image from "next/image";
 
 export default function LoginPage() {
   return (
-    <main className="flex items-center justify-center md:h-screen">
-      <div className="relative mx-auto flex w-full max-w-[400px] flex-col space-y-2.5 p-4 md:-mt-32">
-        <div className="flex h-20 w-full items-end rounded-lg flex justify-center p-3 md:h-36">
-          <div className="w-32 text-white md:w-36">
+    <main className="flex min-h-[100dvh] items-center justify-center px-4 py-8 sm:px-6 md:h-screen md:py-0">
+      <div className="relative mx-auto flex w-full max-w-[420px] flex-col space-y-4 sm:max-w-[400px] md:-mt-32">
+        <div className="flex w-full items-center justify-center rounded-lg py-2 sm:py-3 md:h-36">
+          <div className="w-28 text-white sm:w-32 md:w-36">
             <Image
               src="/images/qwetu_logo.webp"
               width={800}
               height={560}
-              className="hidden md:block"
+              className="h-auto w-full"
               alt="Qwetu Links"
               loading="eager"
+              priority
             />
           </div>
         </div>

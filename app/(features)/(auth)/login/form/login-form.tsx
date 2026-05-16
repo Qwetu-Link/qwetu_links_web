@@ -34,26 +34,31 @@ export default function LoginForm() {
 
   // useLogin returns: { mutate: login, isPending, isError, error, data }
   const { mutate: login, isPending, isError, error } = useLogin();
-  
+
   useEffect(() => {
     if (isAuthenticated()) {
       router.replace(getRedirectPath());
     }
-  }, []);
+  }, [isAuthenticated, router, getRedirectPath]);
 
   const onSubmit = (data: LoginFormData) => {
     login(data); // useLogin handles redirect on success
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-sm">
-      <h1 className="mb-3 text-xl text-center">Please log in to continue.</h1>
-      <div>
-        <label>Email</label>
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
+      <h1 className="mb-4 text-center text-lg font-medium sm:text-xl">
+        Please log in to continue.
+      </h1>
+      <div className="space-y-1.5">
+        <label className="text-sm font-medium" htmlFor="email">
+          Email
+        </label>
         <input
+          id="email"
           type="email"
           {...register("email")}
-          className="w-full border rounded px-3 py-2"
+          className="min-h-11 w-full rounded-md border px-3 py-2 text-base outline-none transition focus:border-black focus:ring-2 focus:ring-black/10 sm:text-sm"
           placeholder="Enter email"
         />
         {errors.email && (
@@ -61,12 +66,15 @@ export default function LoginForm() {
         )}
       </div>
 
-      <div>
-        <label>Password</label>
+      <div className="space-y-1.5">
+        <label className="text-sm font-medium" htmlFor="password">
+          Password
+        </label>
         <input
+          id="password"
           type="password"
           {...register("password")}
-          className="w-full border rounded px-3 py-2"
+          className="min-h-11 w-full rounded-md border px-3 py-2 text-base outline-none transition focus:border-black focus:ring-2 focus:ring-black/10 sm:text-sm"
           placeholder="Enter password"
         />
         {errors.password && (
@@ -76,21 +84,21 @@ export default function LoginForm() {
 
       <button
         type="submit"
-        disabled={isSubmitting}
-        className="bg-black text-white px-4 py-2 rounded"
+        disabled={isSubmitting || isPending}
+        className="min-h-11 w-full rounded-md bg-black px-4 py-2 font-medium text-white transition hover:bg-black/90 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto sm:min-w-28"
         aria-disabled={isPending}
       >
         {isPending ? "Logging in..." : "Login"}
       </button>
 
       <div
-        className="flex h-8 items-end space-x-1"
+        className="flex min-h-8 items-end"
         aria-live="polite"
         aria-atomic="true"
       >
         {isError && (
-          <div className="flex items-center gap-1 text-red-500 text-sm">
-            <AlertCircle className="h-4 w-4" />
+          <div className="flex items-start gap-1 text-sm text-red-500">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
             <p>
               {(error as AxiosError<ApiErrorResponse>)?.response?.data
                 ?.message ?? "Invalid credentials."}
