@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import LoginForm from "./form/login-form";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function LoginPage() {
   return (
@@ -22,6 +23,15 @@ export default function LoginPage() {
         <Suspense>
           <LoginForm />
         </Suspense>
+        <p className="text-center text-sm text-gray-500">
+          Don&apos;t have an account?{" "}
+          <Link
+            href="/register"
+            className="font-medium text-black underline-offset-4 hover:underline"
+          >
+            Create one
+          </Link>
+        </p>
       </div>
     </main>
   );
