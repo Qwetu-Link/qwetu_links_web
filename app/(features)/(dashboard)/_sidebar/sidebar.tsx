@@ -11,10 +11,11 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useMobile } from "@/app/lib/use-mobile";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { helpLinks, links } from "@/app/lib/sidebar.config";
 import { useAuthStore } from "@/app/stores/useAuthStore";
 import { Role } from "../../(auth)/definitions";
+import { useLogout } from "../../(auth)/auth.services";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -45,22 +46,19 @@ const SidebarBody = ({
   onClose?: () => void;
 }) => {
   const pathname = usePathname();
-  const router = useRouter();
+  // const router = useRouter();
 
   const user = useAuthStore((state) => state.user);
-  const logout = useAuthStore((state) => state.logout);
+  // const logout = useAuthStore((state) => state.logout);
 
   const role: Role = user?.role ?? "tenant";
   const mainMenu = links[role];
   const bottomMenu = helpLinks[role];
 
+  const { mutate: logoutUser, isPending: isLoggingOut } = useLogout();
+
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
-
-  const handleLogout = () => {
-    logout(); // clear Zustand + cookie
-    router.replace("/login");
-  };
 
   const initials = user?.name
     ? user.name
@@ -211,11 +209,14 @@ const SidebarBody = ({
               {initials}
             </div>
             <button
-              onClick={handleLogout}
+              onClick={() => logoutUser()}
+              disabled={isLoggingOut}
               title="Log out"
-              className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-50"
             >
-              <LogOut className="h-4 w-4" />
+              <LogOut
+                className={cn("h-4 w-4", isLoggingOut && "animate-spin")}
+              />
             </button>
           </div>
         ) : (
@@ -235,11 +236,14 @@ const SidebarBody = ({
               </div>
             </div>
             <button
-              onClick={handleLogout}
+              onClick={() => logoutUser()}
+              disabled={isLoggingOut}
               title="Log out"
-              className="shrink-0 rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer"
+              className="shrink-0 cursor-pointer rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <LogOut className="h-4 w-4" />
+              <LogOut
+                className={cn("h-4 w-4", isLoggingOut && "animate-spin")}
+              />
             </button>
           </div>
         )}

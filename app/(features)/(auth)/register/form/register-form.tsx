@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { RegisterFormData, registerSchema } from "@/app/lib/zod";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "@/app/stores/useAuthStore";
 import { AxiosError } from "axios";
 import { useRegister } from "../../auth.services";
@@ -17,6 +17,8 @@ type ApiErrorResponse = {
 export default function RegisterForm() {
   const router = useRouter();
   const { isAuthenticated, getRedirectPath } = useAuthStore();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     register: field,
@@ -151,13 +153,27 @@ export default function RegisterForm() {
           <label className="text-sm font-medium" htmlFor="password">
             Password
           </label>
-          <input
-            id="password"
-            type="password"
-            {...field("password")}
-            className="min-h-11 w-full rounded-md border px-3 py-2 text-base outline-none transition focus:border-black focus:ring-2 focus:ring-black/10 sm:text-sm"
-            placeholder="Min. 8 characters"
-          />
+          <div className="relative">
+            <input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              {...field("password")}
+              className="min-h-11 w-full rounded-md border px-3 py-2 text-base outline-none transition focus:border-black focus:ring-2 focus:ring-black/10 sm:text-sm"
+              placeholder="Min. 8 characters"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </button>
+          </div>
           {errors.password && (
             <p className="text-sm text-red-500">{errors.password.message}</p>
           )}
@@ -167,13 +183,29 @@ export default function RegisterForm() {
           <label className="text-sm font-medium" htmlFor="confirmPassword">
             Confirm Password
           </label>
-          <input
-            id="confirmPassword"
-            type="password"
-            {...field("confirmPassword")}
-            className="min-h-11 w-full rounded-md border px-3 py-2 text-base outline-none transition focus:border-black focus:ring-2 focus:ring-black/10 sm:text-sm"
-            placeholder="Re-enter your password"
-          />
+          <div className="relative">
+            <input
+              id="confirmPassword"
+              type={showConfirmPassword ? "text" : "password"}
+              {...field("confirmPassword")}
+              className="min-h-11 w-full rounded-md border px-3 py-2 text-base outline-none transition focus:border-black focus:ring-2 focus:ring-black/10 sm:text-sm"
+              placeholder="Re-enter your password"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword((v) => !v)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              aria-label={
+                showConfirmPassword ? "Hide password" : "Show password"
+              }
+            >
+              {showConfirmPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </button>
+          </div>
           {errors.confirmPassword && (
             <p className="text-sm text-red-500">
               {errors.confirmPassword.message}

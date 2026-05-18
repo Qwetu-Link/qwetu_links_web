@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { loginSchema } from "@/app/lib/zod";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "@/app/stores/useAuthStore";
 import { useLogin } from "../../auth.services";
 import { AxiosError } from "axios";
@@ -20,6 +20,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 export default function LoginForm() {
   const router = useRouter();
   const { isAuthenticated, getRedirectPath } = useAuthStore();
+  const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
@@ -70,13 +71,27 @@ export default function LoginForm() {
         <label className="text-sm font-medium" htmlFor="password">
           Password
         </label>
-        <input
-          id="password"
-          type="password"
-          {...register("password")}
-          className="min-h-11 w-full rounded-md border px-3 py-2 text-base outline-none transition focus:border-black focus:ring-2 focus:ring-black/10 sm:text-sm"
-          placeholder="Enter password"
-        />
+        <div className="relative">
+          <input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            {...register("password")}
+            className="min-h-11 w-full rounded-md border px-3 py-2 text-base outline-none transition focus:border-black focus:ring-2 focus:ring-black/10 sm:text-sm"
+            placeholder="Enter password"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((v) => !v)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
+          </button>
+        </div>
         {errors.password && (
           <p className="text-red-500 text-sm">{errors.password.message}</p>
         )}
@@ -85,27 +100,25 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={isSubmitting || isPending}
-        className="min-h-11 w-full rounded-md bg-black px-4 py-2 font-medium text-white transition hover:bg-black/90 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto sm:min-w-28"
+        className="min-h-11 w-full rounded-md bg-primary px-4 py-2 font-medium text-white transition hover:bg-black/90 disabled:cursor-not-allowed disabled:opacity-70"
         aria-disabled={isPending}
       >
         {isPending ? "Logging in..." : "Login"}
       </button>
 
-      <div
-        className="flex min-h-8 items-end"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        {isError && (
-          <div className="flex items-start gap-1 text-sm text-red-500">
-            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-            <p>
-              {(error as AxiosError<ApiErrorResponse>)?.response?.data
-                ?.message ?? "Invalid credentials."}
-            </p>
-          </div>
-        )}
-      </div>
+      {isError && (
+        <div
+          className="flex items-start gap-2 rounded-md border border-red-200 bg-red-50 px-4 py-3"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
+          <p className="text-sm text-red-600">
+            {(error as AxiosError<ApiErrorResponse>)?.response?.data?.message ??
+              "Invalid credentials."}
+          </p>
+        </div>
+      )}
     </form>
   );
 }

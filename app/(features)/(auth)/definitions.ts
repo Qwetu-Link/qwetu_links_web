@@ -7,6 +7,7 @@ export type User = {
   email: string;
   role: Role;
   isActive: boolean;
+  businessID: string;
   staff: [];
   tenant: [];
 };
