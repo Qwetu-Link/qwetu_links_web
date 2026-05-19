@@ -60,11 +60,11 @@ export const useRegister = () => {
  */
 export const useLogout = () => {
   const queryClient = useQueryClient();
-  const { logout, user } = useAuthStore();
+  const { logout } = useAuthStore();
   const router = useRouter();
 
   return useMutation({
-    mutationFn: () => logoutUser(user?.businessID || ""),
+    mutationFn: () => logoutUser(),
     onSuccess: () => {
       logout();
       queryClient.clear();

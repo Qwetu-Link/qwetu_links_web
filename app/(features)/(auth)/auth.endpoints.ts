@@ -23,9 +23,8 @@ export const registerUser = async (
   return response.data;
 };
 
-export const logoutUser = async (businessID: string): Promise<void> => {
-  if (!businessID) throw new Error("Business ID is required to logout.");
-  await api.post(`/businesses/${businessID}/logout`);
+export const logoutUser = async (): Promise<void> => {
+  await api.post(`/businesses/logout`);
 };
 
 export const verifyEmail = async (
