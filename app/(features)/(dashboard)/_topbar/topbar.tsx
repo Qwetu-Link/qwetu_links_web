@@ -13,8 +13,9 @@ interface TopbarProps {
 const titleMap: Record<string, string> = {
   "/dashboard": "Dashboard",
   "/admin/property": "Properties",
-  "/admin/property/unit": "Units",
-  "/admin/feature": "Property Features",
+  "/admin/unit": "Units",
+  "/admin/amenities": "Amenities",
+  "/admin/feature": "Features",
   "/admin/tenant": "Tenants",
   "/admin/finance": "Finance",
   "/admin/reports": "Reports",

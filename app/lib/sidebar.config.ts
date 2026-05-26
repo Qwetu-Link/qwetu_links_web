@@ -32,12 +32,21 @@ export const links = {
     {
       icon: HomeIcon,
       label: "Units",
-      href: "/admin/property/unit",
+      href: "/admin/unit",
     },
     {
       icon: Layers,
       label: "Property Features",
-      href: "/admin/feature",
+      children: [
+      {
+        label: "Amenities",
+        href: "/admin/amenities",
+      },
+      {
+        label: "Features",
+        href: "/admin/feature",
+      },
+    ],
     },
     {
       icon: Users2,

@@ -1,6 +1,12 @@
 "use client";
 
-import { LogOut, PanelLeftClose, PanelLeftOpen, X } from "lucide-react";
+import {
+  ChevronDown,
+  LogOut,
+  PanelLeftClose,
+  PanelLeftOpen,
+  X,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -132,6 +138,75 @@ const SidebarBody = ({
         <ul className="space-y-0.5">
           {mainMenu.map((item) => {
             const Icon = item.icon;
+            const hasChildren = "children" in item && item.children;
+
+            if (hasChildren) {
+              const active = item.children.some((child) =>
+                isActive(child.href),
+              );
+
+              return (
+                <li key={item.label}>
+                  {collapsed ? (
+                    <div
+                      title={item.label}
+                      className={cn(
+                        "flex items-center justify-center rounded-lg p-2.5 text-sm transition-colors",
+                        active
+                          ? "bg-primary/15 font-medium text-foreground"
+                          : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+                      )}
+                    >
+                      <Icon className="h-4 w-4 shrink-0" strokeWidth={1.75} />
+                    </div>
+                  ) : (
+                    <details className="group" open={active}>
+                      <summary
+                        className={cn(
+                          "flex cursor-pointer list-none items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors [&::-webkit-details-marker]:hidden",
+                          active
+                            ? "bg-primary/15 font-medium text-foreground"
+                            : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+                        )}
+                      >
+                        <Icon
+                          className="h-4 w-4 shrink-0"
+                          strokeWidth={1.75}
+                        />
+                        <span className="flex-1">{item.label}</span>
+                        <ChevronDown className="h-4 w-4 shrink-0 transition-transform group-open:rotate-180" />
+                      </summary>
+
+                      <ul className="mt-1 space-y-0.5 pl-9">
+                        {item.children.map((child) => {
+                          const childActive = isActive(child.href);
+
+                          return (
+                            <li key={child.href}>
+                              <Link
+                                href={child.href}
+                                onClick={onNavigate}
+                                className={cn(
+                                  "flex items-center rounded-md px-3 py-2 text-sm transition-colors",
+                                  childActive
+                                    ? "bg-primary/10 font-medium text-foreground"
+                                    : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+                                )}
+                              >
+                                {child.label}
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </details>
+                  )}
+                </li>
+              );
+            }
+
+            if (!item.href) return null;
+
             const active = isActive(item.href);
 
             return (
