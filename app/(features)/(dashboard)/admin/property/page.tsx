@@ -1,5 +1,5 @@
-import PageUnderDevelopment from '@/app/comming-soon';
+import PropertyCatalog from "./_component/PropertyCatalog";
 
 export default function Page() {
-  return <PageUnderDevelopment title="Properties Page" />;
+  return <PropertyCatalog />;
 }

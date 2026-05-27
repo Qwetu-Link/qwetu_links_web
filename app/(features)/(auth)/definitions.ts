@@ -7,6 +7,7 @@ export type User = {
   email: string;
   role: Role;
   isActive: boolean;
+  businessID: string;
   staff: [];
   tenant: [];
 };
@@ -17,11 +18,11 @@ export type LoginFormInputs = {
 };
 
 export interface RegisterFormInputs extends LoginFormInputs {
-  first_name: string;
-  last_name: string;
-  phone_number: string;
-  password: string;
-  password_confirm: string;
+  name: string;
+  phone: string;
+  city: string;
+  address: string;
+  is_active: boolean;
 }
 
 export interface AuthResponse {

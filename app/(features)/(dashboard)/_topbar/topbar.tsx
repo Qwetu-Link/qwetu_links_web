@@ -3,6 +3,8 @@
 import { Bell, Menu, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import UserMenu from "./user_menu";
+import { Suspense } from "react";
 
 interface TopbarProps {
   onMenuClick: () => void;
@@ -11,8 +13,9 @@ interface TopbarProps {
 const titleMap: Record<string, string> = {
   "/dashboard": "Dashboard",
   "/admin/property": "Properties",
-  "/admin/property/unit": "Units",
-  "/admin/feature": "Property Features",
+  "/admin/unit": "Units",
+  "/admin/amenities": "Amenities",
+  "/admin/feature": "Features",
   "/admin/tenant": "Tenants",
   "/admin/finance": "Finance",
   "/admin/reports": "Reports",
@@ -79,17 +82,18 @@ export function Topbar({ onMenuClick }: TopbarProps) {
         >
           <Search className="h-4 w-4" />
         </Button>
-        <Button type="button" variant="ghost" size="icon" aria-label="Notifications">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          aria-label="Notifications"
+        >
           <Bell className="h-4 w-4" />
         </Button>
 
-        <button
-          type="button"
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground"
-          aria-label="User menu"
-        >
-          QL
-        </button>
+        <Suspense>
+          <UserMenu />
+        </Suspense>
       </div>
     </header>
   );

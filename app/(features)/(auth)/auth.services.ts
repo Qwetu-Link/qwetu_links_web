@@ -1,5 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { loginUser } from "./auth.endpoints";
+import {
+  loginUser,
+  logoutUser,
+  registerUser,
+  verifyEmail,
+} from "./auth.endpoints";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/app/stores/useAuthStore";
 
@@ -34,6 +39,50 @@ export const useLogin = () => {
 
     onError: (error) => {
       console.error("Login failed:", error);
+    },
+  });
+};
+
+/**
+ * Mutation: Register a busnisee
+ */
+export const useRegister = () => {
+  return useMutation({
+    mutationFn: registerUser,
+    onError: (error) => {
+      console.error("Registration failed:", error);
+    },
+  });
+};
+
+/**
+ * Mutation: Logout a user
+ */
+export const useLogout = () => {
+  const queryClient = useQueryClient();
+  const { logout } = useAuthStore();
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: () => logoutUser(),
+    onSuccess: () => {
+      logout();
+      queryClient.clear();
+      router.replace("/login");
+    },
+    onError: (error) => {
+      console.error("Logout failed:", error);
+    },
+  });
+};
+
+/**
+ * Mutation: Verify Email
+ */
+export const useVerifyEmail = () => {
+  return useMutation({
+    mutationFn: async ({ token, email }: { token: string; email: string }) => {
+      await verifyEmail(token, email);
     },
   });
 };
