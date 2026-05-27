@@ -4,8 +4,8 @@ import { useMemo, useState } from "react";
 import { Building2, Plus, Search } from "lucide-react";
 import AmenityCard from "./AmenityCard";
 import AmenityModal from "./AmenityModal";
-import DeleteAmenityModal from "./DeleteAmenityModal";
 import { Amenities, AmenitiesFormValues } from "../definations";
+import DeleteModal from "@/components/deletemodal/DeleteModal";
 
 const dummyAmenities: Amenities[] = [
   {
@@ -158,8 +158,9 @@ export default function PropertyAmenities() {
       )}
 
       {deleteTarget && (
-        <DeleteAmenityModal
-          amenityName={deleteTarget.name}
+        <DeleteModal
+          name={deleteTarget.name}
+          title="Delete Amenity"
           onConfirm={handleDeleteConfirm}
           onCancel={() => setDeleteTarget(null)}
         />

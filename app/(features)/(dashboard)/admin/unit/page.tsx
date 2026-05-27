@@ -1,5 +1,5 @@
-import PageUnderDevelopment from '@/app/comming-soon';
+import UnitsPage from "./_components/UnitsPage";
 
 export default function Page() {
-  return <PageUnderDevelopment title="Units Page" />;
+  return <UnitsPage />;
 }

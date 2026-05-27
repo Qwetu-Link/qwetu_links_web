@@ -6,7 +6,7 @@ import PropertyCard from "./PropertyCard";
 import Pagination from "./Pagination";
 import { Building2, Package, Search } from "lucide-react";
 import { Property, PropertyFilters, PropertyStatus } from "../definations";
-import DeleteModal from "./DeleteModal";
+import DeleteModal from "@/components/deletemodal/DeleteModal";
 
 const STATUSES: PropertyStatus[] = [
   "Occupied",
@@ -183,6 +183,7 @@ export default function PropertyCatalog() {
       {deleteTarget && (
         <DeleteModal
           name={deleteTarget.name}
+          title="Delete Property"
           onConfirm={handleDeleteConfirm}
           onCancel={() => setDeleteTarget(null)}
         />

@@ -13,7 +13,7 @@ export default function MainLayout({
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
+    <div className="flex h-dvh overflow-hidden bg-background">
       {/* Sidebar */}
       <div className="fixed">
         <Sidebar
@@ -32,7 +32,7 @@ export default function MainLayout({
         <Topbar onMenuClick={() => setMobileOpen((open) => !open)} />
 
         {/* Main content */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="custom-scrollbar min-h-0 flex-1 overflow-y-auto">
           {children}
         </main>
       </div>
