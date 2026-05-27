@@ -127,7 +127,6 @@
   }
   html {
     @apply font-sans;
-    scrollbar-gutter: stable;
   }
   body {
     @apply bg-background text-foreground;
@@ -135,12 +134,12 @@
 
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgb(147 197 253) transparent;
+    scrollbar-color: rgb(134, 137, 139) transparent;
   }
 
   *::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
   }
 
   *::-webkit-scrollbar-track {
@@ -148,15 +147,15 @@
   }
 
   *::-webkit-scrollbar-thumb {
-    background: rgb(191 219 254);
-    border: 3px solid transparent;
+    background: rgb(134, 137, 139);
+    border: 2px solid transparent;
     border-radius: 999px;
     background-clip: content-box;
   }
 
   *::-webkit-scrollbar-thumb:hover {
-    background: rgb(96 165 250);
-    border: 3px solid transparent;
+    background: rgb(110, 113, 115);
+    border: 2px solid transparent;
     background-clip: content-box;
   }
 }
@@ -164,6 +163,6 @@
 @layer utilities {
   .custom-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: rgb(147 197 253) transparent;
+    scrollbar-color: rgb(134, 137, 139) transparent;
   }
 }
