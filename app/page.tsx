@@ -1,9 +1,5 @@
-import LandingPage from "./(features)/_portfolio/portfolio";
+import PropertyPage from "./(features)/_portfolio/_component/_propertylisting/propertyPage";
 
 export default function Home() {
-  return (
-    <div>
-      <LandingPage />
-    </div>
-  );
+  return <PropertyPage listingLimit={6} />;
 }

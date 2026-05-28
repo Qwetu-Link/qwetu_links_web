@@ -1,0 +1,22 @@
+"use client";
+
+import { useState } from "react";
+import PropertySearch from "../_portfolio/_component/_propertylisting/PropertySearch";
+import PropertyListing from "../_portfolio/_component/_propertylisting/propertyListing";
+import type { PropertyFilters } from "../_portfolio/_component/_propertylisting/propertyPage";
+import PropertyFooter from "../_portfolio/_component/_propertylisting/PropertyFooter";
+
+export default function PropertyPage() {
+  const [filters, setFilters] = useState<PropertyFilters>({
+    keyword: "",
+    type: "",
+    county: "",
+  });
+  return (
+    <div>
+      <PropertySearch filters={filters} onFiltersChange={setFilters} />
+      <PropertyListing filters={filters} showBrowseMore={false} />
+      <PropertyFooter />
+    </div>
+  );
+}
