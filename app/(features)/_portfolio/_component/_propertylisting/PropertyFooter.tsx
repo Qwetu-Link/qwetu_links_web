@@ -1,24 +1,72 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { footerContacts, propertyListings } from "../propertyData";
 
 const quickLinks = [
-  "About Us",
-  "Contact Us",
-  "Our Services",
-  "Privacy Policy",
-  "Terms & Condition",
+  { label: "About Us", href: "/#about" },
+  { label: "Contact Us", href: "/#contact" },
+  { label: "Our Services", href: "/#services" },
+  { label: "Properties", href: "/property" },
+  { label: "Overview", href: "/overview" },
 ];
 
-const footerMenu = ["Home", "Cookies", "Help", "FAQs"];
-const socials = ["X", "F", "Y", "In"];
+const footerMenu = [
+  { label: "Home", href: "/" },
+  { label: "Properties", href: "/property" },
+  { label: "Help", href: "/overview" },
+  { label: "FAQs", href: "/overview#faq" },
+];
+
+const socials = [
+  { label: "X", href: "#" },
+  { label: "Facebook", href: "#" },
+  { label: "YouTube", href: "#" },
+  { label: "LinkedIn", href: "#" },
+];
+
+const hiddenRoutes = [
+  "/admin",
+  "/caretaker",
+  "/dashboard",
+  "/forget-password",
+  "/landlord",
+  "/login",
+  "/register",
+  "/reset-password",
+  "/tenant",
+  "/verify-email",
+];
 
 export default function PropertyFooter() {
+  const pathname = usePathname();
+
+  if (hiddenRoutes.some((route) => pathname.startsWith(route))) {
+    return null;
+  }
+
   return (
-    <footer className="mt-10 bg-brand-dark pt-16 text-slate-400">
+    <footer id="contact" className="mt-auto bg-brand-dark pt-16 text-slate-400">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 pb-12 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
         <div>
-          <h3 className="mb-5 text-lg font-semibold text-white">Get In Touch</h3>
+          <Link
+            href="/"
+            className="mb-5 flex w-fit items-center gap-2 text-xl font-bold text-white"
+          >
+            <Image
+              src="/images/qwetu_logo.webp"
+              alt="Qwetu Links Logo"
+              width={34}
+              height={34}
+            />
+            Qwetu Links
+          </Link>
+          <p className="mb-5 max-w-xs text-sm leading-6">
+            Clear property listings, reliable rental support, and practical
+            tools for renters, landlords, and managers.
+          </p>
           <div className="space-y-3">
             {footerContacts.map((item) => (
               <p key={item.label} className="flex items-center gap-3">
@@ -30,11 +78,12 @@ export default function PropertyFooter() {
           <div className="mt-5 flex gap-2">
             {socials.map((item) => (
               <a
-                key={item}
-                href="#"
+                key={item.label}
+                href={item.href}
+                aria-label={item.label}
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-white/40 text-xs font-bold text-white transition hover:border-rental-primary hover:bg-rental-primary"
               >
-                {item}
+                {item.label.slice(0, 2)}
               </a>
             ))}
           </div>
@@ -45,11 +94,11 @@ export default function PropertyFooter() {
           <div className="space-y-2">
             {quickLinks.map((link) => (
               <Link
-                key={link}
-                href="#"
+                key={link.label}
+                href={link.href}
                 className="block transition hover:text-orange-300"
               >
-                {link}
+                {link.label}
               </Link>
             ))}
           </div>
@@ -61,8 +110,10 @@ export default function PropertyFooter() {
           </h3>
           <div className="grid grid-cols-3 gap-2">
             {propertyListings.map((property) => (
-              <div
+              <Link
                 key={property.id}
+                href={`/property/${property.slug}`}
+                aria-label={`View ${property.title}`}
                 className="relative aspect-square overflow-hidden rounded-md bg-white p-1"
               >
                 <Image
@@ -73,7 +124,7 @@ export default function PropertyFooter() {
                   className="object-cover p-1"
                   unoptimized
                 />
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -82,7 +133,11 @@ export default function PropertyFooter() {
           <h3 className="mb-5 text-lg font-semibold text-white">Newsletter</h3>
           <p>Get the latest property updates and viewing opportunities.</p>
           <div className="relative mt-5">
+            <label htmlFor="footer-email" className="sr-only">
+              Email address
+            </label>
             <input
+              id="footer-email"
               className="h-14 w-full rounded-md border border-white/20 bg-transparent px-4 pr-28 text-white outline-none focus:border-rental-primary"
               placeholder="Your email"
               type="email"
@@ -91,7 +146,7 @@ export default function PropertyFooter() {
               type="button"
               className="absolute right-2 top-2 rounded-md bg-rental-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600"
             >
-              SignUp
+              Sign Up
             </button>
           </div>
         </div>
@@ -108,8 +163,12 @@ export default function PropertyFooter() {
           </p>
           <div className="flex flex-wrap gap-5">
             {footerMenu.map((item) => (
-              <Link key={item} href="#" className="transition hover:text-white">
-                {item}
+              <Link
+                key={item.label}
+                href={item.href}
+                className="transition hover:text-white"
+              >
+                {item.label}
               </Link>
             ))}
           </div>
