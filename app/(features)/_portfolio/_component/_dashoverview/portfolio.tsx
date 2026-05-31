@@ -440,63 +440,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section>
-        <footer className="border-t bg-white py-12">
-          {/* <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-
-            <div>
-              <h4 className="font-semibold mb-3">Product</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li>Features</li>
-                <li>Pricing</li>
-                <li>Dashboard</li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-3">Company</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li>About</li>
-                <li>Careers</li>
-                <li>Contact</li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-3">Support</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li>Help Center</li>
-                <li>Documentation</li>
-                <li>Email Support</li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-3">Legal</h4>
-              <ul className="space-y-2 text-sm text-gray-600 mb-4">
-                <li>Privacy Policy</li>
-                <li>Terms of Service</li>
-              </ul>
-
-              <div className="text-sm text-gray-600 flex items-center gap-2 mb-4">
-                <Mail className="w-4 h-4" />
-                support@qwetu.com
-              </div>
-
-              <div className="flex gap-3 text-gray-600">
-                <Twitter className="w-5 h-5 cursor-pointer hover:text-primary" />
-                <Facebook className="w-5 h-5 cursor-pointer hover:text-primary" />
-                <Linkedin className="w-5 h-5 cursor-pointer hover:text-primary" />
-              </div>
-            </div>
-          </div> */}
-
-          {/* Bottom bar */}
-          <div className="text-center text-xs text-gray-500 mt-10">
-            © {new Date().getFullYear()} QwetuLinks. All rights reserved.
-          </div>
-        </footer>
-      </section>
     </div>
   );
 }

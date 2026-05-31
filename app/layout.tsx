@@ -5,6 +5,8 @@ import "./styles/globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import QueryProvider from "@/providers/query-provider";
+import NavBar from "./(features)/_portfolio/_navbar/NavBar";
+import PropertyFooter from "./(features)/_portfolio/_component/_propertylisting/PropertyFooter";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -26,8 +28,11 @@ export default function RootLayout({
       <body
         className={`${inter.className} min-h-full flex flex-col antialiased`}
       >
-        {/* {children} */}
-         <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <NavBar />
+          {children}
+          <PropertyFooter />
+        </QueryProvider>
       </body>
     </html>
   );

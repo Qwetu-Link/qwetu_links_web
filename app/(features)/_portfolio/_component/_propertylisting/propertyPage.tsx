@@ -1,13 +1,9 @@
-"use client";
-
-import { useState } from "react";
 import PropertyAbout from "./PropertyAbout";
-import PropertyCallToAction from "./PropertyCallToAction";
-import PropertyFooter from "./PropertyFooter";
+// import PropertyCallToAction from "./PropertyCallToAction";
 import PropertyHero from "./PropertyHero";
 import PropertyListing from "./propertyListing";
-import PropertySearch from "./PropertySearch";
 import PropertyTypes from "./PropertyTypes";
+import PropertyServices from "./PropertyServices";
 
 export type PropertyFilters = {
   keyword: string;
@@ -16,21 +12,20 @@ export type PropertyFilters = {
 };
 
 export default function PropertyPage({ listingLimit }: { listingLimit?: number }) {
-  const [filters, setFilters] = useState<PropertyFilters>({
+  const filters: PropertyFilters = {
     keyword: "",
     type: "",
     county: "",
-  });
+  };
 
   return (
     <main className="min-h-screen bg-white">
       <PropertyHero />
       <PropertyTypes />
       <PropertyAbout />
-      <PropertySearch filters={filters} onFiltersChange={setFilters} />
       <PropertyListing filters={filters} limit={listingLimit} />
-      <PropertyCallToAction />
-      <PropertyFooter />
+      <PropertyServices/>
+      {/* <PropertyCallToAction /> */}
     </main>
   );
 }

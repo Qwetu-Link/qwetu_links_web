@@ -5,7 +5,7 @@ import { featureChecks } from "../propertyData";
 
 export default function PropertyAbout() {
   return (
-    <section className="bg-rental-bg-light py-20">
+    <section id="about" className="bg-rental-bg-light py-20">
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
         <div className="relative overflow-hidden rounded-md  p-8 pr-0">
           <Image
@@ -19,7 +19,7 @@ export default function PropertyAbout() {
         </div>
         <div>
           <h2 className="text-3xl font-bold leading-tight text-brand-dark sm:text-4xl">
-            Place To Find The Perfect Property
+            Place To Find & List The Perfect Property
           </h2>
           <p className="mt-6 leading-8 text-slate-600">
             We make property discovery easier with clear listings, reliable
