@@ -56,10 +56,10 @@ export default function PropertyFooter() {
             className="mb-5 flex w-fit items-center gap-2 text-xl font-bold text-white"
           >
             <Image
-              src="/images/qwetu_logo.webp"
+              src="/images/_qwetu_logo_orange.webp"
               alt="Qwetu Links Logo"
-              width={34}
-              height={34}
+              width={40}
+              height={40}
             />
             Qwetu Links
           </Link>

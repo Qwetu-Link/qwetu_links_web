@@ -1,12 +1,14 @@
 import { api } from "@/lib/axios";
 import {
   AuthResponse,
+  ForgotPasswordInputs,
   LoginFormInputs,
   RegisterFormInputs,
 } from "./definitions";
 
 const LOGIN_URL = "/login";
 const REGISTER_URL = "/businesses";
+const FORGOT_PASSWORD_URL = "/forgot-password";
 const VERIFY_EMAIL_URL = "/verify-email";
 
 export const loginUser = async (
@@ -21,6 +23,12 @@ export const registerUser = async (
 ): Promise<AuthResponse> => {
   const response = await api.post(REGISTER_URL, data);
   return response.data;
+};
+
+export const forgotPassword = async (
+  data: ForgotPasswordInputs,
+): Promise<void> => {
+  await api.post(FORGOT_PASSWORD_URL, data);
 };
 
 export const logoutUser = async (): Promise<void> => {

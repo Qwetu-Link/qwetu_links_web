@@ -17,12 +17,15 @@ export type LoginFormInputs = {
   password: string;
 };
 
+export type ForgotPasswordInputs = {
+  email: string;
+};
+
 export interface RegisterFormInputs extends LoginFormInputs {
   name: string;
   phone: string;
   city: string;
   address: string;
-  is_active: boolean;
 }
 
 export interface AuthResponse {

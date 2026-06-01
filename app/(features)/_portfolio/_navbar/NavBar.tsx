@@ -54,7 +54,7 @@ export default function NavBar() {
           className="flex min-w-0 items-center gap-3 text-xl font-bold text-brand-dark sm:text-2xl"
         >
           <Image
-            src="/images/qwetu_logo.webp"
+            src="/images/_qwetu_logo_orange.webp"
             alt="QwetuRent Logo"
             width={60}
             height={60}

@@ -1,49 +1,102 @@
 import { Suspense } from "react";
+import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import RegisterForm from "./form/register-form";
+import { heroImages } from "../../_portfolio/_component/propertyData";
 
 export default function RegisterPage() {
   return (
-    <main className="flex min-h-[100dvh] items-center justify-center px-4 py-8 sm:px-6">
-      <div className="mx-auto w-full max-w-5xl">
-        <div className="flex flex-col items-center gap-8 md:flex-row md:items-start md:gap-12">
-          {/* Left: Logo + Branding */}
-          <div className="flex w-full flex-col items-center justify-center md:sticky md:top-8 md:w-1/5 md:pt-8">
-            <div className="w-32 sm:w-40 md:w-56">
-              <Image
-                src="/images/qwetu_logo.webp"
-                width={800}
-                height={560}
-                className="h-auto w-full"
-                alt="Qwetu Links"
-                loading="eager"
-                priority
-              />
+    <main className="h-dvh overflow-hidden bg-rental-bg-light">
+      <div className="grid h-full md:grid-cols-[42%_58%]">
+        {/* Left: Image + login link */}
+        <div className="relative hidden h-dvh overflow-hidden bg-brand-dark md:block">
+          <Image
+            src={heroImages[2]}
+            alt="Modern Qwetu Links property"
+            fill
+            sizes="42vw"
+            className="object-cover"
+            priority
+            unoptimized
+          />
+          <div className="absolute inset-0 bg-brand-dark/55" />
+          <div className="relative z-10 flex h-full flex-col justify-between p-8 text-white">
+            <Link
+              href="/"
+              className="inline-flex w-fit items-center gap-2 rounded-md border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back Home
+            </Link>
+            <div className="flex flex-1 items-center justify-center">
+              <div className="w-44">
+                <Image
+                  src="/images/_qwetu_logo_orange.webp"
+                  width={800}
+                  height={560}
+                  className="h-auto w-full"
+                  alt="Qwetu Links"
+                  loading="eager"
+                  priority
+                />
+              </div>
             </div>
-            <p className="mt-4 hidden text-center text-sm text-gray-500 md:block">
-              Create your account to get started with Qwetu Links.
-            </p>
+            <div className="pb-2">
+              <h2 className="text-3xl font-bold leading-tight">
+                Create your Qwetu Links account
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-white/75">
+                Manage listings, enquiries, and property activity from one
+                place.
+              </p>
+              <p className="mt-4 text-sm text-white/75">
+                Already have an account?{" "}
+                <Link
+                  href="/login"
+                  className="font-semibold text-rental-primary underline-offset-4 hover:underline"
+                >
+                  Log in
+                </Link>
+              </p>
+            </div>
           </div>
+        </div>
 
-          {/* Divider */}
-          <div className="hidden w-px self-stretch bg-gray-200 md:block" />
-
-          {/* Right: Register Form */}
-          <div className="w-full md:w-3/5">
-            <Suspense>
-              <RegisterForm />
-            </Suspense>
-
-            <p className="mt-6 text-center text-sm text-gray-500">
-              Already have an account?{" "}
+        {/* Right: Register Form */}
+        <div className="h-dvh overflow-y-auto px-4 py-6 sm:px-6 md:px-10 lg:px-14">
+          <div className="mx-auto flex min-h-full max-w-3xl items-center">
+            <div className="w-full">
               <Link
-                href="/login"
-                className="font-medium text-black underline-offset-4 hover:underline"
+                href="/"
+                className="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-dark transition hover:text-rental-primary md:hidden"
               >
-                Log in
+                <ArrowLeft className="h-4 w-4" />
+                Back Home
               </Link>
-            </p>
+              <div className="mb-6 flex justify-center md:hidden">
+                <Image
+                  src="/images/_qwetu_logo_orange.webp"
+                  width={180}
+                  height={126}
+                  className="h-auto w-36"
+                  alt="Qwetu Links"
+                  priority
+                />
+              </div>
+              <Suspense>
+                <RegisterForm />
+              </Suspense>
+              <p className="mt-4 text-center text-sm text-gray-500 md:hidden">
+                Already have an account?{" "}
+                <Link
+                  href="/login"
+                  className="font-semibold text-rental-primary underline-offset-4 hover:underline"
+                >
+                  Log in
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </div>

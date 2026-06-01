@@ -1,25 +1,31 @@
 import { Suspense } from "react";
-import Image from "next/image";
-import VerifyEmailHandler from "./verify-email-handler";
+import AuthImagePanel from "../_components/AuthImagePanel";
+import AuthMobileHeader from "../_components/AuthMobileHeader";
+import VerifyEmailForm from "./form/verify-email-form";
 
 export default function VerifyEmailPage() {
   return (
-    <main className="flex min-h-[100dvh] items-center justify-center px-4 py-8 sm:px-6">
-      <div className="mx-auto flex w-full max-w-md flex-col items-center space-y-6">
-        <div className="w-28 sm:w-32">
-          <Image
-            src="/images/qwetu_logo.webp"
-            width={800}
-            height={560}
-            className="h-auto w-full"
-            alt="Qwetu Links"
-            loading="eager"
-            priority
-          />
+    <main className="h-dvh overflow-hidden bg-rental-bg-light">
+      <div className="grid h-full md:grid-cols-[42%_58%]">
+        <AuthImagePanel
+          imageIndex={2}
+          title="Verify your email address"
+          text="Enter the 6-digit code sent to your email to activate your Qwetu Links account."
+          linkText="Already verified?"
+          linkHref="/login"
+          linkLabel="Log in"
+        />
+
+        <div className="h-dvh overflow-y-auto px-4 py-6 sm:px-6 md:px-10 lg:px-14">
+          <div className="mx-auto flex min-h-full max-w-xl items-center">
+            <div className="w-full">
+              <AuthMobileHeader />
+              <Suspense>
+                <VerifyEmailForm />
+              </Suspense>
+            </div>
+          </div>
         </div>
-        <Suspense>
-          <VerifyEmailHandler />
-        </Suspense>
       </div>
     </main>
   );

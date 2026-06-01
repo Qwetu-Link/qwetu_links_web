@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+  forgotPassword,
   loginUser,
   logoutUser,
   registerUser,
@@ -49,9 +50,15 @@ export const useLogin = () => {
 export const useRegister = () => {
   return useMutation({
     mutationFn: registerUser,
-    onError: (error) => {
-      console.error("Registration failed:", error);
-    },
+  });
+};
+
+/**
+ * Mutation: Request password reset email/code
+ */
+export const useForgotPassword = () => {
+  return useMutation({
+    mutationFn: forgotPassword,
   });
 };
 
