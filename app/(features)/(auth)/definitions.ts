@@ -21,13 +21,19 @@ export type ForgotPasswordInputs = {
   email: string;
 };
 
+export interface ResetPasswordInputs extends LoginFormInputs {
+  token: string;
+}
+
 export interface RegisterFormInputs extends LoginFormInputs {
   name: string;
   phone: string;
   city: string;
   address: string;
 }
-
+export interface VerifyEmailInputs extends ForgotPasswordInputs {
+  token: string;
+}
 export interface AuthResponse {
   user: User;
   token: string;

@@ -75,13 +75,13 @@ export const otpCodeSchema = z
   .regex(/^[a-zA-Z0-9]+$/, "Code can only contain letters and numbers");
 
 export const verifyEmailSchema = z.object({
-  otp: otpCodeSchema,
+  token: otpCodeSchema,
   email:forgotPasswordSchema.shape.email, // Reuse email validation from forgotPasswordSchema
 });
 
 export const resetPasswordSchema = z
   .object({
-    otp: otpCodeSchema,
+    token: otpCodeSchema,
     email: forgotPasswordSchema.shape.email, // Reuse email validation from forgotPasswordSchema
     password: loginSchema.shape.password,
     confirmPassword: z.string({message: "Please confirm your password"}),

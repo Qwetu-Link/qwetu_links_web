@@ -4,12 +4,15 @@ import {
   ForgotPasswordInputs,
   LoginFormInputs,
   RegisterFormInputs,
+  ResetPasswordInputs,
+  VerifyEmailInputs,
 } from "./definitions";
 
 const LOGIN_URL = "/login";
 const REGISTER_URL = "/businesses";
 const FORGOT_PASSWORD_URL = "/forgot-password";
 const VERIFY_EMAIL_URL = "/verify-email";
+const RESET_PASSWORD_URL = "/reset-password";
 
 export const loginUser = async (
   credentials: LoginFormInputs,
@@ -31,13 +34,16 @@ export const forgotPassword = async (
   await api.post(FORGOT_PASSWORD_URL, data);
 };
 
+export const resetPassword = async (
+  data: ResetPasswordInputs,
+): Promise<void> => {
+  await api.post(RESET_PASSWORD_URL, data);
+};
+
 export const logoutUser = async (): Promise<void> => {
   await api.post(`/businesses/logout`);
 };
 
-export const verifyEmail = async (
-  token: string,
-  email: string,
-): Promise<void> => {
-  await api.post(VERIFY_EMAIL_URL, { token, email });
+export const verifyEmail = async (data: VerifyEmailInputs): Promise<void> => {
+  await api.post(VERIFY_EMAIL_URL, data);
 };

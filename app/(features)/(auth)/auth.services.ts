@@ -4,6 +4,7 @@ import {
   loginUser,
   logoutUser,
   registerUser,
+  resetPassword,
   verifyEmail,
 } from "./auth.endpoints";
 import { useRouter } from "next/navigation";
@@ -45,11 +46,20 @@ export const useLogin = () => {
 };
 
 /**
- * Mutation: Register a busnisee
+ * Mutation: Register a business
  */
 export const useRegister = () => {
   return useMutation({
     mutationFn: registerUser,
+  });
+};
+
+/**
+ * Mutation: Verify Email
+ */
+export const useVerifyEmail = () => {
+  return useMutation({
+    mutationFn: verifyEmail,
   });
 };
 
@@ -59,6 +69,16 @@ export const useRegister = () => {
 export const useForgotPassword = () => {
   return useMutation({
     mutationFn: forgotPassword,
+  });
+};
+
+/**
+ * Mutation: Reset Password
+ */
+
+export const useResetPassword = () => {
+  return useMutation({
+    mutationFn: resetPassword,
   });
 };
 
@@ -79,17 +99,6 @@ export const useLogout = () => {
     },
     onError: (error) => {
       console.error("Logout failed:", error);
-    },
-  });
-};
-
-/**
- * Mutation: Verify Email
- */
-export const useVerifyEmail = () => {
-  return useMutation({
-    mutationFn: async ({ token, email }: { token: string; email: string }) => {
-      await verifyEmail(token, email);
     },
   });
 };

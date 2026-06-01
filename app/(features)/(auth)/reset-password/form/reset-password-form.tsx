@@ -1,9 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, LockKeyhole } from "lucide-react";
+import { AlertCircle, Eye, EyeOff, LockKeyhole } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import {
@@ -11,8 +11,15 @@ import {
   resetPasswordSchema,
 } from "@/app/lib/zod";
 import OtpInput from "../../_components/OtpInput";
+import { useResetPassword } from "../../auth.services";
+import { AxiosError } from "axios";
+
+type ApiErrorResponse = {
+  message?: string;
+};
 
 export default function ResetPasswordForm() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") ?? "";
   const [showPassword, setShowPassword] = useState(false);
@@ -25,15 +32,28 @@ export default function ResetPasswordForm() {
   } = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      otp: "",
+      token: "",
       email,
       password: "",
-      confirmPassword: "",
     },
   });
 
+  const {
+      mutate: passwordReset,
+      isPending,
+      isError,
+      error,
+    } = useResetPassword();
+
   const onSubmit: SubmitHandler<ResetPasswordFormData> = (payload) => {
-    console.log("Reset password request:", payload);
+    passwordReset(
+      payload,
+      {
+        onSuccess: () => {
+          router.push("/login");
+        },
+      },
+    );
   };
 
   return (
@@ -64,13 +84,13 @@ export default function ResetPasswordForm() {
         <label className="text-sm font-semibold text-brand-dark">OTP code</label>
         <Controller
           control={control}
-          name="otp"
+          name="token"
           render={({ field }) => (
             <OtpInput value={field.value} onChange={field.onChange} />
           )}
         />
-        {errors.otp && (
-          <p className="text-sm text-red-500">{errors.otp.message}</p>
+        {errors.token && (
+          <p className="text-sm text-red-500">{errors.token.message}</p>
         )}
       </div>
 
@@ -143,11 +163,28 @@ export default function ResetPasswordForm() {
 
       <button
         type="submit"
-        disabled={isSubmitting}
+        disabled={isPending || isSubmitting}
         className="mt-6 min-h-12 w-full rounded-md bg-rental-primary px-4 py-2 font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-70"
       >
-        {isSubmitting ? "Resetting..." : "Reset password"}
+        {isPending ? "Resetting..." : "Reset password"}
       </button>
+
+       <div
+        className="mt-4 min-h-11"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {isError && (
+          <div className="flex items-start gap-2 rounded-md border border-red-200 bg-red-50 px-4 py-3">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
+            <p className="text-sm leading-5 text-red-600">
+              {(error as AxiosError<ApiErrorResponse>)?.response?.data
+                ?.message ??
+                "We could not send a reset code. Please try again."}
+            </p>
+          </div>
+        )}
+      </div>
 
       <p className="mt-4 text-center text-sm text-gray-500 md:hidden">
         Back to sign in?{" "}

@@ -30,7 +30,7 @@ export default function VerifyEmailForm() {
   } = useForm<VerifyEmailFormData>({
     resolver: zodResolver(verifyEmailSchema),
     defaultValues: {
-      otp: "",
+      token: "",
       email,
     },
   });
@@ -45,7 +45,7 @@ export default function VerifyEmailForm() {
     return () => clearTimeout(timer);
   }, [status, countdown, router]);
 
-  const handleVerify: SubmitHandler<VerifyEmailFormData> = ({ otp }) => {
+  const handleVerify: SubmitHandler<VerifyEmailFormData> = ({ token }) => {
     if (!email) {
       setStatus("error");
       setMessage("Missing email address. Please request a new code.");
@@ -54,7 +54,7 @@ export default function VerifyEmailForm() {
 
     setStatus("loading");
     verifyEmail(
-      { token: otp, email },
+      { token: token, email },
       {
         onSuccess: () => {
           setStatus("success");
@@ -99,7 +99,7 @@ export default function VerifyEmailForm() {
         </label>
         <Controller
           control={control}
-          name="otp"
+          name="token"
           render={({ field }) => (
             <OtpInput
               value={field.value}
@@ -114,8 +114,8 @@ export default function VerifyEmailForm() {
             />
           )}
         />
-        {errors.otp && (
-          <p className="text-sm text-red-500">{errors.otp.message}</p>
+        {errors.token && (
+          <p className="text-sm text-red-500">{errors.token.message}</p>
         )}
       </div>
 
