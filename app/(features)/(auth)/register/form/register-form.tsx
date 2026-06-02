@@ -18,9 +18,14 @@ import {
 import { useAuthStore } from "@/app/stores/useAuthStore";
 import { AxiosError } from "axios";
 import { useRegister } from "../../auth.services";
+import Link from "next/link";
+import Image from "next/image";
+import { GOOGLE_AUTH_URL } from "../../auth.endpoints";
+import GoogleSignupButton from "../../_components/GoogleBtn";
 
 type ApiErrorResponse = {
   message?: string;
+  errors?: Record<string, string[]>;
 };
 
 export default function RegisterForm() {
@@ -47,6 +52,11 @@ export default function RegisterForm() {
   });
 
   const { mutate: registerUser, isPending, isError, error } = useRegister();
+  const apiError = error as AxiosError<ApiErrorResponse> | undefined;
+  const errorMessage =
+    apiError?.response?.data?.message ??
+    "Something went wrong. Please try again.";
+  const fieldErrors = apiError?.response?.data?.errors;
 
   useEffect(() => {
     if (isAuthenticated()) {
@@ -89,7 +99,10 @@ export default function RegisterForm() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-brand-dark" htmlFor="name">
+          <label
+            className="text-sm font-semibold text-brand-dark"
+            htmlFor="name"
+          >
             BusinessName
           </label>
           <div className="relative">
@@ -108,7 +121,10 @@ export default function RegisterForm() {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-brand-dark" htmlFor="email">
+          <label
+            className="text-sm font-semibold text-brand-dark"
+            htmlFor="email"
+          >
             Business Email
           </label>
           <div className="relative">
@@ -129,7 +145,10 @@ export default function RegisterForm() {
 
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-brand-dark" htmlFor="phone">
+          <label
+            className="text-sm font-semibold text-brand-dark"
+            htmlFor="phone"
+          >
             Business Phone
           </label>
           <div className="relative">
@@ -148,7 +167,10 @@ export default function RegisterForm() {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-brand-dark" htmlFor="city">
+          <label
+            className="text-sm font-semibold text-brand-dark"
+            htmlFor="city"
+          >
             City
           </label>
           <div className="relative">
@@ -168,7 +190,10 @@ export default function RegisterForm() {
       </div>
 
       <div className="mt-4 space-y-1.5">
-        <label className="text-sm font-semibold text-brand-dark" htmlFor="address">
+        <label
+          className="text-sm font-semibold text-brand-dark"
+          htmlFor="address"
+        >
           Address
         </label>
         <div className="relative">
@@ -188,7 +213,10 @@ export default function RegisterForm() {
 
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-brand-dark" htmlFor="password">
+          <label
+            className="text-sm font-semibold text-brand-dark"
+            htmlFor="password"
+          >
             Password
           </label>
           <div className="relative">
@@ -254,30 +282,37 @@ export default function RegisterForm() {
           )}
         </div>
       </div>
-
-      <div
-        className="mt-4 mb-4 min-h-11"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        {isError && (
+      {isError && (
+        <div className="mt-4 min-h-11" aria-live="polite" aria-atomic="true">
           <div className="flex items-start gap-2 rounded-md border border-red-200 bg-red-50 px-4 py-3">
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
-            <p className="text-sm leading-5 text-red-600">
-              {(error as AxiosError<ApiErrorResponse>)?.response?.data
-                ?.message ?? "Something went wrong. Please try again."}
-            </p>
+
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-red-600">{errorMessage}</p>
+
+              {fieldErrors && (
+                <ul className="list-disc pl-5 text-sm text-red-600">
+                  {Object.entries(fieldErrors).map(([field, messages]) =>
+                    messages.map((message, index) => (
+                      <li key={`${field}-${index}`}>{message}</li>
+                    )),
+                  )}
+                </ul>
+              )}
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       <button
         type="submit"
         disabled={isSubmitting || isPending}
-        className="min-h-12 w-full rounded-md bg-rental-primary px-4 py-2 font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-70"
+        className="min-h-12 w-full mt-4 rounded-md bg-rental-primary px-4 py-2 font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-70"
       >
         {isPending ? "Creating account..." : "Register"}
       </button>
+
+      <GoogleSignupButton />
     </form>
   );
 }

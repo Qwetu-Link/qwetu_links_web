@@ -84,7 +84,7 @@ export const resetPasswordSchema = z
     token: otpCodeSchema,
     email: forgotPasswordSchema.shape.email, // Reuse email validation from forgotPasswordSchema
     password: loginSchema.shape.password,
-    confirmPassword: z.string({message: "Please confirm your password"}),
+    confirmPassword: loginSchema.shape.password
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",

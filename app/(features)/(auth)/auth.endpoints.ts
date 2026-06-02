@@ -10,9 +10,12 @@ import {
 
 const LOGIN_URL = "/login";
 const REGISTER_URL = "/businesses";
-const FORGOT_PASSWORD_URL = "/forgot-password";
-const VERIFY_EMAIL_URL = "/verify-email";
-const RESET_PASSWORD_URL = "/reset-password";
+const FORGOT_PASSWORD_URL = "/forgot/password";
+const VERIFY_EMAIL_URL = "/verify/email";
+const RESET_PASSWORD_URL = "/reset/password";
+const LOGOUT_URL = "/businesses/logout";
+
+export const GOOGLE_AUTH_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/google/web/redirect`;
 
 export const loginUser = async (
   credentials: LoginFormInputs,
@@ -41,7 +44,7 @@ export const resetPassword = async (
 };
 
 export const logoutUser = async (): Promise<void> => {
-  await api.post(`/businesses/logout`);
+  await api.post(LOGOUT_URL);
 };
 
 export const verifyEmail = async (data: VerifyEmailInputs): Promise<void> => {
