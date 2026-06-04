@@ -1,5 +1,6 @@
-import PageUnderDevelopment from '@/app/comming-soon';
+import MaintenanceRequestsPage from "../../admin/maintenance/MaintenanceRequestsPage";
+
 
 export default function Page() {
-  return <PageUnderDevelopment title="My Maintenance Page" />;
+  return <MaintenanceRequestsPage basePath="/tenant/maintenance" />;
 }

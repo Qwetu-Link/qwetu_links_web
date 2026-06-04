@@ -53,11 +53,16 @@ export const links = {
       label: "Tenants",
       href: "/admin/tenant",
     },
-    {
-      icon: CreditCard,
-      label: "Finance",
-      href: "/admin/finance/payments",
+     {
+      icon: Wrench,
+      label: "Maintenance",
+      href: "/admin/maintenance",
     },
+    // {
+    //   icon: CreditCard,
+    //   label: "Finance",
+    //   href: "/admin/finance/payments",
+    // },
 
     {
       icon: BarChart3,
@@ -187,17 +192,17 @@ export const helpLinks = {
     {
       icon: BookOpen,
       label: "User Guide",
-      href: "/guide",
+      href: "/help/guide",
     },
     {
       icon: Headphones,
       label: "Support",
-      href: "/support",
+      href: "/help/support",
     },
     {
       icon: Settings,
       label: "Settings",
-      href: "/settings",
+      href: "/help/settings",
     },
   ],
 
@@ -205,12 +210,12 @@ export const helpLinks = {
     {
       icon: Headphones,
       label: "Support",
-      href: "/support",
+      href: "/help/support",
     },
     {
       icon: Settings,
       label: "Settings",
-      href: "/settings",
+      href: "/help/settings",
     },
   ],
 
@@ -218,7 +223,7 @@ export const helpLinks = {
     {
       icon: Headphones,
       label: "Support",
-      href: "/support",
+      href: "/help/support",
     },
   ],
 
@@ -226,7 +231,7 @@ export const helpLinks = {
     {
       icon: Headphones,
       label: "Support",
-      href: "/support",
+      href: "/help/support",
     },
   ],
 };

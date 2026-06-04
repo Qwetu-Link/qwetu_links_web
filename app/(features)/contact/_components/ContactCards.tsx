@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const contactCards = [
   {
-    title: "Call us",
+    title: "Whatsapp",
     text: "+254 700 000 000",
     href: "tel:+254700000000",
     icon: Phone,
@@ -16,7 +16,7 @@ const contactCards = [
   },
   {
     title: "Visit office",
-    text: "Westlands, Nairobi",
+    text: "Voi, Mwatate",
     href: "#office",
     icon: MapPin,
   },

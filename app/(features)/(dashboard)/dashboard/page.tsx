@@ -8,6 +8,7 @@ import AdminDashboard from "./_pages/admindashboard";
 import LandlordDashboard from "./_pages/landlorddashboard";
 import CaretakerDashboard from "./_pages/caretakerdashboard";
 import TenantDashboard from "./_pages/tenantdashboard";
+import QwetuDashboard from "./_pages/qwetudashboard";
 
 // Lazy map of role to dashboard component
 const DASHBOARD_MAP: Record<Role, () => JSX.Element> = {
@@ -15,6 +16,7 @@ const DASHBOARD_MAP: Record<Role, () => JSX.Element> = {
   staff: () => <LandlordDashboard />,
   caretaker: () => <CaretakerDashboard />,
   tenant: () => <TenantDashboard />,
+  qwetulinks:()=> <QwetuDashboard/>
 };
 
 export default function DashboardPage() {

@@ -10,10 +10,7 @@ import { AlertCircle, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { useAuthStore } from "@/app/stores/useAuthStore";
 import { useLogin } from "../../auth.services";
 import { AxiosError } from "axios";
-import Link from "next/link";
-import Image from "next/image";
-import { GOOGLE_AUTH_URL } from "../../auth.endpoints";
-import GoogleSignupButton from "../../_components/GoogleBtn";
+// import GoogleSignupButton from "../../_components/GoogleBtn";
 
 type ApiErrorResponse = {
   message?: string;
@@ -155,7 +152,7 @@ export default function LoginForm() {
         </div>
       )}
 
-      <GoogleSignupButton />
+      {/* <GoogleSignupButton /> */}
     </form>
   );
 }

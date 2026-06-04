@@ -56,10 +56,11 @@ export default function ContactForm() {
               Enquiry type
             </span>
             <select className="h-12 w-full rounded-md border border-rental-border bg-white px-4 text-sm text-brand-dark outline-none focus:border-rental-primary">
+              <option>General enquiry</option>
               <option>Property viewing</option>
+              <option>Landlord Onboarding</option>
               <option>List a property</option>
               <option>Tenant support</option>
-              <option>General enquiry</option>
             </select>
           </label>
         </div>

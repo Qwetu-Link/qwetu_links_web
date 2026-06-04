@@ -6,7 +6,7 @@ import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import QueryProvider from "@/providers/query-provider";
 import NavBar from "./(features)/_portfolio/_navbar/NavBar";
-import PropertyFooter from "./(features)/_portfolio/_component/_propertylisting/PropertyFooter";
+import PropertyFooter from "./(features)/_portfolio/_footer/PropertyFooter";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { footerContacts, propertyListings } from "../propertyData";
+import { footerContacts, propertyListings } from "../_component/propertyData";
 
 const quickLinks = [
   { label: "About Us", href: "/#about" },
@@ -38,6 +38,8 @@ const hiddenRoutes = [
   "/reset-password",
   "/tenant",
   "/verify-email",
+  "/help/",
+  "/setup-business",
 ];
 
 export default function PropertyFooter() {

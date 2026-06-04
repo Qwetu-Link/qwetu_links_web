@@ -1,53 +1,19 @@
+import SetupBusinessForm from "./form/setup-business-form";
 import { Suspense } from "react";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import LoginForm from "./form/login-form";
 import { heroImages } from "../../_portfolio/_component/propertyData";
 
-export default function LoginPage() {
+export default function SetUpBusinessPage() {
+  //   return <SetupBusinessForm />;
   return (
     <main className="h-dvh overflow-hidden bg-rental-bg-light">
-      <div className="grid h-full md:grid-cols-[58%_42%]">
-        <div className="h-dvh overflow-y-auto px-4 py-6 sm:px-6 md:px-10 lg:px-14">
-          <div className="mx-auto flex min-h-full max-w-xl items-center">
-            <div className="w-full">
-              <Link
-                href="/"
-                className="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-dark transition hover:text-rental-primary md:hidden"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back Home
-              </Link>
-              <div className="mb-6 flex justify-center md:hidden">
-                <Image
-                  src="/images/_qwetu_logo_orange.webp"
-                  width={180}
-                  height={126}
-                  className="h-auto w-36"
-                  alt="Qwetu Links"
-                  priority
-                />
-              </div>
-              <Suspense>
-                <LoginForm />
-              </Suspense>
-              <p className="mt-4 text-center text-sm text-gray-500 md:hidden">
-                Don&apos;t have an account?{" "}
-                <Link
-                  href="/contact"
-                  className="font-semibold text-rental-primary underline-offset-4 hover:underline"
-                >
-                  Create one
-                </Link>
-              </p>
-            </div>
-          </div>
-        </div>
-
+      <div className="grid h-full md:grid-cols-[42%_58%]">
+        {/* Left: Image + login link */}
         <div className="relative hidden h-dvh overflow-hidden bg-brand-dark md:block">
           <Image
-            src={heroImages[1]}
+            src={heroImages[2]}
             alt="Modern Qwetu Links property"
             fill
             sizes="42vw"
@@ -79,19 +45,56 @@ export default function LoginPage() {
             </div>
             <div className="pb-2">
               <h2 className="text-3xl font-bold leading-tight">
-                Welcome back to Qwetu Links
+                Create your Qwetu Links account
               </h2>
               <p className="mt-3 text-sm leading-6 text-white/75">
-                Sign in to manage properties, enquiries, tenants, and rental
-                activity.
+                Manage listings, enquiries, and property activity from one
+                place.
               </p>
               <p className="mt-4 text-sm text-white/75">
-                Don&apos;t have an account?{" "}
+                Already have an account?{" "}
                 <Link
-                  href="/contact"
+                  href="/login"
                   className="font-semibold text-rental-primary underline-offset-4 hover:underline"
                 >
-                  Create one
+                  Log in
+                </Link>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Register Form */}
+        <div className="h-dvh overflow-y-auto px-4 py-6 sm:px-6 md:px-10 lg:px-14">
+          <div className="mx-auto flex min-h-full max-w-3xl items-center">
+            <div className="w-full">
+              <Link
+                href="/"
+                className="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-dark transition hover:text-rental-primary md:hidden"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back Home
+              </Link>
+              <div className="mb-6 flex justify-center md:hidden">
+                <Image
+                  src="/images/_qwetu_logo_orange.webp"
+                  width={180}
+                  height={126}
+                  className="h-auto w-36"
+                  alt="Qwetu Links"
+                  priority
+                />
+              </div>
+              <Suspense>
+                <SetupBusinessForm />
+              </Suspense>
+              <p className="mt-4 text-center text-sm text-gray-500 md:hidden">
+                Already have an account?{" "}
+                <Link
+                  href="/login"
+                  className="font-semibold text-rental-primary underline-offset-4 hover:underline"
+                >
+                  Log in
                 </Link>
               </p>
             </div>

@@ -18,10 +18,7 @@ import {
 import { useAuthStore } from "@/app/stores/useAuthStore";
 import { AxiosError } from "axios";
 import { useRegister } from "../../auth.services";
-import Link from "next/link";
-import Image from "next/image";
-import { GOOGLE_AUTH_URL } from "../../auth.endpoints";
-import GoogleSignupButton from "../../_components/GoogleBtn";
+// import GoogleSignupButton from "../../_components/GoogleBtn";
 
 type ApiErrorResponse = {
   message?: string;
@@ -312,7 +309,7 @@ export default function RegisterForm() {
         {isPending ? "Creating account..." : "Register"}
       </button>
 
-      <GoogleSignupButton />
+      {/* <GoogleSignupButton /> */}
     </form>
   );
 }

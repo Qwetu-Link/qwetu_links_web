@@ -3,7 +3,27 @@ import { NextRequest, NextResponse } from "next/server";
 import { Role } from "@/app/(features)/(auth)/definitions";
 import { getDashboardForRole, isRoleAllowedOnPath } from "@/app/lib/roles";
 
-const PUBLIC_PATHS = ["/login", "/register", "/"];
+const PUBLIC_PATHS = [
+  "/",
+  "/about",
+  "/contact",
+  "/forget-password",
+  "/login",
+  "/overview",
+  "/property",
+  "/register",
+  "/reset-password",
+  "/services",
+  "/setup-business",
+  "/verify-email",
+];
+
+function isPublicPath(pathname: string): boolean {
+  return PUBLIC_PATHS.some((path) => {
+    if (path === "/") return pathname === "/";
+    return pathname === path || pathname.startsWith(`${path}/`);
+  });
+}
 
 interface PersistedAuthState {
   user: { role: Role } | null;
@@ -26,7 +46,7 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 1. Always allow public paths through
-  if (PUBLIC_PATHS.some((p) => pathname.startsWith(p))) {
+  if (isPublicPath(pathname)) {
     return NextResponse.next();
   }
 
@@ -54,6 +74,6 @@ export function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     // Protect all paths except Next.js internals and static files
-    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*$).*)",
   ],
 };

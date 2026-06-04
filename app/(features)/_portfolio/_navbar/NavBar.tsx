@@ -21,10 +21,12 @@ const hiddenRoutes = [
   "/forget-password",
   "/landlord",
   "/login",
-  "/register",
+  // "/register",
   "/reset-password",
   "/tenant",
   "/verify-email",
+  "/help/",
+  "/setup-business",
 ];
 
 export default function NavBar() {
@@ -78,7 +80,7 @@ export default function NavBar() {
         </nav>
 
         <Link
-          href="/register"
+          href="/login"
           className="hidden items-center gap-2 rounded-md bg-rental-primary px-5 py-3 text-base font-semibold text-white transition hover:bg-orange-600 sm:inline-flex lg:px-6"
         >
           <span className="hidden lg:inline">List Your Property</span>
@@ -88,12 +90,18 @@ export default function NavBar() {
 
         <button
           type="button"
-          aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-label={
+            mobileOpen ? "Close navigation menu" : "Open navigation menu"
+          }
           aria-expanded={mobileOpen}
           onClick={() => setMobileOpen((open) => !open)}
           className="inline-flex h-12 w-12 items-center justify-center rounded-md border border-rental-border text-brand-dark transition hover:bg-rental-bg-light lg:hidden"
         >
-          {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          {mobileOpen ? (
+            <X className="h-6 w-6" />
+          ) : (
+            <Menu className="h-6 w-6" />
+          )}
         </button>
       </div>
 
@@ -115,7 +123,7 @@ export default function NavBar() {
               </Link>
             ))}
             <Link
-              href="/register"
+              href="/login"
               onClick={() => setMobileOpen(false)}
               className="mt-2 inline-flex items-center justify-center gap-2 rounded-md bg-rental-primary px-4 py-3 font-semibold text-white transition hover:bg-orange-600"
             >
