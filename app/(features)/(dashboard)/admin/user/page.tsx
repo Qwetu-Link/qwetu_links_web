@@ -1,5 +1,5 @@
-import PageUnderDevelopment from '@/app/comming-soon';
+import StaffManagement from "./_components/StaffManagement";
 
 export default function Page() {
-  return <PageUnderDevelopment title="Users Page" />;
+  return <StaffManagement />;
 }
