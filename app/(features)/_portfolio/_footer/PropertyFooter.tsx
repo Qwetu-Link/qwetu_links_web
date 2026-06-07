@@ -3,7 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { footerContacts, propertyListings } from "../_component/propertyData";
+import { footerContacts } from "../_component/propertyData";
+import { seededProperties } from "../../(dashboard)/admin/property/definations";
 
 const quickLinks = [
   { label: "About Us", href: "/#about" },
@@ -111,16 +112,16 @@ export default function PropertyFooter() {
             Photo Gallery
           </h3>
           <div className="grid grid-cols-3 gap-2">
-            {propertyListings.map((property) => (
+            {seededProperties.map((property) => (
               <Link
-                key={property.id}
+                key={property.slug}
                 href={`/property/${property.slug}`}
-                aria-label={`View ${property.title}`}
+                aria-label={`View ${property.name}`}
                 className="relative aspect-square overflow-hidden rounded-md bg-white p-1"
               >
                 <Image
                   src={property.image}
-                  alt={property.title}
+                  alt={property.name}
                   fill
                   sizes="100px"
                   className="object-cover p-1"

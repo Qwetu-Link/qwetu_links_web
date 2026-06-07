@@ -4,8 +4,9 @@ import { CalendarCheck, Eye, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { propertyListings, propertyStats } from "../propertyData";
+import { propertyStats } from "../propertyData";
 import type { PropertyFilters } from "./propertyPage";
+import { seededProperties } from "@/app/(features)/(dashboard)/admin/property/definations";
 
 const tabs = [
   { label: "Featured", value: "featured" },
@@ -28,16 +29,18 @@ export default function PropertyListing({
   const visibleListings = useMemo(() => {
     const keyword = filters.keyword.trim().toLowerCase();
 
-    const filteredListings = propertyListings.filter((property) => {
+    const filteredListings = seededProperties.filter((property) => {
       const matchesTab =
-        activeTab === "featured" || property.category === activeTab;
-      const matchesType = !filters.type || property.type === filters.type;
+        activeTab === "featured" || property.apartment_type === activeTab;
+      const matchesType =
+        !filters.apartment_type ||
+        property.apartment_type === filters.apartment_type;
       const matchesCounty =
         !filters.county ||
         property.location.toLowerCase().includes(filters.county.toLowerCase());
       const matchesKeyword =
         !keyword ||
-        [property.title, property.type, property.location]
+        [property.name, property.apartment_type, property.location]
           .join(" ")
           .toLowerCase()
           .includes(keyword);
@@ -59,9 +62,9 @@ export default function PropertyListing({
               Property Listing
             </h2>
             <p className="mt-4 text-slate-600">
-              Discover featured properties available for rent, with
-              clear pricing, location details, and the essential amenities you
-              need to compare options quickly.
+              Discover featured properties available for rent, with clear
+              pricing, location details, and the essential amenities you need to
+              compare options quickly.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -85,66 +88,75 @@ export default function PropertyListing({
         {visibleListings.length > 0 ? (
           <div className="grid gap-7 md:grid-cols-2 lg:grid-cols-3">
             {visibleListings.map((property) => (
-            <article
-              key={property.id}
-              className="overflow-hidden rounded-md bg-white shadow-sm ring-1 ring-rental-border transition hover:-translate-y-1 hover:shadow-lg"
-            >
-              <div className="relative h-64 overflow-hidden">
-                <Image
-                  src={property.image}
-                  alt={property.title}
-                  fill
-                  sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                  className="object-cover transition duration-500 hover:scale-105"
-                  unoptimized
-                />
-                <span className="absolute left-4 top-4 rounded-md bg-rental-primary px-3 py-1 text-sm font-medium text-white">
-                  {property.status}
-                </span>
-                <span className="absolute bottom-0 left-4 rounded-t-md bg-white px-3 py-1 text-sm font-medium text-rental-primary">
-                  {property.type}
-                </span>
-              </div>
-              <div className="p-6 pb-4">
-                <p className="mb-3 text-xl font-bold text-rental-primary">
+              <article
+                key={property.slug}
+                className="overflow-hidden rounded-md bg-white shadow-sm ring-1 ring-rental-border transition hover:-translate-y-1 hover:shadow-lg"
+              >
+                <div className="relative h-64 overflow-hidden">
+                  <Image
+                    src={property.image}
+                    alt={property.name}
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover transition duration-500 hover:scale-105"
+                    unoptimized
+                  />
+                  <span className="absolute left-4 top-4 rounded-md bg-rental-primary px-3 py-1 text-sm font-medium text-white">
+                    {property.status}
+                  </span>
+                  <span className="absolute bottom-0 left-4 rounded-t-md bg-white px-3 py-1 text-sm font-medium text-rental-primary">
+                    {property.apartment_type}
+                  </span>
+                </div>
+                <div className="p-6 pb-4">
+                  {/* <p className="mb-3 text-xl font-bold text-rental-primary">
                   {property.price}/month
-                </p>
-                <h3 className="mb-3 text-lg font-bold text-brand-dark">
-                  {property.title}
-                </h3>
-                <p className="flex items-center gap-2 text-sm text-slate-600">
-                  <MapPin className="h-4 w-4 text-rental-primary" />
-                  {property.location}
-                </p>
-              </div>
-              <div className="grid grid-cols-3 border-t border-rental-border text-sm text-slate-600">
-                {propertyStats.map((stat) => (
-                  <div
-                    key={stat.key}
-                    className="flex items-center justify-center gap-2 border-r border-rental-border px-2 py-3 last:border-r-0"
+                </p> */}
+                  <h3 className="mb-3 text-lg font-bold text-brand-dark">
+                    {property.name}
+                  </h3>
+                  <p className="flex items-center gap-2 text-sm text-slate-600">
+                    <MapPin className="h-4 w-4 text-rental-primary" />
+                    {property.location}
+                  </p>
+                </div>
+                <div className="grid grid-cols-3 border-t border-rental-border text-sm text-slate-600">
+                  {propertyStats.map((stat) => (
+                    <div
+                      key={stat.key}
+                      className="flex items-center justify-center gap-2 border-r border-rental-border px-2 py-3 last:border-r-0"
+                    >
+                      <stat.icon className="h-4 w-4 shrink-0 text-rental-primary" />
+                      <span>
+                        {
+                          property[
+                            stat.key as
+                              | "square_meters"
+                              | "bedrooms"
+                              | "bathrooms"
+                          ]
+                        }
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-2 gap-3 border-t border-rental-border p-4">
+                  <Link
+                    href={`/property/${property.slug}`}
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-rental-primary px-3 text-sm font-semibold text-rental-primary transition hover:bg-rental-bg-light"
                   >
-                    <stat.icon className="h-4 w-4 shrink-0 text-rental-primary" />
-                    <span>{property[stat.key as "size" | "beds" | "baths"]}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="grid grid-cols-2 gap-3 border-t border-rental-border p-4">
-                <Link
-                  href={`/property/${property.slug}`}
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-rental-primary px-3 text-sm font-semibold text-rental-primary transition hover:bg-rental-bg-light"
-                >
-                  <Eye className="h-4 w-4" />
-                  View Details
-                </Link>
-                <button
-                  type="button"
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-rental-primary px-3 text-sm font-semibold text-white transition hover:bg-orange-600"
-                >
-                  <CalendarCheck className="h-4 w-4" />
-                  Book
-                </button>
-              </div>
-            </article>
+                    <Eye className="h-4 w-4" />
+                    View Details
+                  </Link>
+                  <button
+                    type="button"
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-rental-primary px-3 text-sm font-semibold text-white transition hover:bg-orange-600"
+                  >
+                    <CalendarCheck className="h-4 w-4" />
+                    Book
+                  </button>
+                </div>
+              </article>
             ))}
           </div>
         ) : (
@@ -161,12 +173,12 @@ export default function PropertyListing({
 
         {showBrowseMore && (
           <div className="mt-12 text-center">
-          <Link
-            href="/property"
-            className="rounded-md bg-rental-primary px-8 py-3 font-semibold text-white transition hover:bg-orange-600"
-          >
-            Browse More Property
-          </Link>
+            <Link
+              href="/property"
+              className="rounded-md bg-rental-primary px-8 py-3 font-semibold text-white transition hover:bg-orange-600"
+            >
+              Browse More Property
+            </Link>
           </div>
         )}
       </div>

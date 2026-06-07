@@ -9,7 +9,7 @@ import PropertyPageHeroSection from "../_portfolio/_component/_propertylisting/P
 export default function PropertyPage() {
   const [filters, setFilters] = useState<PropertyFilters>({
     keyword: "",
-    type: "",
+    apartment_type: "",
     county: "",
   });
   return (

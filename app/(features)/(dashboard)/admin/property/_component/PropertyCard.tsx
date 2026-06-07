@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Box, Edit, Gauge, MapPin, Trash2 } from "lucide-react";
 import { Property } from "../definations";
 
@@ -42,7 +43,7 @@ export default function PropertyCard({ property, onDelete }: Props) {
           </h3>
         </div>
 
-        <p className="text-sm text-gray-500 mb-3">{property.type}</p>
+        <p className="text-sm text-gray-500 mb-3">{property.apartment_type}</p>
         <p className="mb-3 flex items-center gap-1.5 text-sm text-gray-500">
           <MapPin size={14} className="shrink-0 text-blue-500" />
           {property.location}
@@ -52,27 +53,27 @@ export default function PropertyCard({ property, onDelete }: Props) {
           <div className="flex items-center gap-1.5">
             <Box size={14} className="text-gray-400" />
             <span className="text-sm font-medium text-gray-800">
-              {property.units} units
+              {property.unit} units
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <Gauge size={14} className="text-blue-500" />
             <span className="text-sm font-medium text-gray-800">
-              {property.occupancyRate}% occupied
+              {property.occupany_rate}% occupied
             </span>
           </div>
         </div>
 
         {/* Actions */}
         <div className="flex gap-2">
-          <button
-            // onClick={}
+          <Link
+            href={`/admin/property/${property.slug}/edit`}
             className="flex-1 px-3 py-2 text-sm text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition font-medium flex items-center justify-center gap-1"
           >
             <Edit size={14} /> Edit
-          </button>
+          </Link>
           <button
-            onClick={() => onDelete(property.id, property.name)}
+            onClick={() => onDelete(property.slug, property.name)}
             className="flex-1 px-3 py-2 text-sm text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition font-medium flex items-center justify-center gap-1"
           >
             <Trash2 size={14} /> Delete

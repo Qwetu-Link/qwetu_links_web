@@ -1,11 +1,17 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
+import Link from "next/link";
 import CatalogStatsCards from "./CatalogStatsCards";
 import PropertyCard from "./PropertyCard";
 import Pagination from "./Pagination";
-import { Building2, Package, Search } from "lucide-react";
-import { Property, PropertyFilters, PropertyStatus } from "../definations";
+import { Building2, Package, Plus, Search } from "lucide-react";
+import {
+  Property,
+  PropertyFilters,
+  PropertyStatus,
+  seededProperties,
+} from "../definations";
 import DeleteModal from "@/components/deletemodal/DeleteModal";
 
 const STATUSES: PropertyStatus[] = [
@@ -14,45 +20,12 @@ const STATUSES: PropertyStatus[] = [
   "Maintenance",
 ];
 
-const dummyProperties: Property[] = [
-  {
-    id: "1",
-    name: "Ultra Modern Apartment with City View",
-    status: "Occupied",
-    type: "2 Bed, 2 Bath in Downtown",
-    location: "Riverside, Nairobi",
-    units: 12,
-    occupancyRate: 92,
-    image:
-      "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    id: "2",
-    name: "Garden Court Studio Residences",
-    status: "Unoccupied",
-    type: "Studio and 1 Bed Apartments",
-    location: "Kilimani, Nairobi",
-    units: 24,
-    occupancyRate: 58,
-    image:
-      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    id: "3",
-    name: "Westlands Executive Suites",
-    status: "Maintenance",
-    type: "Serviced Apartment Block",
-    location: "Westlands, Nairobi",
-    units: 18,
-    occupancyRate: 74,
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80",
-  },
-];
-
 export default function PropertyCatalog() {
-  const [properties, setProperties] = useState<Property[]>(dummyProperties);
-  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+  const [properties, setProperties] = useState<Property[]>(seededProperties);
+  const [deleteTarget, setDeleteTarget] = useState<{
+    slug: string;
+    name: string;
+  } | null>(null);
   const [filters, setFilters] = useState<PropertyFilters>({
     search: "",
     status: "all",
@@ -68,7 +41,8 @@ export default function PropertyCatalog() {
         (property) =>
           property.name.toLowerCase().includes(s) ||
           property.status.toLowerCase().includes(s) ||
-          property.type.toLowerCase().includes(s) ||
+          property.apartment_type.toLowerCase().includes(s) ||
+          property.address.toLowerCase().includes(s) ||
           property.location.toLowerCase().includes(s),
       );
     }
@@ -91,7 +65,7 @@ export default function PropertyCatalog() {
 
   const handleDeleteConfirm = useCallback(() => {
     if (!deleteTarget) return;
-    setProperties((prev) => prev.filter((p) => p.id !== deleteTarget.id));
+    setProperties((prev) => prev.filter((p) => p.slug !== deleteTarget.slug));
     setDeleteTarget(null);
   }, [deleteTarget]);
 
@@ -107,6 +81,13 @@ export default function PropertyCatalog() {
             Manage your property portfolio, occupancy, and units
           </p>
         </div>
+        <Link
+          href="/admin/property/new"
+          className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-orange-500 px-4 text-sm font-semibold text-white transition hover:bg-orange-600 sm:w-auto"
+        >
+          <Plus size={16} />
+          Add Property
+        </Link>
       </div>
 
       <CatalogStatsCards />
@@ -160,9 +141,9 @@ export default function PropertyCatalog() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {paginated.map((property) => (
             <PropertyCard
-              key={property.id}
+              key={property.slug}
               property={property}
-              onDelete={(id, name) => setDeleteTarget({ id, name })}
+              onDelete={(slug, name) => setDeleteTarget({ slug, name })}
             />
           ))}
         </div>

@@ -1,6 +1,7 @@
 import { Search } from "lucide-react";
-import { kenyaCounties, propertyListings } from "../propertyData";
+import { kenyaCounties} from "../propertyData";
 import type { PropertyFilters } from "./propertyPage";
+import { seededProperties } from "@/app/(features)/(dashboard)/admin/property/definations";
 
 type PropertySearchProps = {
   filters: PropertyFilters;
@@ -8,7 +9,7 @@ type PropertySearchProps = {
 };
 
 const propertyTypes = Array.from(
-  new Set(propertyListings.map((property) => property.type)),
+  new Set(seededProperties.map((property) => property.apartment_type)),
 );
 
 export default function PropertySearch({
@@ -60,8 +61,8 @@ export default function PropertySearch({
               Property Type
             </span>
             <select
-              value={filters.type}
-              onChange={(event) => updateFilter("type", event.target.value)}
+              value={filters.apartment_type}
+              onChange={(event) => updateFilter("apartment_type", event.target.value)}
               className="h-12 w-full rounded-md border border-rental-border bg-rental-bg-light px-4 text-sm text-brand-dark outline-none focus:border-rental-primary focus:bg-white"
             >
               <option value="">All Types</option>

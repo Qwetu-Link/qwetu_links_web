@@ -7,14 +7,14 @@ import PropertyServices from "./PropertyServices";
 
 export type PropertyFilters = {
   keyword: string;
-  type: string;
+  apartment_type: string;
   county: string;
 };
 
 export default function PropertyPage({ listingLimit }: { listingLimit?: number }) {
   const filters: PropertyFilters = {
     keyword: "",
-    type: "",
+    apartment_type: "",
     county: "",
   };
 
