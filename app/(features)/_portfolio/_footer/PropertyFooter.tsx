@@ -41,6 +41,7 @@ const hiddenRoutes = [
   "/verify-email",
   "/help/",
   "/setup-business",
+  "/qwetulinks",
 ];
 
 export default function PropertyFooter() {

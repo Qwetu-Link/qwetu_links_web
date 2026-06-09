@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { RegisterFormData, registerSchema } from "@/app/lib/zod";
+import { RegisterFormData, registerSchema } from "@/app/lib/auth.zod";
 import {
   AlertCircle,
   Building2,

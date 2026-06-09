@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { loginSchema } from "@/app/lib/zod";
+import { loginSchema } from "@/app/lib/auth.zod";
 import { AlertCircle, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { useAuthStore } from "@/app/stores/useAuthStore";
 import { useLogin } from "../../auth.services";

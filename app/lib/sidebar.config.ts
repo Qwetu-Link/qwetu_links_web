@@ -125,6 +125,24 @@ export const links = {
     },
   ],
 
+  qwetulinks: [
+    {
+      icon: LayoutGrid,
+      label: "Dashboard",
+      href: "/dashboard",
+    },
+    {
+      icon: Users,
+      label: "Users",
+      href: "/qwetulinks/accounts",
+    },
+    {
+      icon: CreditCard,
+      label: "Payments",
+      href: "/qwetulinks/payments",
+    },
+  ],
+
   caretaker: [
     {
       icon: LayoutGrid,
@@ -207,6 +225,19 @@ export const helpLinks = {
   ],
 
   staff: [
+    {
+      icon: Headphones,
+      label: "Support",
+      href: "/help/support",
+    },
+    {
+      icon: Settings,
+      label: "Settings",
+      href: "/help/settings",
+    },
+  ],
+
+  qwetulinks: [
     {
       icon: Headphones,
       label: "Support",

@@ -9,7 +9,7 @@ import { AxiosError } from "axios";
 import {
   ForgotPasswordFormData,
   forgotPasswordSchema,
-} from "@/app/lib/zod";
+} from "@/app/lib/auth.zod";
 import { useForgotPassword } from "../../auth.services";
 
 type ApiErrorResponse = {

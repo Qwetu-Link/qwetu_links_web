@@ -9,7 +9,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import {
   ResetPasswordFormData,
   resetPasswordSchema,
-} from "@/app/lib/zod";
+} from "@/app/lib/auth.zod";
 import OtpInput from "../../_components/OtpInput";
 import { useResetPassword } from "../../auth.services";
 import { AxiosError } from "axios";

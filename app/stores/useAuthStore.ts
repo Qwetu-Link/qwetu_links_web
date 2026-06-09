@@ -68,7 +68,7 @@ export const useAuthStore = create<AuthState>()(
       getRedirectPath: () => {
         const { user } = get();
         if (!user) return "/login";
-        return getDashboardForRole(user.role);
+        return getDashboardForRole(user.userType);
       },
     }),
     {

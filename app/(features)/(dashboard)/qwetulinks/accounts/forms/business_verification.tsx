@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, CheckCircle2, Loader2, MailCheck } from "lucide-react";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -10,8 +9,8 @@ import {
   VerifyEmailFormData,
   verifyEmailSchema,
 } from "@/app/lib/auth.zod";
-import OtpInput from "../../_components/OtpInput";
-import { useVerifyEmail } from "../../auth.services";
+import { useVerifyEmail } from "../business.service";
+import OtpInput from "@/app/(features)/(auth)/_components/OtpInput";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -38,7 +37,7 @@ export default function VerifyEmailForm() {
   useEffect(() => {
     if (status !== "success") return;
     if (countdown === 0) {
-      router.replace("/login");
+      router.replace("/qwetulinks/accounts");
       return;
     }
     const timer = setTimeout(() => setCountdown((current) => current - 1), 1000);
@@ -58,7 +57,7 @@ export default function VerifyEmailForm() {
       {
         onSuccess: () => {
           setStatus("success");
-          setMessage("Your email has been verified successfully.");
+          setMessage("The business email has been verified successfully.");
         },
         onError: (err: unknown) => {
           const error = err as { response?: { data?: { message?: string } } };
@@ -79,15 +78,15 @@ export default function VerifyEmailForm() {
     >
       <div className="mb-6">
         <p className="text-sm font-semibold uppercase tracking-wide text-rental-primary">
-          Verify email
+          Verify business email
         </p>
         <h1 className="mt-2 text-2xl font-bold text-brand-dark">
           Enter your 6-digit code
         </h1>
         <p className="mt-2 text-sm leading-6 text-slate-500">
-          We sent a verification code to{" "}
+          Enter the verification code sent to{" "}
           <span className="font-semibold text-brand-dark">
-            {email || "your email"}
+            {email || "the business email"}
           </span>
           .
         </p>
@@ -133,8 +132,8 @@ export default function VerifyEmailForm() {
             <div>
               <p className="font-semibold text-green-800">Email verified</p>
               <p className="mt-1 text-sm text-green-700">{message}</p>
-              <p className="mt-1 text-sm text-green-700">
-                Redirecting to login in {countdown}s.
+              <p className="mt-1 text-xs text-green-700">
+                Returning to business accounts in {countdown}s.
               </p>
             </div>
           </div>
@@ -158,16 +157,6 @@ export default function VerifyEmailForm() {
           </>
         )}
       </button>
-
-      <div className="mt-4 flex flex-col gap-2 text-center text-sm text-slate-500">
-        <p>Didn&apos;t receive the code? Check spam or request a new one.</p>
-        <Link
-          href="/login"
-          className="font-semibold text-rental-primary underline-offset-4 hover:underline"
-        >
-          Back to login
-        </Link>
-      </div>
     </form>
   );
 }

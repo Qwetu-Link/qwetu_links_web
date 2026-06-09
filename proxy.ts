@@ -26,7 +26,7 @@ function isPublicPath(pathname: string): boolean {
 }
 
 interface PersistedAuthState {
-  user: { role: Role } | null;
+  user: { userType: Role } | null;
   token: string | null;
 }
 
@@ -59,7 +59,7 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  const userRole = auth.user.role;
+  const userRole = auth.user.userType;
 
   // 3. Role not allowed on this path → redirect to their own dashboard
   if (!isRoleAllowedOnPath(userRole, pathname)) {

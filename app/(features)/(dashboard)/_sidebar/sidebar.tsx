@@ -30,12 +30,13 @@ interface SidebarProps {
   onMobileOpenChange?: (open: boolean) => void;
 }
 
-// Friendly label for each role shown in the profile chip
+// Friendly label for each usertype shown in the profile chip
 const ROLE_LABELS: Record<Role, string> = {
   owner: "Administrator",
-  caretaker: "Caretaker",
+  // caretaker: "Caretaker",
   tenant: "Tenant",
   staff: "Staff",
+  qwetulinks: "Qwetu Links",
 };
 
 const SidebarBody = ({
@@ -57,9 +58,9 @@ const SidebarBody = ({
   const user = useAuthStore((state) => state.user);
   // const logout = useAuthStore((state) => state.logout);
 
-  const role: Role = user?.role ?? "tenant";
-  const mainMenu = links[role];
-  const bottomMenu = helpLinks[role];
+  const usertype: Role = user?.userType ?? "tenant";
+  const mainMenu = links[usertype];
+  const bottomMenu = helpLinks[usertype];
 
   const { mutate: logoutUser, isPending: isLoggingOut } = useLogout();
 
@@ -169,10 +170,7 @@ const SidebarBody = ({
                             : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
                         )}
                       >
-                        <Icon
-                          className="h-4 w-4 shrink-0"
-                          strokeWidth={1.75}
-                        />
+                        <Icon className="h-4 w-4 shrink-0" strokeWidth={1.75} />
                         <span className="flex-1">{item.label}</span>
                         <ChevronDown className="h-4 w-4 shrink-0 transition-transform group-open:rotate-180" />
                       </summary>
@@ -295,7 +293,7 @@ const SidebarBody = ({
             </button>
           </div>
         ) : (
-          // Expanded: show name, role badge, logout button
+          // Expanded: show name, usertype badge, logout button
           <div className="flex items-center justify-between gap-2">
             <div className="flex min-w-0 items-center gap-2">
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xs font-semibold text-foreground">
@@ -306,7 +304,7 @@ const SidebarBody = ({
                   {user?.name ?? "User"}
                 </p>
                 <p className="text-[11px] text-muted-foreground">
-                  {ROLE_LABELS[role]}
+                  {ROLE_LABELS[usertype]}
                 </p>
               </div>
             </div>

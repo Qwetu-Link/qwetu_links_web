@@ -21,7 +21,7 @@ export default function MaintenanceRedirect({
       return;
     }
 
-    router.replace(`${getMaintenanceForRole(user.role)}${suffix}`);
+    router.replace(`${getMaintenanceForRole(user.userType)}${suffix}`);
   }, [router, suffix, user]);
 
   return null;

@@ -1,11 +1,11 @@
 // validations and types
-export type Role = "owner" | "staff" | "caretaker" | "tenant" | "qwetulinks";
+export type Role = "owner" | "staff" | "tenant" | "qwetulinks";
 
 export type User = {
   id: string;
   name: string;
   email: string;
-  role: Role;
+  userType: Role;
   isActive: boolean;
   businessID: string;
   staff: [];

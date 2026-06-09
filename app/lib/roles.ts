@@ -1,45 +1,46 @@
 import { Role } from "@/app/(features)/(auth)/definitions";
 
-// Where each role lands after login
-export const ROLE_DASHBOARDS: Record<Role, string> = {
+// Where each user type lands after login
+export const USER_TYPE_DASHBOARDS: Record<Role, string> = {
   owner: "/dashboard",
   staff: "/dashboard",
-  caretaker: "/dashboard",
+  // caretaker: "/dashboard",
   tenant: "/dashboard",
-  
+  qwetulinks: "/dashboard",
 };
 
-export const ROLE_MAINTENANCE_PATHS: Record<Role, string> = {
+export const USER_TYPE_MAINTENANCE_PATHS: Record<Role, string> = {
   owner: "/admin/maintenance",
   staff: "/landlord/maintenance",
-  caretaker: "/caretaker/maintenance",
+  // caretaker: "/caretaker/maintenance",
   tenant: "/tenant/maintenance",
+  qwetulinks: "/dashboard",
 };
 
-// Which roles are permitted on each path prefix
-// More permissive roles listed first
-export const ROLE_PATH_PERMISSIONS: Record<string, Role[]> = {
-  "/dashboard": ["owner", "staff", "caretaker", "tenant"],
-  "/maintenance": ["owner", "staff", "caretaker", "tenant"],
+
+export const USER_TYPE_PATH_PERMISSIONS: Record<string, Role[]> = {
+  "/dashboard": ["owner", "staff", "tenant", "qwetulinks"],
+  "/maintenance": ["owner", "staff", "tenant"],
   "/admin": ["owner"],
   "/landlord": ["staff"],
-  "/caretaker": ["caretaker"],
+  // "/caretaker": ["caretaker"],
   "/tenant": ["tenant"],
-  "/help": ["owner", "staff", "caretaker", "tenant"],
+  "/qwetulinks": ["qwetulinks"],
+  "/help": ["owner", "staff", "tenant", "qwetulinks"],
 };
 
-export function getDashboardForRole(role: Role): string {
-  return ROLE_DASHBOARDS[role] ?? "/login";
+export function getDashboardForRole(usertype: Role): string {
+  return USER_TYPE_DASHBOARDS[usertype] ?? "/login";
 }
 
-export function getMaintenanceForRole(role: Role): string {
-  return ROLE_MAINTENANCE_PATHS[role] ?? "/dashboard";
+export function getMaintenanceForRole(usertype: Role): string {
+  return USER_TYPE_MAINTENANCE_PATHS[usertype] ?? "/dashboard";
 }
 
-export function isRoleAllowedOnPath(role: Role, pathname: string): boolean {
-  for (const [prefix, allowedRoles] of Object.entries(ROLE_PATH_PERMISSIONS)) {
+export function isRoleAllowedOnPath(usertype: Role, pathname: string): boolean {
+  for (const [prefix, allowedUser] of Object.entries(USER_TYPE_PATH_PERMISSIONS)) {
     if (pathname.startsWith(prefix)) {
-      return allowedRoles.includes(role);
+      return allowedUser.includes(usertype);
     }
   }
   // No rule matched — allow (public/unprotected path)
