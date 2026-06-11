@@ -14,25 +14,25 @@ import {
   ShieldCheck,
   Store,
 } from "lucide-react";
-import { Business, seededBusinesses } from "../definations";
-import { useBusiness } from "../business.service";
+// import { Business } from "../definations";/
+import { useBizDetails } from "../business.service";
 
-function findSeededBusiness(id: string) {
-  const decodedId = decodeURIComponent(id);
+// function findSeededBusiness(id: string) {
+//   const decodedId = decodeURIComponent(id);
 
-  return (
-    seededBusinesses.find(
-      (business) =>
-        String(business.id) === decodedId ||
-        business.slug === decodedId ||
-        business.email === decodedId,
-    ) ?? {
-      ...seededBusinesses[0],
-      id: decodedId,
-      slug: decodedId,
-    }
-  );
-}
+//   return (
+//     seededBusinesses.find(
+//       (business) =>
+//         String(business.id) === decodedId ||
+//         business.slug === decodedId ||
+//         business.email === decodedId,
+//     ) ?? {
+//       ...seededBusinesses[0],
+//       id: decodedId,
+//       slug: decodedId,
+//     }
+//   );
+// }
 
 function DetailItem({
   label,
@@ -45,7 +45,11 @@ function DetailItem({
     <div className="min-w-0 rounded-lg border border-orange-100 bg-slate-50 p-3">
       <p className="text-xs font-semibold uppercase text-slate-400">{label}</p>
       <p className="mt-1 break-words text-sm font-medium text-slate-900">
-        {typeof value === "boolean" ? (value ? "Yes" : "No") : value || "Not set"}
+        {typeof value === "boolean"
+          ? value
+            ? "Yes"
+            : "No"
+          : value || "Not set"}
       </p>
     </div>
   );
@@ -76,11 +80,30 @@ function DetailSection({
     </section>
   );
 }
+type BusinessProps = {
+  id: string;
+};
+export default function AccDetails({ id }: BusinessProps) {
+  const { data: business, isError, isLoading,error } = useBizDetails(id);
+  // const business: Business = data ?? findSeededBusiness(businessId);
+  // const editId = encodeURIComponent(String(business.id ?? business.slug));
+  console.log("Business Data", business);
+  console.log({
+  id,
+  business,
+  isLoading,
+  isError,
+  
+});
+console.log(error);
 
-export default function AccDetails({ businessId }: { businessId: string }) {
-  const { data, isError } = useBusiness(decodeURIComponent(businessId));
-  const business: Business = data ?? findSeededBusiness(businessId);
-  const editId = encodeURIComponent(String(business.id ?? business.slug));
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!business) {
+    return <div>Business not found</div>;
+  }
 
   return (
     <div className="min-h-full bg-slate-50 p-3 sm:p-5 lg:p-6">
@@ -123,7 +146,7 @@ export default function AccDetails({ businessId }: { businessId: string }) {
           </div>
 
           <Link
-            href={`/qwetulinks/accounts/${editId}/edit`}
+            href={`/qwetulinks/accounts/${business.id}/edit`}
             className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-orange-500 px-4 text-sm font-semibold text-white transition hover:bg-orange-600 sm:w-auto"
           >
             <Edit3 size={16} />
@@ -229,7 +252,11 @@ export default function AccDetails({ businessId }: { businessId: string }) {
             Website
           </a>
           <div className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-orange-100 bg-white px-4 text-sm font-semibold text-slate-700">
-            {business.is_verified ? <BadgeCheck size={16} /> : <MapPin size={16} />}
+            {business.is_verified ? (
+              <BadgeCheck size={16} />
+            ) : (
+              <MapPin size={16} />
+            )}
             {business.is_verified ? "Verified" : "Pending"}
           </div>
         </div>

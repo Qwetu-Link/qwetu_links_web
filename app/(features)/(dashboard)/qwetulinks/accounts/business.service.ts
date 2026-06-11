@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  getBusiness,
+  getBizDetails,
   getBusinesses,
-  registerUser,
+  registerBiz,
   updateBusiness,
   verifyEmail,
 } from "./business.endpoints";
@@ -13,18 +13,21 @@ export const businessQueryKeys = {
   detail: (id: string) => [...businessQueryKeys.all, "detail", id] as const,
 };
 
+//get all businesses
 export const useBusinesses = () => {
   return useQuery({
     queryKey: businessQueryKeys.list(),
     queryFn: getBusinesses,
+    retry: 2,
   });
 };
 
-export const useBusiness = (id: string) => {
+//get business by id
+export const useBizDetails = (id: string) => {
   return useQuery({
     queryKey: businessQueryKeys.detail(id),
-    queryFn: () => getBusiness(id),
-    enabled: Boolean(id),
+    queryFn: () => getBizDetails(id),
+    enabled:!!id,
   });
 };
 
@@ -35,7 +38,7 @@ export const useRegister = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: registerUser,
+    mutationFn: registerBiz,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: businessQueryKeys.all });
     },

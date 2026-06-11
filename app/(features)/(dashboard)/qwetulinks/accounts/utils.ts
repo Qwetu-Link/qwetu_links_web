@@ -1,5 +1,5 @@
 import { BusinessFormValues, businessSchema } from "@/app/lib/acc.zod";
-import { Business, emptyBusiness, seededBusinesses } from "./definations";
+import { Business, emptyBusiness } from "./definations";
 
 export function getBusinessFormSchema(mode: "add" | "edit") {
   return businessSchema.superRefine((data, ctx) => {
@@ -66,17 +66,20 @@ export const sectionFields = [
 ] as const;
 
 
-export function getSeededBusiness(id?: string) {
-  if (!id) return undefined;
-  const decodedId = decodeURIComponent(id);
 
-  return seededBusinesses.find(
-    (business) =>
-      String(business.id) === decodedId ||
-      business.slug === decodedId ||
-      business.email === decodedId,
-  );
-}
+// export function getSeededBusiness(id?: string) {
+//   if (!id) return undefined;
+//   const decodedId = decodeURIComponent(id);
+
+//   const { data } = useBizDetails(decodedId) || {};
+
+//   return data?.find(
+//     (business : Business) =>
+//       String(business.id) === decodedId ||
+//       business.slug === decodedId ||
+//       business.email === decodedId,
+//   );
+// }
 
 export function getDefaults(business?: Business): BusinessFormValues {
   const source = business ?? emptyBusiness;

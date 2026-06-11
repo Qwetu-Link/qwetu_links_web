@@ -23,12 +23,14 @@ export const getBusinesses = async (): Promise<Business[]> => {
   return payload.results ?? payload.data ?? [];
 };
 
-export const getBusiness = async (id: string): Promise<Business> => {
+export const getBizDetails = async (id: string): Promise<Business> => {
   const response = await api.get<Business>(`${BIZ_URL}/${id}`);
+  console.log("Test getBiz service", response);
   return response.data;
+  
 };
 
-export const registerUser = async (
+export const registerBiz = async (
   data: RegisterBusinessFormInputs,
 ): Promise<AuthResponse> => {
   const response = await api.post(BIZ_URL, data);

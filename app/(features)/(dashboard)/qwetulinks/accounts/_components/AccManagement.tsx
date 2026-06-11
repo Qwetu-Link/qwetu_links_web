@@ -5,8 +5,6 @@ import Link from "next/link";
 import {
   Building2,
   CheckCircle2,
-  Edit3,
-  Eye,
   Globe,
   Mail,
   MapPin,
@@ -17,40 +15,16 @@ import {
   Store,
   XCircle,
 } from "lucide-react";
-import { Business, seededBusinesses } from "../definations";
+import { Business } from "../definations";
 import { useBusinesses } from "../business.service";
+import { StatCard } from "./StatCard";
+import { StatusPills } from "./AccStatusPill";
+import { BusinessActions } from "./ActionBtns";
 
 function businessKey(business: Business) {
   return String(business.id ?? business.slug ?? business.email);
 }
 
-function businessHrefId(business: Business) {
-  return encodeURIComponent(String(business.id ?? business.slug));
-}
-
-function StatCard({
-  label,
-  value,
-  icon: Icon,
-}: {
-  label: string;
-  value: string | number;
-  icon: typeof Store;
-}) {
-  return (
-    <div className="rounded-lg border border-orange-100 bg-white p-4 shadow-sm">
-      <div className="flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <p className="truncate text-sm text-slate-500">{label}</p>
-          <p className="mt-1 text-2xl font-bold text-slate-950">{value}</p>
-        </div>
-        <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-orange-50 text-orange-600">
-          <Icon size={19} />
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function BusinessIdentity({ business }: { business: Business }) {
   const initials = business.name.slice(0, 2).toUpperCase();
@@ -60,7 +34,9 @@ function BusinessIdentity({ business }: { business: Business }) {
       <div
         className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-blue-50 bg-cover bg-center text-sm font-bold text-blue-600 ring-1 ring-orange-100"
         style={
-          business.avatar ? { backgroundImage: `url("${business.avatar}")` } : undefined
+          business.avatar
+            ? { backgroundImage: `url("${business.avatar}")` }
+            : undefined
         }
       >
         {!business.avatar && initials}
@@ -77,58 +53,11 @@ function BusinessIdentity({ business }: { business: Business }) {
   );
 }
 
-function StatusPills({ business }: { business: Business }) {
-  return (
-    <div className="flex flex-wrap gap-2">
-      <span
-        className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${
-          business.is_active
-            ? "bg-emerald-50 text-emerald-700"
-            : "bg-slate-100 text-slate-600"
-        }`}
-      >
-        {business.is_active ? "Active" : "Inactive"}
-      </span>
-      <span
-        className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${
-          business.is_verified
-            ? "bg-blue-50 text-blue-700"
-            : "bg-amber-50 text-amber-700"
-        }`}
-      >
-        {business.is_verified ? "Verified" : "Pending"}
-      </span>
-    </div>
-  );
-}
-
-function BusinessActions({ business }: { business: Business }) {
-  const id = businessHrefId(business);
-
-  return (
-    <div className="flex gap-2 sm:justify-end">
-      <Link
-        href={`/qwetulinks/accounts/${id}`}
-        title="View business"
-        className="inline-flex size-8 items-center justify-center rounded-lg border border-orange-100 text-slate-600 transition hover:bg-orange-50 hover:text-orange-600"
-      >
-        <Eye size={15} />
-      </Link>
-      <Link
-        href={`/qwetulinks/accounts/${id}/edit`}
-        title="Edit business"
-        className="inline-flex size-8 items-center justify-center rounded-lg border border-orange-100 text-slate-600 transition hover:bg-blue-50 hover:text-blue-600"
-      >
-        <Edit3 size={15} />
-      </Link>
-    </div>
-  );
-}
 
 export default function AccManagement() {
   const [query, setQuery] = useState("");
   const { data, isLoading, isError } = useBusinesses();
-  const businesses = data?.length ? data : seededBusinesses;
+  const businesses = useMemo(() => data ?? [], [data]);
 
   const filteredBusinesses = useMemo(() => {
     const search = query.trim().toLowerCase();
@@ -150,7 +79,9 @@ export default function AccManagement() {
     );
   }, [businesses, query]);
 
-  const activeCount = businesses.filter((business) => business.is_active).length;
+  const activeCount = businesses.filter(
+    (business) => business.is_active,
+  ).length;
   const verifiedCount = businesses.filter(
     (business) => business.is_verified,
   ).length;
@@ -180,7 +111,11 @@ export default function AccManagement() {
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard label="Businesses" value={businesses.length} icon={Store} />
           <StatCard label="Active" value={activeCount} icon={ShieldCheck} />
-          <StatCard label="Verified" value={verifiedCount} icon={CheckCircle2} />
+          <StatCard
+            label="Verified"
+            value={verifiedCount}
+            icon={CheckCircle2}
+          />
           <StatCard
             label="Pending"
             value={businesses.length - verifiedCount}
@@ -201,12 +136,6 @@ export default function AccManagement() {
               className="h-10 w-full rounded-lg border border-orange-100 bg-slate-50 pl-10 pr-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             />
           </div>
-          {isError && (
-            <p className="mt-2 text-xs font-medium text-amber-700">
-              Showing local sample accounts because the business API is not
-              available.
-            </p>
-          )}
         </div>
 
         <div className="grid gap-3 xl:hidden">
@@ -333,6 +262,12 @@ export default function AccManagement() {
               Try another search or add a new business account.
             </p>
           </div>
+        )}
+
+        {isError && (
+          <p className="mt-2 text-xs font-medium text-amber-700">
+            Something went wrong , please try again letter
+          </p>
         )}
       </div>
     </div>

@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,12 +10,12 @@ import {
   RegisterBusinessFormInputs,
 } from "../definations";
 import {
-  useBusiness,
+  useBizDetails,
   useRegister,
   useUpdateBusiness,
 } from "../business.service";
 import { BusinessFormValues } from "@/app/lib/acc.zod";
-import { fieldClass, getBusinessFormSchema, getDefaults, getSeededBusiness, sectionFields, textAreaClass } from "../utils";
+import { fieldClass, getBusinessFormSchema, getDefaults, sectionFields, textAreaClass } from "../utils";
 
 export default function RegisterBusinessForm({
   mode = "add",
@@ -27,12 +26,12 @@ export default function RegisterBusinessForm({
 }) {
   const router = useRouter();
   const decodedBusinessId = businessId ? decodeURIComponent(businessId) : "";
-  const { data } = useBusiness(decodedBusinessId);
-  const fallbackBusiness = useMemo(
-    () => getSeededBusiness(businessId),
-    [businessId],
-  );
-  const initialBusiness = data ?? fallbackBusiness;
+  const { data } = useBizDetails(decodedBusinessId);
+  // const fallbackBusiness = useMemo(
+  //   () => getSeededBusiness(businessId),
+  //   [businessId],
+  // );
+  const initialBusiness = data ?? undefined;
   const { mutate: registerBusiness, isPending: isCreating, isError, error } =
     useRegister();
   const { mutate: updateBusiness, isPending: isUpdating } = useUpdateBusiness();
