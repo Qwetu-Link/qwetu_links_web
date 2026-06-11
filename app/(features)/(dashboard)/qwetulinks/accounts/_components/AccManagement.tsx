@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Building2,
-  CheckCircle2,
   Globe,
   Mail,
   MapPin,
@@ -13,7 +12,6 @@ import {
   Search,
   ShieldCheck,
   Store,
-  XCircle,
 } from "lucide-react";
 import { Business } from "../definations";
 import { useBusinesses } from "../business.service";
@@ -80,10 +78,7 @@ export default function AccManagement() {
   }, [businesses, query]);
 
   const activeCount = businesses.filter(
-    (business) => business.is_active,
-  ).length;
-  const verifiedCount = businesses.filter(
-    (business) => business.is_verified,
+    (business) => business.isActive,
   ).length;
 
   return (
@@ -111,16 +106,6 @@ export default function AccManagement() {
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard label="Businesses" value={businesses.length} icon={Store} />
           <StatCard label="Active" value={activeCount} icon={ShieldCheck} />
-          <StatCard
-            label="Verified"
-            value={verifiedCount}
-            icon={CheckCircle2}
-          />
-          <StatCard
-            label="Pending"
-            value={businesses.length - verifiedCount}
-            icon={XCircle}
-          />
         </div>
 
         <div className="rounded-lg border border-orange-100 bg-white p-3 shadow-sm sm:p-4">

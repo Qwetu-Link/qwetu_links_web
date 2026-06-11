@@ -11,16 +11,16 @@ export interface RegisterBusinessFormInputs extends LoginFormInputs {
   website?: string;
   industry?: string;
   description?: string;
-  bank_name?: string;
-  bank_account_number?: string;
-  mpesa_paybill?: string;
-  mpesa_account_number?: string;
-  mpesa_till_no?: string;
+  bankName?: string;
+  bankNccountNumber?: string;
+  mpesaPaybill?: string;
+  mpesaAccountNumber?: string;
+  mpesaTillNo?: string;
   avatar?: string;
 }
 
 export type Business = {
-  id?: string | number;
+  id: string;
   name: string;
   slug: string;
   phone: string;
@@ -28,20 +28,19 @@ export type Business = {
   country?: string;
   city: string;
   address: string;
-  bank_name?: string;
-  bank_account_number?: string;
-  mpesa_paybill?: string;
-  mpesa_account_number?: string;
-  mpesa_till_no?: string;
+  bankName?: string;
+  bankAccountNumber?: string;
+  mpesaPaybill?: string;
+  mpesaAccountNumber?: string;
+  mpesaTillNo?: string;
   industry?: string;
   description?: string;
-  is_active: boolean;
+  isActive: boolean;
   username?: string;
   email: string;
   avatar?: string;
-  is_verified?: boolean;
-  created_at?: string;
-  updated_at?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export const emptyBusiness: Business = {
@@ -53,16 +52,15 @@ export const emptyBusiness: Business = {
   country: "Kenya",
   city: "",
   address: "",
-  bank_name: "",
-  bank_account_number: "",
-  mpesa_paybill: "",
-  mpesa_account_number: "",
-  mpesa_till_no: "",
+  bankName: "",
+  bankAccountNumber: "",
+  mpesaPaybill: "",
+  mpesaAccountNumber: "",
+  mpesaTillNo: "",
   industry: "",
   description: "",
-  is_active: true,
+  isActive: true,
   username: "",
   email: "",
   avatar: "",
-  is_verified: false,
 };
