@@ -1,0 +1,35 @@
+import { api } from "@/lib/axios";
+import { AmenitiesFormValues, AmenitiesResponse, Amenity } from "./definations";
+import { AxiosInstance } from "axios";
+
+const AMENITY_URL = "/businesses/amenities";
+
+export const createAmenity = async (
+    data: AmenitiesFormValues,
+): Promise<Amenity> => {
+    const amenity = await api.post(AMENITY_URL, data);
+    return amenity.data;
+};
+
+export const getAmenities = async (page = 1, apiInstance: AxiosInstance = api,): Promise<AmenitiesResponse> => {
+    const { data } = await apiInstance.get<AmenitiesResponse>(`${AMENITY_URL}?page=${page}`);
+    return data;
+};
+
+export const updateAmenity = async (
+    {
+        id,
+        data,
+    }: {
+        id: string;
+        data: AmenitiesFormValues;
+    }
+): Promise<Amenity> => {
+    const amenity = await api.put(`${AMENITY_URL}/${id}`, data);
+    return amenity.data;
+};
+
+
+export const delAmenity = async ({ id }: { id: string }) => {
+    await api.delete(`${AMENITY_URL}/${id}`);
+};

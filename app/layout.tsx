@@ -8,7 +8,7 @@ import QueryProvider from "@/providers/query-provider";
 import NavBar from "./(features)/_portfolio/_navbar/NavBar";
 import PropertyFooter from "./(features)/_portfolio/_footer/PropertyFooter";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "Qwetu Links",
@@ -18,13 +18,18 @@ export const metadata: Metadata = {
   },
 };
 
+import { Toaster } from "sonner";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("h-full antialiased", "font-sans", geist.variable)}>
+    <html
+      lang="en"
+      className={cn("h-full antialiased", "font-sans", geist.variable)}
+    >
       <body
         className={`${inter.className} min-h-full flex flex-col antialiased`}
       >
@@ -33,6 +38,7 @@ export default function RootLayout({
           {children}
           <PropertyFooter />
         </QueryProvider>
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );

@@ -1,18 +1,14 @@
 "use client";
 
-import {
-  Pencil,
-  Trash2,
-  Tag,
-} from "lucide-react";
+import { Pencil, Trash2, Tag } from "lucide-react";
 import { DynamicIcon, iconNames } from "lucide-react/dynamic";
-import { Amenities } from "../definations";
+import { Amenity } from "../definations";
 
 const DEFAULT_ICON = "tag";
 
 interface Props {
-  amenity: Amenities;
-  onEdit: (amenity: Amenities) => void;
+  amenity: Amenity;
+  onEdit: (amenity: Amenity) => void;
   onDelete: (id: string, name: string) => void;
 }
 
@@ -67,7 +63,7 @@ export default function AmenityCard({ amenity, onEdit, onDelete }: Props) {
         </div>
 
         {/* Action buttons */}
-        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex gap-1 opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100">
           <button
             onClick={() => onEdit(amenity)}
             className="p-2 text-blue-600 hover:bg-blue-50 rounded-full transition"

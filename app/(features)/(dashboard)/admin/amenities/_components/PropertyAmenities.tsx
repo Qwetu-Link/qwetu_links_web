@@ -1,71 +1,44 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Building2, Plus, Search } from "lucide-react";
+import { Building2, PackageSearch, Plus, Search } from "lucide-react";
 import AmenityCard from "./AmenityCard";
 import AmenityModal from "./AmenityModal";
-import { Amenities, AmenitiesFormValues } from "../definations";
+import { AmenitiesFormValues, Amenity } from "../definations";
 import DeleteModal from "@/components/deletemodal/DeleteModal";
-
-const dummyAmenities: Amenities[] = [
-  {
-    id: "1",
-    name: "Parking",
-    category: "General",
-    description: "Dedicated or shared parking space for residents.",
-    icon: "car",
-  },
-  {
-    id: "2",
-    name: "Wi-Fi",
-    category: "Connectivity",
-    description: "Internet connectivity available on the property.",
-    icon: "wifi",
-  },
-  {
-    id: "3",
-    name: "Furnished",
-    category: "Interior",
-    description: "Unit includes essential furniture and fixtures.",
-    icon: "sofa",
-  },
-];
-
-function addAmenity(
-  amenities: Amenities[],
-  values: AmenitiesFormValues,
-): Amenities[] {
-  return [...amenities, { id: crypto.randomUUID(), ...values }];
-}
-
-function updateAmenity(
-  amenities: Amenities[],
-  existingId: string,
-  values: AmenitiesFormValues,
-): Amenities[] {
-  return amenities.map((amenity) =>
-    amenity.id === existingId ? { ...amenity, ...values } : amenity,
-  );
-}
-
-function deleteAmenity(amenities: Amenities[], id: string): Amenities[] {
-  return amenities.filter((amenity) => amenity.id !== id);
-}
+import {
+  useAmenityDel,
+  useCreateAmenity,
+  useGetAmenities,
+  useUpdateAmenity,
+} from "../amenities.services";
+import { toast } from "sonner";
+import Pagination from "@/app/lib/Pagination";
 
 export default function PropertyAmenities() {
-  const [amenities, setAmenities] = useState<Amenities[]>(dummyAmenities);
+  // get amenities
+  const { data: amenities } = useGetAmenities();
+
+  //create and update amenity
+  const createAmenity = useCreateAmenity();
+  const updateAmenity = useUpdateAmenity();
+
+  //delete amenity
+  const deleteAmenity = useAmenityDel();
+
   const [search, setSearch] = useState("");
-  const [editTarget, setEditTarget] = useState<Amenities | null | "new">(null);
+  const [editTarget, setEditTarget] = useState<Amenity | null | "new">(null);
   const [deleteTarget, setDeleteTarget] = useState<{
     id: string;
     name: string;
   } | null>(null);
 
-  const filtered = useMemo(() => {
+  const filtered: Amenity[] = useMemo(() => {
+    const list: Amenity[] = amenities?.data ?? [];
     const query = search.trim().toLowerCase();
-    if (!query) return amenities;
+    if (!query) return list;
 
-    return amenities.filter((amenity) =>
+    return list.filter((amenity) =>
       [amenity.name, amenity.description]
         .join(" ")
         .toLowerCase()
@@ -73,18 +46,55 @@ export default function PropertyAmenities() {
     );
   }, [amenities, search]);
 
-  function handleSave(values: AmenitiesFormValues, existingId?: string) {
-    if (existingId !== undefined) {
-      setAmenities((prev) => updateAmenity(prev, existingId, values));
-    } else {
-      setAmenities((prev) => addAmenity(prev, values));
+  const isSearching = search.trim().length > 0;
+
+  async function handleSave(data: AmenitiesFormValues, existingId?: string) {
+    try {
+      if (existingId) {
+        await updateAmenity.mutateAsync(
+          {
+            id: existingId,
+            data,
+          },
+          {
+            onSuccess: () => {
+              toast.success(`"${data.name}" updated successfully`);
+              setEditTarget(null);
+            },
+          },
+        );
+      } else {
+        await createAmenity.mutateAsync(data, {
+          onSuccess: () => {
+            toast.success(`"${data.name}" added to amenities`);
+            setEditTarget(null);
+          },
+        });
+      }
+    } catch (error) {
+      toast.error(
+        existingId
+          ? "Failed to update amenity. Please try again."
+          : "Failed to add amenity. Please try again.",
+      );
+      throw error;
     }
-    setEditTarget(null);
   }
 
   function handleDeleteConfirm() {
     if (!deleteTarget) return;
-    setAmenities((prev) => deleteAmenity(prev, deleteTarget.id));
+    deleteAmenity.mutate(
+      { id: deleteTarget.id },
+      {
+        onSuccess: () => {
+          toast.success(`"${deleteTarget.name}" deleted successfully`);
+        },
+        onError: () => {
+          toast.error("Failed to delete amenity. Please try again.");
+        },
+      },
+    );
+    // setAmenities((prev) => deleteAmenity(prev, deleteTarget.id));
     setDeleteTarget(null);
   }
 
@@ -120,23 +130,15 @@ export default function PropertyAmenities() {
             className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-4 text-black outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-blue-500"
           />
         </div>
+        {isSearching && (
+          <p className="mt-2 text-xs text-gray-400">
+            Searching within the current page only (
+            {amenities?.data.length ?? 0} items).
+          </p>
+        )}
       </div>
 
-      {filtered.length === 0 ? (
-        <div className="rounded-xl border bg-white py-16 text-center text-gray-400">
-          <p className="mb-3 flex justify-center">
-            <Building2 size={64} className="text-gray-300" />
-          </p>
-          <p className="text-lg font-medium text-gray-500">
-            No amenities found
-          </p>
-          <p className="mt-1 text-sm">
-            {search
-              ? "Try adjusting your search"
-              : 'Click "Add Amenity" to create one'}
-          </p>
-        </div>
-      ) : (
+      {filtered.length > 0 ? (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {filtered.map((amenity) => (
             <AmenityCard
@@ -147,6 +149,54 @@ export default function PropertyAmenities() {
             />
           ))}
         </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-gray-200 bg-white py-16 text-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-blue-500">
+            <PackageSearch size={28} />
+          </div>
+          {isSearching ? (
+            <>
+              <h3 className="text-lg font-semibold text-gray-700">
+                No amenities match &quot;{search}&quot;
+              </h3>
+              <p className="max-w-sm text-sm text-gray-500">
+                Try a different search term, or clear the search to see all
+                amenities.
+              </p>
+              <button
+                onClick={() => setSearch("")}
+                className="mt-1 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
+              >
+                Clear search
+              </button>
+            </>
+          ) : (
+            <>
+              <h3 className="text-lg font-semibold text-gray-700">
+                No amenities yet
+              </h3>
+              <p className="max-w-sm text-sm text-gray-500">
+                Add your first amenity to start showcasing what this property
+                offers.
+              </p>
+              <button
+                onClick={() => setEditTarget("new")}
+                className="mt-1 flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-sky-600 px-5 py-2.5 text-sm font-medium text-white transition hover:shadow-lg"
+              >
+                <Plus size={16} /> Add Amenity
+              </button>
+            </>
+          )}
+        </div>
+      )}
+
+      {!isSearching && amenities && amenities.data.length > 0 && (
+        <Pagination
+          currentPage={amenities.meta.current_page}
+          totalPages={amenities.meta.last_page}
+          total={amenities.meta.total}
+          perPage={amenities.meta.per_page}
+        />
       )}
 
       {editTarget !== null && (

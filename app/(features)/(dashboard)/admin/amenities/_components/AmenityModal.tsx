@@ -1,13 +1,16 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Edit, Plus, Save } from "lucide-react";
+import { useEffect } from "react";
+import { Edit, Loader2, Plus, Save } from "lucide-react";
 import { DynamicIcon, iconNames } from "lucide-react/dynamic";
-import { Amenities, AmenitiesFormValues } from "../definations";
+import { AmenitiesFormValues, Amenity } from "../definations";
+import { AmenityFormValues, amenitySchema } from "../amenity.zod";
+import { useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface Props {
-  amenity: Amenities | null;
-  onSave: (values: AmenitiesFormValues, existingId?: string) => void;
+  amenity: Amenity | null;
+  onSave: (values: AmenityFormValues, existingId?: string) => Promise<void>;
   onClose: () => void;
 }
 
@@ -51,46 +54,40 @@ function getSafeIconName(icon: string) {
 }
 
 export default function AmenityModal({ amenity, onSave, onClose }: Props) {
-  const [name, setName] = useState(amenity?.name ?? "");
-  const [description, setDescription] = useState(amenity?.description ?? "");
-  const [amenityGroup, setAmenityGroup] = useState(
-    amenity?.category ?? "General",
-  );
-  const [icon, setIcon] = useState(
-    amenity ? normalizeIconName(amenity.icon) : DEFAULT_ICON,
-  );
-  const nameRef = useRef<HTMLInputElement>(null);
+  const {
+    formState: { errors, isSubmitting },
+    handleSubmit,
+    register,
+    setValue,
+    control,
+    setFocus,
+  } = useForm<AmenitiesFormValues>({
+    resolver: zodResolver(amenitySchema),
+    defaultValues: {
+      name: amenity?.name ?? "",
+      description: amenity?.description ?? "",
+      icon: amenity?.icon ?? DEFAULT_ICON,
+      category: amenity?.category ?? "General",
+    },
+  });
+
+  const icon = useWatch({ control, name: "icon" });
 
   // Lock background scroll & autofocus
   useEffect(() => {
     document.body.style.overflow = "hidden";
-    nameRef.current?.focus();
+    setFocus("name");
     return () => {
       document.body.style.overflow = "";
     };
-  }, []);
+  }, [setFocus]);
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!name.trim()) return alert("Amenity name is required");
-    onSave(
-      {
-        name: name.trim(),
-        description: description.trim(),
-        category: amenityGroup.trim() || "General",
-        icon: getSafeIconName(icon),
-      },
-      amenity?.id,
-    );
+  async function submitAmenity(values: AmenityFormValues) {
+    await onSave(values, amenity?.id);
   }
 
   return (
-    <div
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl max-w-lg w-full shadow-2xl">
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-5 rounded-t-2xl flex justify-between items-center z-10">
@@ -98,30 +95,25 @@ export default function AmenityModal({ amenity, onSave, onClose }: Props) {
             {amenity ? <Edit /> : <Plus />}{" "}
             {amenity ? "Edit Amenity" : "Add New Amenity"}
           </h3>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition"
-          >
-            ✕
-          </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        <form onSubmit={handleSubmit(submitAmenity)} className="p-6 space-y-5">
           {/* Name */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
               Amenity Name <span className="text-red-500">*</span>
             </label>
             <input
-              ref={nameRef}
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              {...register("name")}
               required
               placeholder="e.g. Parking"
               className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-black placeholder:text-gray-500"
             />
+            {errors.name ? (
+              <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>
+            ) : null}
           </div>
 
           {/* Description */}
@@ -131,8 +123,7 @@ export default function AmenityModal({ amenity, onSave, onClose }: Props) {
               <span className="text-gray-400 font-normal">(optional)</span>
             </label>
             <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              {...register("description")}
               rows={3}
               placeholder="e.g. Dedicated parking space for residents"
               className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none resize-none text-black placeholder:text-gray-500"
@@ -146,8 +137,7 @@ export default function AmenityModal({ amenity, onSave, onClose }: Props) {
             </label>
             <input
               type="text"
-              value={amenityGroup}
-              onChange={(e) => setAmenityGroup(e.target.value)}
+              {...register("category")}
               placeholder="e.g. General, Connectivity, Interior"
               className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-black placeholder:text-gray-500"
             />
@@ -164,8 +154,7 @@ export default function AmenityModal({ amenity, onSave, onClose }: Props) {
             <div className="flex gap-3 items-center">
               <input
                 type="text"
-                value={icon}
-                onChange={(e) => setIcon(e.target.value)}
+                {...register("icon")}
                 placeholder="e.g. car, wifi, sofa"
                 className="flex-1 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-black placeholder:text-gray-500"
               />
@@ -185,7 +174,9 @@ export default function AmenityModal({ amenity, onSave, onClose }: Props) {
                 <button
                   key={value}
                   type="button"
-                  onClick={() => setIcon(value)}
+                  onClick={() =>
+                    setValue("icon", value, { shouldValidate: true })
+                  }
                   title={label}
                   className={`w-9 h-9 rounded-lg flex items-center justify-center transition border ${
                     icon === value
@@ -193,7 +184,10 @@ export default function AmenityModal({ amenity, onSave, onClose }: Props) {
                       : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-blue-50 hover:border-blue-300"
                   }`}
                 >
-                  <DynamicIcon name={getSafeIconName(value) as never} size={16} />
+                  <DynamicIcon
+                    name={getSafeIconName(value) as never}
+                    size={16}
+                  />
                 </button>
               ))}
             </div>
@@ -203,16 +197,28 @@ export default function AmenityModal({ amenity, onSave, onClose }: Props) {
           <div className="flex gap-3 justify-end pt-2">
             <button
               type="button"
+              disabled={isSubmitting}
               onClick={onClose}
-              className="px-6 py-2.5 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition font-medium"
+              className="px-6 py-2.5 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
             </button>
             <button
               type="submit"
+              disabled={isSubmitting}
               className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-sky-600 text-white rounded-xl hover:shadow-lg transition font-medium flex items-center justify-center gap-1"
             >
-              <Save size={14} /> Save Amenity
+              {isSubmitting ? (
+                <>
+                  <Loader2 size={14} className="animate-spin" />
+                  Saving Amenity...
+                </>
+              ) : (
+                <>
+                  <Save size={14} />
+                  Save Amenity
+                </>
+              )}
             </button>
           </div>
         </form>

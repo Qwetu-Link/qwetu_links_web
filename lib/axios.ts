@@ -11,8 +11,11 @@ export const api = axios.create({
   },
 });
 
+const isBrowser = typeof window !== "undefined";
+
 // ── Helper: read and parse the auth cookie ──────────────────────────────────
 function getAuthCookie(): { token: string | null } {
+  if (!isBrowser) return { token: null };
   try {
     const raw = document.cookie
       .split("; ")
@@ -36,7 +39,6 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-  console.log(token)
   return config;
 });
 
