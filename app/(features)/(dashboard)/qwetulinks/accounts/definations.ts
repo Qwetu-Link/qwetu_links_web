@@ -12,7 +12,7 @@ export interface RegisterBusinessFormInputs extends LoginFormInputs {
   industry?: string;
   description?: string;
   bankName?: string;
-  bankNccountNumber?: string;
+  bankAccountNumber?: string;
   mpesaPaybill?: string;
   mpesaAccountNumber?: string;
   mpesaTillNo?: string;

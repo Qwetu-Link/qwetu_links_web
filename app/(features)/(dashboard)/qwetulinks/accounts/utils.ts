@@ -1,4 +1,5 @@
-import { BusinessFormValues, businessSchema } from "@/app/lib/acc.zod";
+
+import { BusinessFormValues, businessSchema } from "./acc.zod";
 import { Business, emptyBusiness } from "./definations";
 
 export function getBusinessFormSchema(mode: "add" | "edit") {
@@ -35,51 +36,51 @@ export const fieldClass =
 export const textAreaClass =
   "min-h-24 w-full resize-y rounded-lg border border-orange-100 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
 
+export const roleOptions = [
+  {
+    value: "company_admin",
+    label: "Company Admin",
+  },
+  {
+    value: "property_manager",
+    label: "Property Manager",
+  },
+  {
+    value: "landlord",
+    label: "Landlord",
+  },
+] as const;
+
+// Configured layout names directly to match snake_case key definitions in BusinessFormValues
 export const sectionFields = [
   {
     title: "Business Details",
     fields: [
-      ["name", "Business name", "text", true],
-      ["email", "Business email", "email", true],
-      ["phone", "Business phone", "tel", true],
-      ["role", "Role", "text", true],
-      ["industry", "Industry", "text"],
+      { name: "name", label: "Business name", type: "text", required: true },
+      { name: "email", label: "Business email", type: "email", required: true },
+      { name: "phone", label: "Business phone", type: "tel", required: true },
+      { name: "industry", label: "Industry", type: "text" },
+      { name: "role", label: "Role", type: "select", required: true, options: roleOptions },
     ],
   },
   {
     title: "Location",
     fields: [
-      ["country", "Country", "text"],
-      ["city", "City", "text", true],
+      { name: "country", label: "Country", type: "text" },
+      { name: "city", label: "City", type: "text", required: true },
     ],
   },
   {
     title: "Payment Details",
     fields: [
-      ["bank_name", "Bank name", "text"],
-      ["bank_account_number", "Bank account number", "text"],
-      ["mpesa_paybill", "Mpesa paybill", "text"],
-      ["mpesa_account_number", "Mpesa account number", "text"],
-      ["mpesa_till_no", "Mpesa till no.", "text"],
+      { name: "bankName", label: "Bank name", type: "text" },
+      { name: "bankAccountNumber", label: "Bank account number", type: "text" },
+      { name: "mpesaPaybill", label: "Mpesa paybill", type: "text" },
+      { name: "mpesaAccountNumber", label: "Mpesa account number", type: "text" },
+      { name: "mpesaTillNo", label: "Mpesa till no.", type: "text" },
     ],
   },
 ] as const;
-
-
-
-// export function getSeededBusiness(id?: string) {
-//   if (!id) return undefined;
-//   const decodedId = decodeURIComponent(id);
-
-//   const { data } = useBizDetails(decodedId) || {};
-
-//   return data?.find(
-//     (business : Business) =>
-//       String(business.id) === decodedId ||
-//       business.slug === decodedId ||
-//       business.email === decodedId,
-//   );
-// }
 
 export function getDefaults(business?: Business): BusinessFormValues {
   const source = business ?? emptyBusiness;
@@ -88,21 +89,23 @@ export function getDefaults(business?: Business): BusinessFormValues {
     name: source.name,
     email: source.email,
     phone: source.phone,
-    role: "owner",
+    role: "",
+
     city: source.city,
     address: source.address,
     country: source.country ?? "Kenya",
     website: source.website ?? "",
     industry: source.industry ?? "",
     description: source.description ?? "",
-    bank_name: source.bank_name ?? "",
-    bank_account_number: source.bank_account_number ?? "",
-    mpesa_paybill: source.mpesa_paybill ?? "",
-    mpesa_account_number: source.mpesa_account_number ?? "",
-    mpesa_till_no: source.mpesa_till_no ?? "",
+    bankName: source.bankName ?? "",
+    bankAccountNumber: source.bankAccountNumber ?? "",
+    mpesaPaybill: source.mpesaPaybill ?? "",
+    mpesaAccountNumber: source.mpesaAccountNumber ?? "",
+    mpesaTillNo: source.mpesaTillNo ?? "",
+
     avatar: source.avatar ?? "",
+
     password: "",
     confirmPassword: "",
   };
 }
-

@@ -14,7 +14,7 @@ import {
   useRegister,
   useUpdateBusiness,
 } from "../business.service";
-import { BusinessFormValues } from "@/app/lib/acc.zod";
+import { BusinessFormValues } from "../acc.zod";
 import { fieldClass, getBusinessFormSchema, getDefaults, sectionFields, textAreaClass } from "../utils";
 
 export default function RegisterBusinessForm({
@@ -27,10 +27,6 @@ export default function RegisterBusinessForm({
   const router = useRouter();
   const decodedBusinessId = businessId ? decodeURIComponent(businessId) : "";
   const { data } = useBizDetails(decodedBusinessId);
-  // const fallbackBusiness = useMemo(
-  //   () => getSeededBusiness(businessId),
-  //   [businessId],
-  // );
   const initialBusiness = data ?? undefined;
   const { mutate: registerBusiness, isPending: isCreating, isError, error } =
     useRegister();
@@ -45,7 +41,6 @@ export default function RegisterBusinessForm({
   } = useForm<BusinessFormValues>({
     defaultValues: getDefaults(initialBusiness),
     resolver: zodResolver(getBusinessFormSchema(mode)),
-    values: getDefaults(initialBusiness),
   });
 
   const avatar = useWatch({ control, name: "avatar" });
@@ -115,35 +110,54 @@ export default function RegisterBusinessForm({
           className="overflow-hidden rounded-lg border border-orange-100 bg-white shadow-sm"
         >
           <div className="grid gap-6 p-4 sm:p-5 lg:grid-cols-2">
+            {/* DYNAMIC FIELDS */}
             {sectionFields.map((section) => (
               <section key={section.title} className="space-y-3">
-                <h2 className="text-base font-bold text-slate-950">
-                  {section.title}
-                </h2>
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-                  {section.fields.map(([key, label, type, required]) => (
-                    <label key={key} className="space-y-1.5">
-                      <span className="text-sm font-medium text-slate-700">
-                        {label}
-                        {required ? <span className="ml-1 text-red-500">*</span> : null}
-                      </span>
-                      <input
-                        {...register(key)}
-                        className={fieldClass}
-                        type={type}
-                        required={required}
-                      />
-                      {errors[key]?.message && (
-                        <p className="text-xs font-medium text-red-500">
-                          {errors[key]?.message}
-                        </p>
-                      )}
-                    </label>
-                  ))}
+                <h2 className="font-bold">{section.title}</h2>
+
+                <div className="grid gap-3">
+                  {section.fields.map((field) => {
+                    if (field.type === "select") {
+                      return (
+                        <label key={field.name}>
+                          <span>{field.label}</span>
+                          <select {...register(field.name)} className={fieldClass}>
+                            {field.options?.map((opt) => (
+                              <option key={opt.value} value={opt.value}>
+                                {opt.label}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                      );
+                    }
+
+                    return (
+                      <label key={field.name}>
+                        <span>
+                          {field.label}
+                          {"required" in field && field.required && (
+                            <span className="text-red-500">*</span>
+                          )}
+                        </span>
+
+                        <input
+                          {...register(field.name)}
+                          type={field.type}
+                          className={fieldClass}
+                        />
+
+                        {errors?.[field.name]?.message && (
+                          <p className="text-xs text-red-500">
+                            {String(errors[field.name]?.message)}
+                          </p>
+                        )}
+                      </label>
+                    );
+                  })}
                 </div>
               </section>
             ))}
-
             <section className="space-y-3 lg:col-span-2">
               <h2 className="text-base font-bold text-slate-950">
                 Address & Profile
