@@ -40,7 +40,7 @@ const amenityIcons = {
   gym: Dumbbell,
 };
 
-type PropertyStatKey = "square_meters" | "bedrooms" | "bathrooms";
+type PropertyStatKey = "squareMeters" | "bedrooms" | "bathrooms";
 
 export default function PropertyDetails({
   property,
@@ -49,7 +49,7 @@ export default function PropertyDetails({
 }) {
   const gallery = [property.image, ...heroImages.slice(0, 3)];
   const highlights = [
-    `${property.apartment_type} in ${property.location}`,
+    `${property.apartmentType} in ${property.location}`,
     `${property.status} with viewing support`,
     property.description,
   ].map((highlight, index) => ({
@@ -89,7 +89,7 @@ export default function PropertyDetails({
           <section className="overflow-hidden rounded-md bg-white shadow-sm ring-1 ring-rental-border">
             <div className="relative h-[420px]">
               <Image
-                src={property.image}
+                src={property.image[0].url}
                 alt={property.name}
                 fill
                 sizes="(min-width: 1024px) 760px, 100vw"
@@ -130,14 +130,14 @@ export default function PropertyDetails({
                   className="overflow-hidden rounded-md border border-rental-border bg-white"
                 >
                   <div className="relative h-40 bg-rental-bg-light">
-                    <Image
+                    {/* <Image
                       src={highlight.image}
                       alt={highlight.title}
                       fill
                       sizes="(min-width: 1024px) 250px, 100vw"
                       className="object-cover"
                       unoptimized
-                    />
+                    /> */}
                   </div>
                   <div className="p-4">
                     <p className="text-sm font-semibold leading-6 text-brand-dark">
@@ -175,7 +175,7 @@ export default function PropertyDetails({
           <section className="rounded-md bg-white p-6 shadow-sm ring-1 ring-rental-border sm:p-8">
             <h2 className="text-2xl font-bold text-brand-dark">Gallery</h2>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              {gallery.map((image, index) => (
+              {/* {gallery.map((image, index) => (
                 <div
                   key={image}
                   className={`relative overflow-hidden rounded-md bg-rental-bg-light ${
@@ -195,7 +195,7 @@ export default function PropertyDetails({
                     unoptimized
                   />
                 </div>
-              ))}
+              ))} */}
             </div>
           </section>
 
@@ -206,12 +206,12 @@ export default function PropertyDetails({
             Occupancy Rate
           </p>
           <p className="mt-2 text-3xl font-bold text-rental-primary">
-            {property.occupany_rate}%
+            {property.occupanyRate}%
           </p>
           <div className="mt-6 space-y-3 text-sm text-slate-600">
             <p>
               <span className="font-semibold text-brand-dark">Type:</span>{" "}
-              {property.apartment_type}
+              {property.apartmentType}
             </p>
             <p>
               <span className="font-semibold text-brand-dark">Address:</span>{" "}

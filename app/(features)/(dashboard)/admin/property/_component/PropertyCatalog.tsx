@@ -4,44 +4,47 @@ import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import CatalogStatsCards from "./CatalogStatsCards";
 import PropertyCard from "./PropertyCard";
-import Pagination from "./Pagination";
 import { Building2, Package, Plus, Search } from "lucide-react";
-import {
-  Property,
-  PropertyFilters,
-  PropertyStatus,
-  seededProperties,
-} from "../definations";
+import { Property, PropertyFilters, PropertyStatus } from "../definations";
 import DeleteModal from "@/components/deletemodal/DeleteModal";
+import { useDelProperty, useGetProperties } from "../property.services";
+import Pagination from "@/app/lib/Pagination";
+import { toast } from "sonner";
 
 const STATUSES: PropertyStatus[] = [
-  "Occupied",
-  "Unoccupied",
-  "Maintenance",
+  "available",
+  "occupied",
+  "reserved",
+  "maintenance",
 ];
 
 export default function PropertyCatalog() {
-  const [properties, setProperties] = useState<Property[]>(seededProperties);
+  // const [properties, setProperties] = useState<Property[]>(seededProperties);
+  //get property
+  const { data: properties } = useGetProperties();
+  console.log("properties", properties);
+
+  const delProperty = useDelProperty();
+
   const [deleteTarget, setDeleteTarget] = useState<{
-    slug: string;
+    id: string;
     name: string;
   } | null>(null);
   const [filters, setFilters] = useState<PropertyFilters>({
     search: "",
     status: "all",
   });
-  const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
 
-  const filtered = useMemo(() => {
-    let list = [...properties];
-    const s = filters.search.toLowerCase();
+  const filtered: Property[] = useMemo(() => {
+    let list: Property[] = properties?.data ?? [];
+    const s = filters.search.trim().toLowerCase();
+
     if (s) {
       list = list.filter(
         (property) =>
           property.name.toLowerCase().includes(s) ||
           property.status.toLowerCase().includes(s) ||
-          property.apartment_type.toLowerCase().includes(s) ||
+          property.apartmentType.toLowerCase().includes(s) ||
           property.address.toLowerCase().includes(s) ||
           property.location.toLowerCase().includes(s),
       );
@@ -52,22 +55,30 @@ export default function PropertyCatalog() {
     return list;
   }, [properties, filters]);
 
-  // Paginated slice
-  const paginated = useMemo(() => {
-    const start = (currentPage - 1) * perPage;
-    return filtered.slice(start, start + perPage);
-  }, [filtered, currentPage, perPage]);
+  const handleFilterChange = useCallback(
+    (partial: Partial<PropertyFilters>) => {
+      setFilters((f) => ({ ...f, ...partial }));
+      // setCurrentPage(1);
+    },
+    [],
+  );
 
-  const handleFilterChange = useCallback((partial: Partial<PropertyFilters>) => {
-    setFilters((f) => ({ ...f, ...partial }));
-    setCurrentPage(1);
-  }, []);
-
-  const handleDeleteConfirm = useCallback(() => {
+  function handleDeleteConfirm() {
     if (!deleteTarget) return;
-    setProperties((prev) => prev.filter((p) => p.slug !== deleteTarget.slug));
+    delProperty.mutate(
+      { id: deleteTarget.id },
+      {
+        onSuccess: () => {
+          toast.success(`"${deleteTarget.name}" deleted successfully`);
+        },
+        onError: () => {
+          toast.error("Failed to delete Property. Please try again.");
+        },
+      },
+    );
+    // setProperties((prev) => prev.filter((p) => p.slug !== deleteTarget.slug));
     setDeleteTarget(null);
-  }, [deleteTarget]);
+  }
 
   return (
     <div className="space-y-6 bg-gray-50 p-6 rounded-xl">
@@ -118,19 +129,23 @@ export default function PropertyCatalog() {
           >
             <option value="all">All Statuses</option>
             {STATUSES.map((c) => (
-              <option key={c} value={c}>{c}</option>
+              <option key={c} value={c}>
+                {c}
+              </option>
             ))}
           </select>
         </div>
       </div>
 
       {/* ---- Properties Grid ---- */}
-      {paginated.length === 0 ? (
+      {filtered.length === 0 ? (
         <div className="text-center py-16 text-gray-400 bg-white rounded-xl border">
           <p className="text-5xl mb-3">
             <Package size={48} className="mx-auto text-gray-300" />
           </p>
-          <p className="text-lg font-medium text-gray-500">No properties found</p>
+          <p className="text-lg font-medium text-gray-500">
+            No properties found
+          </p>
           <p className="text-sm mt-1">
             {filters.search || filters.status !== "all"
               ? "Try adjusting your filters"
@@ -139,24 +154,22 @@ export default function PropertyCatalog() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {paginated.map((property) => (
+          {filtered.map((property) => (
             <PropertyCard
               key={property.slug}
               property={property}
-              onDelete={(slug, name) => setDeleteTarget({ slug, name })}
+              onDelete={(id, name) => setDeleteTarget({ id, name })}
             />
           ))}
         </div>
       )}
 
       {/* ---- Pagination ---- */}
-      {filtered.length > 0 && (
+      {properties && properties.data.length > 0 && (
         <Pagination
-          currentPage={currentPage}
-          totalItems={filtered.length}
-          perPage={perPage}
-          onPageChange={setCurrentPage}
-          onPerPageChange={(n) => { setPerPage(n); setCurrentPage(1); }}
+          currentPage={properties.meta.current_page}
+          totalItems={properties.meta.total}
+          perPage={properties.meta.per_page}
         />
       )}
 

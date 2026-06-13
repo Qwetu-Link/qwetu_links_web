@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { propertyStats } from "../propertyData";
 import type { PropertyFilters } from "./propertyPage";
-import { seededProperties } from "@/app/(features)/(dashboard)/admin/property/definations";
+import { Property } from "@/app/(features)/(dashboard)/admin/property/definations";
 
 const tabs = [
   { label: "Featured", value: "featured" },
@@ -17,30 +17,35 @@ type PropertyListingProps = {
   filters: PropertyFilters;
   limit?: number;
   showBrowseMore?: boolean;
+  properties: Property[];
 };
 
 export default function PropertyListing({
   filters,
   limit,
   showBrowseMore = true,
+  properties,
 }: PropertyListingProps) {
   const [activeTab, setActiveTab] = useState("featured");
 
   const visibleListings = useMemo(() => {
     const keyword = filters.keyword.trim().toLowerCase();
 
-    const filteredListings = seededProperties.filter((property) => {
+    const filteredListings = (properties ?? []).filter((property) => {
       const matchesTab =
-        activeTab === "featured" || property.apartment_type === activeTab;
+        activeTab === "featured" || property.apartmentType === activeTab;
+
       const matchesType =
-        !filters.apartment_type ||
-        property.apartment_type === filters.apartment_type;
+        !filters.apartmentType ||
+        property.apartmentType === filters.apartmentType;
+
       const matchesCounty =
         !filters.county ||
         property.location.toLowerCase().includes(filters.county.toLowerCase());
+
       const matchesKeyword =
         !keyword ||
-        [property.name, property.apartment_type, property.location]
+        [property.name, property.apartmentType, property.location]
           .join(" ")
           .toLowerCase()
           .includes(keyword);
@@ -51,7 +56,7 @@ export default function PropertyListing({
     return typeof limit === "number"
       ? filteredListings.slice(0, limit)
       : filteredListings;
-  }, [activeTab, filters, limit]);
+  }, [activeTab, filters, limit, properties]);
 
   return (
     <section id="property-listing" className="bg-white py-20">
@@ -94,7 +99,7 @@ export default function PropertyListing({
               >
                 <div className="relative h-64 overflow-hidden">
                   <Image
-                    src={property.image}
+                    src={property.image?.[0]?.url ?? "/placeholder.jpg"}
                     alt={property.name}
                     fill
                     sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
@@ -105,7 +110,7 @@ export default function PropertyListing({
                     {property.status}
                   </span>
                   <span className="absolute bottom-0 left-4 rounded-t-md bg-white px-3 py-1 text-sm font-medium text-rental-primary">
-                    {property.apartment_type}
+                    {property.apartmentType}
                   </span>
                 </div>
                 <div className="p-6 pb-4">
@@ -131,7 +136,7 @@ export default function PropertyListing({
                         {
                           property[
                             stat.key as
-                              | "square_meters"
+                              | "squareMeters"
                               | "bedrooms"
                               | "bathrooms"
                           ]

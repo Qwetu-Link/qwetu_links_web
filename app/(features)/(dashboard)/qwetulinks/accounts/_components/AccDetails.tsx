@@ -3,15 +3,12 @@
 import Link from "next/link";
 import {
   ArrowLeft,
-  BadgeCheck,
   Banknote,
   Building2,
   Edit3,
   Globe,
   Mail,
-  MapPin,
   Phone,
-  ShieldCheck,
   Store,
 } from "lucide-react";
 // import { Business } from "../definations";/
@@ -158,13 +155,7 @@ console.log(error);
           <div className="rounded-lg border border-orange-100 bg-white p-4 shadow-sm">
             <p className="text-sm text-slate-500">Status</p>
             <p className="mt-1 text-xl font-bold text-slate-950">
-              {business.is_active ? "Active" : "Inactive"}
-            </p>
-          </div>
-          <div className="rounded-lg border border-orange-100 bg-white p-4 shadow-sm">
-            <p className="text-sm text-slate-500">Verification</p>
-            <p className="mt-1 text-xl font-bold text-slate-950">
-              {business.is_verified ? "Verified" : "Pending"}
+              {business.isActive ? "Active" : "Inactive"}
             </p>
           </div>
           <div className="rounded-lg border border-orange-100 bg-white p-4 shadow-sm">
@@ -190,7 +181,7 @@ console.log(error);
             { label: "Username", value: business.username },
             { label: "Industry", value: business.industry },
             { label: "Description", value: business.description },
-            { label: "Active", value: business.is_active },
+            { label: "Active", value: business.isActive },
           ]}
         />
 
@@ -211,21 +202,11 @@ console.log(error);
           title="Payments"
           icon={Banknote}
           items={[
-            { label: "Bank name", value: business.bank_name },
-            { label: "Bank account", value: business.bank_account_number },
-            { label: "Mpesa paybill", value: business.mpesa_paybill },
-            { label: "Mpesa account", value: business.mpesa_account_number },
-            { label: "Mpesa till", value: business.mpesa_till_no },
-          ]}
-        />
-
-        <DetailSection
-          title="Verification"
-          icon={ShieldCheck}
-          items={[
-            { label: "Verified", value: business.is_verified },
-            { label: "Created", value: business.created_at },
-            { label: "Updated", value: business.updated_at },
+            { label: "Bank name", value: business.bankName },
+            { label: "Bank account", value: business.bankAccountNumber },
+            { label: "Mpesa paybill", value: business.mpesaPaybill },
+            { label: "Mpesa account", value: business.mpesaAccountNumber },
+            { label: "Mpesa till", value: business.mpesaTillNo },
           ]}
         />
 
@@ -251,14 +232,6 @@ console.log(error);
             <Globe size={16} />
             Website
           </a>
-          <div className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-orange-100 bg-white px-4 text-sm font-semibold text-slate-700">
-            {business.is_verified ? (
-              <BadgeCheck size={16} />
-            ) : (
-              <MapPin size={16} />
-            )}
-            {business.is_verified ? "Verified" : "Pending"}
-          </div>
         </div>
       </div>
     </div>

@@ -11,9 +11,10 @@ interface Props {
 }
 
 const statusStyles: Record<Property["status"], string> = {
-  Occupied: "bg-blue-600 text-white",
-  Unoccupied: "bg-purple-600 text-white",
-  Maintenance: "bg-amber-500 text-white",
+  occupied: "bg-blue-600 text-white",
+  available: "bg-purple-600 text-white",
+  maintenance: "bg-amber-500 text-white",
+  reserved:"bg-orange-600 text-white"
 };
 
 export default function PropertyCard({ property, onDelete }: Props) {
@@ -22,7 +23,7 @@ export default function PropertyCard({ property, onDelete }: Props) {
       {/* Image */}
       <div className="relative h-48 bg-gray-100 overflow-hidden">
         <Image
-          src={property.image}
+          src={property.image?.[0]?.url}
           alt={property.name}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -43,7 +44,7 @@ export default function PropertyCard({ property, onDelete }: Props) {
           </h3>
         </div>
 
-        <p className="text-sm text-gray-500 mb-3">{property.apartment_type}</p>
+        <p className="text-sm text-gray-500 mb-3">{property.apartmentType}</p>
         <p className="mb-3 flex items-center gap-1.5 text-sm text-gray-500">
           <MapPin size={14} className="shrink-0 text-blue-500" />
           {property.location}
@@ -59,7 +60,7 @@ export default function PropertyCard({ property, onDelete }: Props) {
           <div className="flex items-center gap-1.5">
             <Gauge size={14} className="text-blue-500" />
             <span className="text-sm font-medium text-gray-800">
-              {property.occupany_rate}% occupied
+              {property.occupanyRate}% occupied
             </span>
           </div>
         </div>

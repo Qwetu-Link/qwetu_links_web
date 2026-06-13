@@ -8,10 +8,12 @@ import { storage } from "@/lib/firebase";
 
 // folders
 
-export const maintenanceRef = "images/maintenance/";
-export const propertyRef = "images/property/";
-export const unitRef = "images/unit/";
-export const profileRef = "images/profile/";
+// export const maintenanceRef = "images/maintenance/";
+// export const propertyRef = "images/property/";
+// export const unitRef = "images/unit/";
+// export const profileRef = "images/profile/";
+
+
 
 // Constants
 
@@ -35,18 +37,39 @@ export type UploadResult = {
 
 type UploadOptions = {
   file: File;
-  folder: string;
+  businessId: string;
+  module: string;
   onProgress?: (progress: number) => void;
 };
 
 type UpdateOptions = {
   oldPath?: string;
   newFile: File;
-  folder: string;
+  businessId: string;
+  module: string;
+  onProgress?: (progress: number) => void;
+};
+
+type UploadManyOptions = {
+  files: File[];
+  businessId: string;
+  module: string;
   onProgress?: (progress: number) => void;
 };
 
 // Helpers
+
+const buildStoragePath = ({
+  businessId,
+  module,
+  fileName,
+}: {
+  businessId: string;
+  module: string;
+  fileName: string;
+}) => {
+  return `images/${businessId}/${module}/${fileName}`;
+};
 
 /**
  * Validates that the file is an allowed image type and within the size limit.
@@ -96,7 +119,8 @@ const getStorageErrorMessage = (error: unknown, fallback: string): string => {
  */
 export const uploadFile = ({
   file,
-  folder,
+  businessId,
+  module,
   onProgress,
 }: UploadOptions): Promise<UploadResult> => {
   return new Promise((resolve, reject) => {
@@ -105,7 +129,11 @@ export const uploadFile = ({
 
       // Use crypto.randomUUID() to avoid timestamp-based filename collisions.
       const fileName = `${crypto.randomUUID().replace(/-/g, "").slice(0, 8)}-${file.name}`;
-      const path = `${folder}/${fileName}`;
+      const path = buildStoragePath({
+        businessId,
+        module,
+        fileName,
+      });
       const storageRef = ref(storage, path);
       const metadata = { contentType: file.type };
 
@@ -128,8 +156,7 @@ export const uploadFile = ({
           } catch (error) {
             reject(
               new Error(
-                `File uploaded, but failed to retrieve download URL: ${
-                  error instanceof Error ? error.message : String(error)
+                `File uploaded, but failed to retrieve download URL: ${error instanceof Error ? error.message : String(error)
                 }`,
               ),
             );
@@ -142,8 +169,8 @@ export const uploadFile = ({
         error instanceof Error
           ? error
           : new Error(
-              `Something went wrong while starting the upload: ${String(error)}`,
-            ),
+            `Something went wrong while starting the upload: ${String(error)}`,
+          ),
       );
     }
   });
@@ -172,13 +199,19 @@ export const deleteFile = async (path: string): Promise<void> => {
 export const updateFile = async ({
   oldPath,
   newFile,
-  folder,
+  businessId,
+  module,
   onProgress,
 }: UpdateOptions): Promise<UploadResult> => {
   // 1. Upload new file first — if this throws, the old file is untouched.
   let uploadedFile: UploadResult;
   try {
-    uploadedFile = await uploadFile({ file: newFile, folder, onProgress });
+    uploadedFile = await uploadFile({
+      file: newFile,
+      businessId,
+      module,
+      onProgress,
+    });
   } catch (error) {
     throw new Error(
       `Failed to upload new file: ${error instanceof Error ? error.message : String(error)}`,
@@ -199,4 +232,27 @@ export const updateFile = async ({
   }
 
   return uploadedFile;
+};
+
+export const uploadFiles = async ({
+  files,
+  businessId,
+  module,
+  onProgress,
+}: UploadManyOptions): Promise<UploadResult[]> => {
+  const uploads = files.map((file, index) =>
+    uploadFile({
+      file,
+      businessId,
+      module,
+      onProgress: (fileProgress) => {
+        const overallProgress =
+          ((index + fileProgress / 100) / files.length) * 100;
+
+        onProgress?.(Math.round(overallProgress));
+      },
+    })
+  );
+
+  return Promise.all(uploads);
 };

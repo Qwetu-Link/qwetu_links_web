@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
 import { inter } from "@/app/fonts/fonts";
 import "./styles/globals.css";
 import { Geist } from "next/font/google";
@@ -19,6 +18,7 @@ export const metadata: Metadata = {
 };
 
 import { Toaster } from "sonner";
+
 
 export default function RootLayout({
   children,

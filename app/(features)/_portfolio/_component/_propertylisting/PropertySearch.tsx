@@ -1,21 +1,29 @@
 import { Search } from "lucide-react";
-import { kenyaCounties} from "../propertyData";
+import { kenyaCounties } from "../propertyData";
 import type { PropertyFilters } from "./propertyPage";
-import { seededProperties } from "@/app/(features)/(dashboard)/admin/property/definations";
+import { Property } from "@/app/(features)/(dashboard)/admin/property/definations";
+import { useMemo } from "react";
 
 type PropertySearchProps = {
   filters: PropertyFilters;
   onFiltersChange: (filters: PropertyFilters) => void;
+  properties: Property[];
 };
 
-const propertyTypes = Array.from(
-  new Set(seededProperties.map((property) => property.apartment_type)),
-);
+// const propertyTypes = Array.from(
+//   new Set(properties.map((property) => property.apartmentType)),
+// );
 
 export default function PropertySearch({
   filters,
   onFiltersChange,
+  properties,
 }: PropertySearchProps) {
+  const apartmentTypes = useMemo(
+    () => Array.from(new Set(properties.map((p) => p.apartmentType))),
+    [properties],
+  );
+
   const updateFilter = (key: keyof PropertyFilters, value: string) => {
     onFiltersChange({ ...filters, [key]: value });
   };
@@ -61,12 +69,14 @@ export default function PropertySearch({
               Property Type
             </span>
             <select
-              value={filters.apartment_type}
-              onChange={(event) => updateFilter("apartment_type", event.target.value)}
+              value={filters.apartmentType}
+              onChange={(event) =>
+                updateFilter("apartmentType", event.target.value)
+              }
               className="h-12 w-full rounded-md border border-rental-border bg-rental-bg-light px-4 text-sm text-brand-dark outline-none focus:border-rental-primary focus:bg-white"
             >
               <option value="">All Types</option>
-              {propertyTypes.map((type) => (
+              {apartmentTypes.map((type) => (
                 <option key={type} value={type}>
                   {type}
                 </option>
@@ -91,14 +101,14 @@ export default function PropertySearch({
             </select>
           </label>
 
-        <button
-          onClick={handleSearch}
-          className="inline-flex h-12 items-center justify-center gap-2 self-end rounded-md bg-rental-primary px-6 text-sm font-semibold text-white transition hover:bg-orange-600"
-          type="button"
-        >
-          <Search className="h-4 w-4" />
-          Search
-        </button>
+          <button
+            onClick={handleSearch}
+            className="inline-flex h-12 items-center justify-center gap-2 self-end rounded-md bg-rental-primary px-6 text-sm font-semibold text-white transition hover:bg-orange-600"
+            type="button"
+          >
+            <Search className="h-4 w-4" />
+            Search
+          </button>
         </div>
       </div>
     </section>

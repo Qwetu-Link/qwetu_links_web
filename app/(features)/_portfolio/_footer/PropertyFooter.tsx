@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { footerContacts } from "../_component/propertyData";
-import { seededProperties } from "../../(dashboard)/admin/property/definations";
+import {  usePublicProperties } from "../../(dashboard)/admin/property/property.services";
 
 const quickLinks = [
   { label: "About Us", href: "/#about" },
@@ -45,8 +45,10 @@ const hiddenRoutes = [
 ];
 
 export default function PropertyFooter() {
-  const pathname = usePathname();
+  const { data: properties } = usePublicProperties();
+  const propertyList = properties?.data ?? [];
 
+  const pathname = usePathname();
   if (hiddenRoutes.some((route) => pathname.startsWith(route))) {
     return null;
   }
@@ -113,7 +115,7 @@ export default function PropertyFooter() {
             Photo Gallery
           </h3>
           <div className="grid grid-cols-3 gap-2">
-            {seededProperties.map((property) => (
+            {propertyList.slice(0, 5).map((property) => (
               <Link
                 key={property.slug}
                 href={`/property/${property.slug}`}
@@ -121,7 +123,7 @@ export default function PropertyFooter() {
                 className="relative aspect-square overflow-hidden rounded-md bg-white p-1"
               >
                 <Image
-                  src={property.image}
+                  src={property.image?.[0]?.url}
                   alt={property.name}
                   fill
                   sizes="100px"
@@ -160,7 +162,10 @@ export default function PropertyFooter() {
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-6 text-sm sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
           <p>
             &copy; {new Date().getFullYear()}{" "}
-            <Link href="/overview" className="border-b border-white/40 text-white">
+            <Link
+              href="/overview"
+              className="border-b border-white/40 text-white"
+            >
               Qwetu Links
             </Link>
             , All Right Reserved.
