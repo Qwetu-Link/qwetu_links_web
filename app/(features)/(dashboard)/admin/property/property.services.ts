@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import { createProperty, deleteProperty, getProperties, getPublicProperties, propertyDetails, propertyPublicDetails, propertyPublicSlugDetails, updateProperty } from "./property.endpoints"
+import { PropertyData } from "./definations"
 
 export const propertykeys = {
     all: ["properties"] as const,
@@ -82,7 +83,7 @@ export const usePublicProperties = (page = 1) => {
         queryKey: propertykeys.publiclist(page),
         queryFn: () => getPublicProperties(page),
         staleTime: 1000 * 60 * 5,
-        retry: 2,
+        retry: false,
     })
 }
 
@@ -97,7 +98,7 @@ export const useGetPublicProperty = () => {
 }
 
 export const useGetPublicSlugProperty = (slug: string) => {
-    return useQuery({
+    return useQuery<{ data: PropertyData }>({
         queryKey: propertykeys.pslug(slug),
         queryFn: () => propertyPublicSlugDetails({ slug }),
         staleTime: 1000 * 60 * 5,

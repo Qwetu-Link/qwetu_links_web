@@ -99,7 +99,12 @@ export default function PropertyListing({
               >
                 <div className="relative h-64 overflow-hidden">
                   <Image
-                    src={property.image?.[0]?.url ?? "/placeholder.jpg"}
+                    src={
+                      property.images?.[0]?.url &&
+                      property.images[0].url.trim() !== ""
+                        ? property.images[0].url
+                        : "/images/placeholder.svg"
+                    }
                     alt={property.name}
                     fill
                     sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"

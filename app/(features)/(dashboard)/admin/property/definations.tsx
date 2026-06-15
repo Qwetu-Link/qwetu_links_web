@@ -1,6 +1,6 @@
 import { PropertyFormValues } from "@/app/lib/property.zod";
 import { Amenity } from "../amenities/definations";
-// import { Amenity } from "../amenities/definations";
+import { Business } from "../../qwetulinks/accounts/definations";
 
 export type PropertyStatus =
   | "available"
@@ -14,8 +14,6 @@ export const propertyStatusValues = [
   "reserved",
   "maintenance",
 ] as const;
-
-//, occupied, maintenance,
 
 export interface PropertyFilters {
   search: string;
@@ -38,13 +36,23 @@ export type Property = {
   status: PropertyStatus;
   occupanyRate: number;
   businessId: string;
-  image: Images[];
+  images: Images[];
+  business: Business;
+  version: number;
+  amenities: Amenity[];
 };
 
 type Images = {
   url: string;
   path: string;
 };
+
+export interface PropertyImages extends Images {
+  id: string;
+  property_id: string;
+  units_id: string;
+  version: number | null;
+}
 
 export type PropertiesFormValues = {
   name: string;
@@ -94,6 +102,31 @@ export interface PropertyResponse {
   };
 }
 
+export interface PropertyData {
+  id: string;
+  name: string;
+  slug: string;
+  address: string;
+  location: string;
+  apartmentType: string;
+  description: string;
+  parking: number;
+  bedrooms: number;
+  bathrooms: number;
+  squareMeters: number;
+  unit: string;
+  status: PropertyStatus;
+  occupanyRate: number;
+  businessId: string;
+  images: PropertyImages[];
+  business: Business;
+  version: number;
+  amenities: Amenity[];
+}
+
+export interface PublicProperty {
+  data: PropertyData;
+}
 export const fieldClass =
   "h-10 w-full rounded-lg border border-orange-100 bg-white px-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
 

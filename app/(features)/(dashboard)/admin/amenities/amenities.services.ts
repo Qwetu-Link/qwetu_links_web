@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createAmenity, delAmenity, getAmenities, updateAmenity } from "./amenities.endpoints";
 
 
@@ -7,14 +7,24 @@ export const amenityKeys = {
     list: (page: number) => [...amenityKeys.all, page] as const,
 };
 
-export const useGetAmenities = (page = 1) =>
-    useSuspenseQuery({
+export const useGetAmenities = (page = 1) => {
+    return useQuery({
         queryKey: amenityKeys.list(page),
         queryFn: () => getAmenities(page),
-        // placeholderData: (previousData) => previousData,
         staleTime: 1000 * 60 * 5,
-        retry: 2,
+        gcTime: 1000 * 60 * 30,
     });
+}
+
+// Hook — fetch ALL amenities once, never search the DB
+export const useGetPropertyAmenities = () => {
+    return useQuery({
+        queryKey: amenityKeys.all,
+        queryFn: () => getAmenities(),
+        staleTime: 1000 * 60 * 10,
+        gcTime: 1000 * 60 * 30,
+    });
+};
 
 export const useCreateAmenity = () => {
     const queryClient = useQueryClient();

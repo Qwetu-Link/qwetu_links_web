@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
-import CatalogStatsCards from "./CatalogStatsCards";
 import PropertyCard from "./PropertyCard";
 import { Building2, Package, Plus, Search } from "lucide-react";
 import { Property, PropertyFilters, PropertyStatus } from "../definations";
@@ -101,7 +100,7 @@ export default function PropertyCatalog() {
         </Link>
       </div>
 
-      <CatalogStatsCards />
+      {/* <CatalogStatsCards /> */}
 
       {/* ---- Search & Filter ---- */}
       <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">

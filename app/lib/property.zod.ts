@@ -22,6 +22,7 @@ export const propertyTypeGroups = [
 
 const propertyTypes = propertyTypeGroups.flatMap((group) => group.options);
 
+
 export const propertyFormSchema = z.object({
   name: z
     .string({ message: "Full name field is required" })
@@ -70,6 +71,8 @@ export const propertyFormSchema = z.object({
   status: z.enum(propertyStatusValues, { message: "Status is required" }),
   image: z.array(z.string()).default([]),
   amenityID: z.array(z.string()).default([]),
+  version: z
+    .number().optional()
 });
 
 export type PropertyFormValues = z.infer<typeof propertyFormSchema>;

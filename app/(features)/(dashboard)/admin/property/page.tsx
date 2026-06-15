@@ -8,14 +8,13 @@ import { propertykeys } from "./property.services";
 import { getProperties } from "./property.endpoints";
 import { getServerApi } from "@/lib/axios.server";
 
-type PageProps = {
-  searchParams?: {
-    page?: string;
-  };
-};
+interface PageProps {
+  searchParams: Promise<{ page?: string }>;
+}
 
 export default async function Page({ searchParams }: PageProps) {
-  const page = Number(searchParams?.page ?? 1);
+  const resolvedSearchParams = await searchParams;
+  const page = Number(resolvedSearchParams?.page ?? 1);
   const serverApi = await getServerApi();
 
   const queryClient = new QueryClient({

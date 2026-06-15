@@ -14,16 +14,20 @@ const statusStyles: Record<Property["status"], string> = {
   occupied: "bg-blue-600 text-white",
   available: "bg-purple-600 text-white",
   maintenance: "bg-amber-500 text-white",
-  reserved:"bg-orange-600 text-white"
+  reserved: "bg-orange-600 text-white",
 };
 
 export default function PropertyCard({ property, onDelete }: Props) {
+  const imageUrl =
+    property.images?.[0]?.url && property.images[0].url.trim() !== ""
+      ? property.images[0].url
+      : "/images/placeholder.svg";
   return (
     <div className="group bg-white rounded-md border border-gray-100 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
       {/* Image */}
       <div className="relative h-48 bg-gray-100 overflow-hidden">
         <Image
-          src={property.image?.[0]?.url}
+          src={imageUrl}
           alt={property.name}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -68,13 +72,13 @@ export default function PropertyCard({ property, onDelete }: Props) {
         {/* Actions */}
         <div className="flex gap-2">
           <Link
-            href={`/admin/property/${property.slug}/edit`}
+            href={`/admin/property/${property.id}/edit`}
             className="flex-1 px-3 py-2 text-sm text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition font-medium flex items-center justify-center gap-1"
           >
             <Edit size={14} /> Edit
           </Link>
           <button
-            onClick={() => onDelete(property.slug, property.name)}
+            onClick={() => onDelete(property.id, property.name)}
             className="flex-1 px-3 py-2 text-sm text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition font-medium flex items-center justify-center gap-1"
           >
             <Trash2 size={14} /> Delete

@@ -43,6 +43,6 @@ export const propertyPublicDetails = async ({ id }: { id: string }) => {
 }
 
 export const propertyPublicSlugDetails = async ({ slug }: { slug: string }) => {
-    const response = await api.get(`${PUBLIC_PROPERTY_URL}/slug/${slug}`)
-    return response.data;
+    const {data}= await api.get(`${PUBLIC_PROPERTY_URL}/slug/${slug}`)
+    return data;
 }

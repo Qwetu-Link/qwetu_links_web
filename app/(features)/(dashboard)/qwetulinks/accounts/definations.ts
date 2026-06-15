@@ -41,6 +41,7 @@ export type Business = {
   avatar?: string;
   createdAt?: string;
   updatedAt?: string;
+  version?:number;
 }
 
 export const emptyBusiness: Business = {

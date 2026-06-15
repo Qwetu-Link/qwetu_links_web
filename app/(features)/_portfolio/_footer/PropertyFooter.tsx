@@ -4,8 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { footerContacts } from "../_component/propertyData";
-import {  usePublicProperties } from "../../(dashboard)/admin/property/property.services";
+import { usePublicProperties } from "../../(dashboard)/admin/property/property.services";
+import { Property } from "../../(dashboard)/admin/property/definations";
 
+// Define your arrays outside the components so they are static
 const quickLinks = [
   { label: "About Us", href: "/#about" },
   { label: "Contact Us", href: "/#contact" },
@@ -44,14 +46,23 @@ const hiddenRoutes = [
   "/qwetulinks",
 ];
 
-export default function PropertyFooter() {
-  const { data: properties } = usePublicProperties();
-  const propertyList = properties?.data ?? [];
+const STATIC_EMPTY_ARRAY: Property[] = [];
 
+export default function PropertyFooter() {
   const pathname = usePathname();
+
+  // If we are on an admin route, completely halt right here.
+  // No hooks inside FooterContent will ever fire or spam requests.
   if (hiddenRoutes.some((route) => pathname.startsWith(route))) {
     return null;
   }
+
+  return <FooterContent />;
+}
+
+function FooterContent() {
+  const { data: properties } = usePublicProperties();
+  const propertyList = properties?.data ?? STATIC_EMPTY_ARRAY;
 
   return (
     <footer id="contact" className="mt-auto bg-brand-dark pt-16 text-slate-400">
@@ -115,23 +126,31 @@ export default function PropertyFooter() {
             Photo Gallery
           </h3>
           <div className="grid grid-cols-3 gap-2">
-            {propertyList.slice(0, 5).map((property) => (
-              <Link
-                key={property.slug}
-                href={`/property/${property.slug}`}
-                aria-label={`View ${property.name}`}
-                className="relative aspect-square overflow-hidden rounded-md bg-white p-1"
-              >
-                <Image
-                  src={property.image?.[0]?.url}
-                  alt={property.name}
-                  fill
-                  sizes="100px"
-                  className="object-cover p-1"
-                  unoptimized
-                />
-              </Link>
-            ))}
+            {propertyList.slice(0, 5).map((property) => {
+              const imageUrl =
+                property.images?.[0]?.url &&
+                property.images[0].url.trim() !== ""
+                  ? property.images[0].url
+                  : "/images/placeholder.svg";
+
+              return (
+                <Link
+                  key={property.slug}
+                  href={`/property/${property.slug}`}
+                  aria-label={`View ${property.name}`}
+                  className="relative aspect-square overflow-hidden rounded-md bg-white p-1"
+                >
+                  <Image
+                    src={imageUrl}
+                    alt={property.name}
+                    fill
+                    sizes="100px"
+                    className="object-cover p-1"
+                    unoptimized
+                  />
+                </Link>
+              );
+            })}
           </div>
         </div>
 
