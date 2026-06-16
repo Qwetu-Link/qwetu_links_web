@@ -269,10 +269,12 @@ export default function PropertyFormPage({
         </div>
 
         <input
-          type="hidden"
-          value={defaultValues.version}
-          {...register("version", { valueAsNumber: true })}
-        />
+            type="hidden"
+            {...register("version", {
+              setValueAs: (v) =>
+                v === "" || v === undefined ? undefined : Number(v),
+            })}
+          />
 
         <div className="grid gap-5 md:grid-cols-2">
           <div>
