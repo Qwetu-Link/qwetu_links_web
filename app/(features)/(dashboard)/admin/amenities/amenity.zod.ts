@@ -11,8 +11,9 @@ export const amenitySchema = z.object({
         )
         .trim(),
     description: z.string().trim(),
-    category: z.string().min(1,),
+    category: z.string().min(1,).optional(),
     icon: z.string(),
+    version:z.number().optional()
 });
 
 export type AmenityFormValues = z.infer<typeof amenitySchema>;

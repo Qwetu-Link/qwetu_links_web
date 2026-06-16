@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { Edit, Loader2, Plus, Save } from "lucide-react";
 import { DynamicIcon, iconNames } from "lucide-react/dynamic";
-import { AmenitiesFormValues, Amenity } from "../definations";
+import { Amenity } from "../definations";
 import { AmenityFormValues, amenitySchema } from "../amenity.zod";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -61,13 +61,14 @@ export default function AmenityModal({ amenity, onSave, onClose }: Props) {
     setValue,
     control,
     setFocus,
-  } = useForm<AmenitiesFormValues>({
+  } = useForm<AmenityFormValues>({
     resolver: zodResolver(amenitySchema),
     defaultValues: {
       name: amenity?.name ?? "",
       description: amenity?.description ?? "",
       icon: amenity?.icon ?? DEFAULT_ICON,
       category: amenity?.category ?? "General",
+      version: amenity?.version,
     },
   });
 
@@ -83,6 +84,7 @@ export default function AmenityModal({ amenity, onSave, onClose }: Props) {
   }, [setFocus]);
 
   async function submitAmenity(values: AmenityFormValues) {
+    console.log("valu", values);
     await onSave(values, amenity?.id);
   }
 
@@ -99,6 +101,14 @@ export default function AmenityModal({ amenity, onSave, onClose }: Props) {
 
         {/* Form */}
         <form onSubmit={handleSubmit(submitAmenity)} className="p-6 space-y-5">
+          {/* hidden version input */}
+          <input
+            type="hidden"
+            {...register("version", {
+              setValueAs: (v) =>
+                v === "" || v === undefined ? undefined : Number(v),
+            })}
+          />
           {/* Name */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
@@ -119,12 +129,12 @@ export default function AmenityModal({ amenity, onSave, onClose }: Props) {
           {/* Description */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-              Description{" "}
-              <span className="text-gray-400 font-normal">(optional)</span>
+              Description <span className="text-red-500">*</span>
             </label>
             <textarea
               {...register("description")}
               rows={3}
+              required
               placeholder="e.g. Dedicated parking space for residents"
               className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none resize-none text-black placeholder:text-gray-500"
             />

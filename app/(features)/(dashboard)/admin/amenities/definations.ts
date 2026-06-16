@@ -1,18 +1,16 @@
+
+import type { AmenityFormValues } from "./amenity.zod";
 export interface Amenity {
   id: string;
   name: string;
   description: string;
   category: string;
   icon: string;
+  version?: number;
 }
 
 // ---- Form values ----
-export interface AmenitiesFormValues {
-  name: string;
-  description: string;
-  category: string;
-  icon: string;
-}
+export type { AmenityFormValues };
 
 export interface AmenitiesResponse {
   data: Amenity[];
