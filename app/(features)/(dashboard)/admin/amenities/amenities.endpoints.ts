@@ -1,11 +1,11 @@
 import { api } from "@/lib/axios";
-import { AmenitiesFormValues, AmenitiesResponse, Amenity } from "./definations";
+import { AmenityFormValues, AmenitiesResponse, Amenity } from "./definations";
 import { AxiosInstance } from "axios";
 
 const AMENITY_URL = "/businesses/amenities";
 
 export const createAmenity = async (
-    data: AmenitiesFormValues,
+    data: AmenityFormValues,
 ): Promise<Amenity> => {
     const amenity = await api.post(AMENITY_URL, data);
     return amenity.data;
@@ -22,7 +22,7 @@ export const updateAmenity = async (
         data,
     }: {
         id: string;
-        data: AmenitiesFormValues;
+        data: AmenityFormValues;
     }
 ): Promise<Amenity> => {
     const amenity = await api.put(`${AMENITY_URL}/${id}`, data);

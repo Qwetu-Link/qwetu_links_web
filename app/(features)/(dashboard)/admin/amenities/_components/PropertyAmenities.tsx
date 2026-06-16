@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Building2, PackageSearch, Plus, Search } from "lucide-react";
 import AmenityCard from "./AmenityCard";
 import AmenityModal from "./AmenityModal";
-import { AmenitiesFormValues, Amenity } from "../definations";
+import { AmenityFormValues, Amenity } from "../definations";
 import DeleteModal from "@/components/deletemodal/DeleteModal";
 import {
   useAmenityDel,
@@ -48,7 +48,7 @@ export default function PropertyAmenities() {
 
   const isSearching = search.trim().length > 0;
 
-  async function handleSave(data: AmenitiesFormValues, existingId?: string) {
+  async function handleSave(data: AmenityFormValues, existingId?: string) {
     try {
       if (existingId) {
         await updateAmenity.mutateAsync(

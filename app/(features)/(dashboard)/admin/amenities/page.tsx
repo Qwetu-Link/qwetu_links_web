@@ -10,13 +10,14 @@ import { getServerApi } from "@/lib/axios.server";
 // import { Suspense } from "react";
 
 type PageProps = {
-  searchParams?: {
+  searchParams?: Promise<{
     page?: string;
-  };
+  }>;
 };
 
 export default async function Page({ searchParams }: PageProps) {
-  const page = Number(searchParams?.page ?? 1);
+  const resolvedParams = await searchParams;
+  const page = Number(resolvedParams?.page ?? 1);
 
   const serverApi = await getServerApi();
 
