@@ -24,10 +24,11 @@ export const useBusinesses = () => {
 
 //get business by id
 export const useBizDetails = (id: string) => {
+  const decodedId = decodeURIComponent(id);
   return useQuery({
-    queryKey: businessQueryKeys.detail(id),
-    queryFn: () => getBizDetails(id),
-    enabled:!!id,
+    queryKey: businessQueryKeys.detail(decodedId),
+    queryFn: () => getBizDetails(decodedId),
+    enabled: !!decodedId,
   });
 };
 

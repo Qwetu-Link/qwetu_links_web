@@ -17,7 +17,7 @@ export interface RegisterBusinessFormInputs extends LoginFormInputs {
   mpesaAccountNumber?: string;
   mpesaTillNo?: string;
   avatar?: string;
-  avatarPath?: string; // ← Firebase Storage path
+  avatarPath?: string;
 }
 
 export type Business = {

@@ -90,7 +90,6 @@ export default function AccDetails({ id }: BusinessProps) {
   business,
   isLoading,
   isError,
-  
 });
 console.log(error);
 

@@ -17,7 +17,7 @@ import { Business } from "../definations";
 import { useBusinesses } from "../business.service";
 import { StatCard } from "./StatCard";
 import { StatusPills } from "./AccStatusPill";
-import { BusinessActions } from "./ActionBtns";
+// import { BusinessActions } from "./ActionBtns";
 
 function businessKey(business: Business) {
   return String(business.id ?? business.slug ?? business.email);
@@ -131,7 +131,7 @@ export default function AccManagement() {
             >
               <div className="flex items-start justify-between gap-3">
                 <BusinessIdentity business={business} />
-                <BusinessActions business={business} />
+                {/* <BusinessActions business={business} /> */}
               </div>
 
               <div className="mt-4 grid gap-3 text-sm text-slate-600">
@@ -224,7 +224,7 @@ export default function AccManagement() {
                     <StatusPills business={business} />
                   </td>
                   <td className="px-4 py-4">
-                    <BusinessActions business={business} />
+                    {/* <BusinessActions business={business} /> */}
                   </td>
                 </tr>
               ))}

@@ -27,7 +27,6 @@ export const getBizDetails = async (id: string): Promise<Business> => {
   const response = await api.get<Business>(`${BIZ_URL}/${id}`);
   console.log("Test getBiz service", response);
   return response.data;
-  
 };
 
 export const registerBiz = async (

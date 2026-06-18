@@ -1,11 +1,5 @@
-import RegisterBusinessForm from "../../forms/register_business";
+// import EditBusinessForm from "../../forms/edit_business";
 
-export default async function EditBusinessPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-
-  return <RegisterBusinessForm mode="edit" businessId={id} />;
-}
+// export default function Page({ params }: { params: { id: string } }) {
+//   return <EditBusinessForm businessId={params.id} />;
+// }
