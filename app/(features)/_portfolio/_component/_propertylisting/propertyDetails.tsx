@@ -11,74 +11,75 @@ import {
   Bed,
   CalendarCheck,
   Car,
-  CheckCircle2,
   DoorOpen,
-  Droplets,
-  Dumbbell,
-  Flame,
-  Leaf,
   Mail,
   MapPin,
-  ParkingCircle,
   Phone,
   Ruler,
-  ShieldCheck,
-  Sofa,
-  Waves,
-  Wifi,
-  Zap,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { createElement, useState } from "react";
 
-// ─── Amenity icon registry (matches API `icon` field values) ────────────────
-const amenityIconMap: Record<string, React.ElementType> = {
-  wifi: Wifi,
-  parking: ParkingCircle,
-  pool: Waves,
-  gym: Dumbbell,
-  dumbbell: Dumbbell,
-  security: ShieldCheck,
-  garden: Leaf,
-  balcony: DoorOpen,
-  water: Droplets,
-  power: Zap,
-  electricity: Zap,
-  fire: Flame,
-  sofa: Sofa,
-};
+import * as LucideIcons from "lucide-react";
 
-const amenityColorMap: Record<string, string> = {
-  wifi: "bg-blue-50 text-blue-600",
-  parking: "bg-slate-100 text-slate-600",
-  pool: "bg-cyan-50 text-cyan-600",
-  gym: "bg-orange-50 text-orange-600",
-  dumbbell: "bg-orange-50 text-orange-600",
-  security: "bg-green-50 text-green-600",
-  garden: "bg-emerald-50 text-emerald-600",
-  balcony: "bg-amber-50 text-amber-600",
-  water: "bg-sky-50 text-sky-600",
-  power: "bg-yellow-50 text-yellow-600",
-  electricity: "bg-yellow-50 text-yellow-600",
-};
+function getAmenityIcon(iconName: string): React.ElementType {
+  if (!iconName) return LucideIcons.CheckCircle2;
+
+  const pascal = iconName
+    .split(/[-_\s]+/)
+    .map((s) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase())
+    .join("");
+
+  return (
+    ((LucideIcons as Record<string, unknown>)[pascal] as React.ElementType) ??
+    LucideIcons.CheckCircle2
+  );
+}
+
+const amenityColorPalette = [
+  "bg-blue-50 text-blue-600",
+  "bg-cyan-50 text-cyan-600",
+  "bg-emerald-50 text-emerald-600",
+  "bg-orange-50 text-orange-600",
+  "bg-amber-50 text-amber-600",
+  "bg-sky-50 text-sky-600",
+  "bg-yellow-50 text-yellow-600",
+  "bg-green-50 text-green-600",
+  "bg-violet-50 text-violet-600",
+  "bg-rose-50 text-rose-600",
+  "bg-teal-50 text-teal-600",
+  "bg-indigo-50 text-indigo-600",
+];
+
+function hashString(str: string): number {
+  return [...str].reduce(
+    (acc, ch) => (acc * 31 + ch.charCodeAt(0)) & 0xffff,
+    0,
+  );
+}
+
+function getAmenityColor(icon: string): string {
+  const idx = hashString(icon.toLowerCase()) % amenityColorPalette.length;
+  return amenityColorPalette[idx];
+}
 
 function AmenityIcon({ icon, name }: { icon: string; name: string }) {
-  const Icon = amenityIconMap[icon] ?? CheckCircle2;
-  const colors = amenityColorMap[icon] ?? "bg-slate-100 text-slate-600";
+  const colors = getAmenityColor(icon);
+  const IconComponent = getAmenityIcon(icon);
+
   return (
     <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-white p-4 shadow-xs transition-shadow hover:shadow-sm">
       <span
         className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${colors}`}
       >
-        <Icon className="h-5 w-5" />
+        {createElement(IconComponent, { className: "h-5 w-5" })}
       </span>
       <span className="text-sm font-medium text-slate-700">{name}</span>
     </div>
   );
 }
 
-// ─── Status pill ─────────────────────────────────────────────────────────────
 const statusStyles: Record<string, string> = {
   available: "bg-emerald-100 text-emerald-700 ring-emerald-200",
   occupied: "bg-red-100 text-red-700 ring-red-200",
@@ -86,7 +87,6 @@ const statusStyles: Record<string, string> = {
   maintenance: "bg-slate-100 text-slate-600 ring-slate-200",
 };
 
-// ─── Main component ──────────────────────────────────────────────────────────
 export default function PropertyDetails({
   propertyData,
 }: {
@@ -103,7 +103,6 @@ export default function PropertyDetails({
 
   return (
     <main className="min-h-screen bg-[#F7F8FA]">
-      {/* ── Hero ───────────────────────────────────────────────────────────── */}
       <section className="relative bg-[#0F172A] px-4 pb-12 pt-8 text-white sm:px-6 lg:px-8">
         {/* subtle grid texture */}
         <div
@@ -276,29 +275,30 @@ export default function PropertyDetails({
             <section className="rounded-2xl border border-slate-100 bg-white p-6 shadow-xs sm:p-8">
               <h2 className="text-lg font-bold text-slate-800">Gallery</h2>
               <div className="mt-1 h-0.5 w-10 rounded-full bg-orange-500" />
-              <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                {images.map((img: PropertyImages, i: number) => (
-                  <button
-                    key={img.id}
-                    type="button"
-                    onClick={() => setActiveImage(i)}
-                    className={`group relative overflow-hidden rounded-xl ${
-                      i === 0 ? "col-span-2 h-52 sm:col-span-2" : "h-36"
-                    }`}
-                  >
-                    <Image
-                      src={img.url}
-                      alt={`Gallery ${i + 1}`}
-                      fill
-                      className="object-cover transition duration-300 group-hover:scale-105"
-                      unoptimized
-                      loading="eager"
-                    />
-                    {i === activeImage && (
-                      <div className="absolute inset-0 ring-2 ring-inset ring-orange-500" />
-                    )}
-                  </button>
-                ))}
+
+              <div className="mt-5 flex flex-wrap gap-3">
+                {images.map((img: PropertyImages, i: number) => {
+                  return (
+                    <button
+                      key={img.id}
+                      type="button"
+                      onClick={() => setActiveImage(i)}
+                      className="group relative h-48 w-[calc(50%-6px)] overflow-hidden rounded-xl transition-all duration-200 sm:h-64"
+                    >
+                      <Image
+                        src={img.url}
+                        alt={`Gallery ${i + 1}`}
+                        fill
+                        className="object-cover transition duration-300 group-hover:scale-105"
+                        unoptimized
+                        loading="eager"
+                      />
+                      {i === activeImage && (
+                        <div className="absolute inset-0 ring-2 ring-inset ring-orange-500" />
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             </section>
           )}
