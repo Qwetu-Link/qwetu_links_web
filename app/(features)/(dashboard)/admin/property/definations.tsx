@@ -1,6 +1,7 @@
 import { PropertyFormValues } from "@/app/lib/property.zod";
 import { Amenity } from "../amenities/definations";
 import { Business } from "../../qwetulinks/accounts/definations";
+import { UnitProperty } from "../unit/definations";
 
 export type PropertyStatus =
   | "available"
@@ -40,6 +41,7 @@ export type Property = {
   business: Business;
   version: number;
   amenities: Amenity[];
+  units?: UnitProperty[];
 };
 
 type Images = {

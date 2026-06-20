@@ -1,9 +1,9 @@
 import { Box, Gauge, MapPin } from "lucide-react";
 import Image from "next/image";
-import type { UnitProperty } from "../definations";
+import { Property } from "../../property/definations";
 
 interface PropertyCardProps {
-  property: UnitProperty;
+  property: Property;
   onClick?: () => void;
   isSelected?: boolean;
 }
@@ -13,6 +13,10 @@ export default function PropertyCard({
   onClick,
   isSelected,
 }: PropertyCardProps) {
+  const imageUrl =
+    property.images?.[0]?.url && property.images[0].url.trim() !== ""
+      ? property.images[0].url
+      : "/images/placeholder.svg";
   return (
     <div
       onClick={onClick}
@@ -23,15 +27,18 @@ export default function PropertyCard({
       <div className="flex gap-3 p-2">
         {/* Property Image */}
         <Image
-          src={property.images[0]?.image_url || "/placeholder.jpg"}
+          src={imageUrl}
           alt={property.name}
           width={100}
           height={100}
           className="object-cover rounded-lg flex-shrink-0"
-          loading="lazy"
+          loading="eager"
+          unoptimized
         />
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-gray-800 text-base leading-tight line-clamp-2 flex-1 mr-2 mb-2 line-clamp-2">{property.name}</h3>
+          <h3 className="font-bold text-gray-800 text-base leading-tight line-clamp-2 flex-1 mr-2 mb-2 line-clamp-2">
+            {property.name}
+          </h3>
           <div className="flex items-center gap-1 text-xs text-gray-500 mb-2">
             <MapPin className="w-4 h-4" />
             <span className="truncate">{property.location}</span>
@@ -42,13 +49,13 @@ export default function PropertyCard({
             <div className="flex items-center gap-1.5">
               <Box size={14} className="text-gray-400" />
               <span className="text-sm font-medium text-gray-800">
-                {property.units} units
+                {property.unit} units
               </span>
             </div>
             <div className="flex items-center gap-1.5">
               <Gauge size={14} className="text-blue-500" />
               <span className="text-sm font-medium text-gray-800">
-                {property.occupancyRate}% occupied
+                {property.occupanyRate}% occupied
               </span>
             </div>
           </div>

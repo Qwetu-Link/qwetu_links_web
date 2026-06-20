@@ -1,48 +1,31 @@
 import { Bath, Bed, Car, Edit, Maximize, Trash2 } from "lucide-react";
-import { Unit } from "./UnitListing";
+import { UnitProperty } from "../definations";
+import Link from "next/link";
 
 interface Props {
-  unit: Unit;
+  unit: UnitProperty;
   onDelete: (id: string, name: string) => void;
 }
 
-const statusStyles: Record<Unit["status"], string> = {
-  Available: "bg-blue-50 text-blue-700 border-blue-200",
-  Occupied: "bg-slate-100 text-slate-700 border-slate-200",
-  Maintenance: "bg-amber-50 text-amber-700 border-amber-200",
+const statusStyles: Record<UnitProperty["status"], string> = {
+  available: "bg-blue-50 text-blue-700 border-blue-200",
+  occupied: "bg-slate-100 text-slate-700 border-slate-200",
+  reserved: "bg-purple-50 text-purple-700 border-purple-200",
+  maintenance: "bg-amber-50 text-amber-700 border-amber-200",
 };
 
-function getInitials(name: string) {
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
-}
-
 export default function UnitCard({ unit, onDelete }: Props) {
-  const tenant = unit.status === "Occupied" ? unit.tenant : undefined;
-
   return (
     <div className="flex min-h-[280px] flex-col rounded-lg border border-gray-100 bg-white p-3 shadow-sm transition-shadow duration-200 hover:shadow-lg">
       <div className="mb-4 flex items-start justify-between gap-3">
         <div>
-          <h3 className="text-xl font-bold text-gray-900">{unit.title}</h3>
+          <h3 className="text-xl font-bold text-gray-900">{unit.unitNumber}</h3>
         </div>
         <span
           className={`shrink-0 rounded-full border px-3 py-1 text-xs font-semibold uppercase ${statusStyles[unit.status]}`}
         >
           {unit.status}
         </span>
-      </div>
-      <div className="mb-5 text-sm text-gray-500">{unit.description}</div>
-
-      <div className="mb-5">
-        <span className="text-2xl font-bold text-blue-600">
-          KES {unit.price.toLocaleString()}
-        </span>
-        <span className="text-sm text-gray-500"> / month</span>
       </div>
 
       <div className="grid grid-cols-2 gap-3 text-sm text-gray-700">
@@ -70,7 +53,11 @@ export default function UnitCard({ unit, onDelete }: Props) {
         </div>
       </div>
 
-      {tenant && (
+      <div className="mt-5 flex items-center gap-3 font-bold rounded-xl border border-gray-100 bg-slate-50 p-3">
+        KES  {unit.rentAmount}
+      </div>
+
+      {/* {tenant && (
         <div className="mt-5 flex items-center gap-3 rounded-xl border border-gray-100 bg-slate-50 p-3">
           {tenant.avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -91,19 +78,20 @@ export default function UnitCard({ unit, onDelete }: Props) {
             <p className="truncate text-xs text-gray-500">{tenant.email}</p>
           </div>
         </div>
-      )}
+      )} */}
 
       <div className="mt-auto flex gap-2 border-t border-gray-100 pt-4">
-        <button
+        <Link
+          href={`/admin/unit/${unit.id}/edit`}
           type="button"
           className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-blue-200 px-3 py-2 text-sm font-semibold text-blue-600 transition hover:bg-blue-50"
         >
           <Edit size={14} />
           Edit
-        </button>
+        </Link>
         <button
           type="button"
-          onClick={() => onDelete(unit.id, unit.title)}
+          onClick={() => onDelete(unit.id, unit.unitNumber)}
           className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-red-200 px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50"
         >
           <Trash2 size={14} />

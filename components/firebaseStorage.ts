@@ -6,14 +6,6 @@ import {
 } from "firebase/storage";
 import { storage } from "@/lib/firebase";
 
-// folders
-
-// export const maintenanceRef = "images/maintenance/";
-// export const propertyRef = "images/property/";
-// export const unitRef = "images/unit/";
-// export const profileRef = "images/profile/";
-
-
 
 // Constants
 
