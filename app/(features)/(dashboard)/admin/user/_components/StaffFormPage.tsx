@@ -1,120 +1,104 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { ArrowLeft, Save } from "lucide-react";
-// import ImageFileField from "@/app/(features)/(dashboard)/admin/tenant/_components/ImageFileField";
+import { toast } from "sonner";
+import ImageFileField from "../../tenant/_components/ImageFileField";
 import {
+  DEPARTMENTS,
+  POSITIONS,
+  employmentTypeValues,
+  employmentTypeLabels,
   EmploymentType,
-  emptyStaffMember,
-  seededStaff,
-} from "../definations";
-import { staffFormSchema, StaffFormValues } from "../../../../../lib/staff.zod";
+} from "../staffConstants";
+import { StaffUserFormValues, staffUserSchema } from "../user.zod";
+import { emptyStaff } from "../definations";
+import { fieldClass, StaffFormPageProps, textAreaClass, textSections } from "./formSection";
+import { useCreateStaff,useUpdateStaff } from "../user.services";
 
-const fieldClass =
-  "h-10 w-full rounded-lg border border-orange-100 bg-white px-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
-
-const textAreaClass =
-  "min-h-24 w-full resize-y rounded-lg border border-orange-100 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
-
-const formSections = [
-  {
-    title: "Staff Details",
-    fields: [
-      ["name", "Full name"],
-      ["username", "Username"],
-      ["email", "Email"],
-      ["phone", "Phone"],
-      ["id_number", "ID number"],
-      // ["role", "Role"],
-      // ["password", "Password"],
-    ],
-  },
-  {
-    title: "Employment",
-    fields: [
-      ["position", "Position"],
-      ["department", "Department"],
-      ["salary", "Salary"],
-      ["hire_date", "Hire date"],
-      ["employment_type", "Employment type"],
-    ],
-  },
-  {
-    title: "Emergency Contact",
-    fields: [
-      ["emergency_contact_name", "Emergency contact name"],
-      ["emergency_contact_phone", "Emergency contact phone"],
-      ["emergency_contact_relationship", "Relationship"],
-    ],
-  },
-] as const;
-
-const employmentTypes: Array<{ label: string; value: EmploymentType }> = [
-  { label: "Full time", value: "full_time" },
-  { label: "Part time", value: "part_time" },
-  { label: "Contract", value: "contract" },
-  { label: "Intern", value: "intern" },
-  { label: "Temporary", value: "temporary" },
-];
-
-export default function StaffFormPage({
-  mode,
-  staffId,
-}: {
-  mode: "add" | "edit";
-  staffId?: string;
-}) {
+export default function StaffFormPage({ mode,businessId, existingStaff,listHref }: StaffFormPageProps) {
   const router = useRouter();
-  const initialStaff = useMemo(() => {
-    if (mode === "edit") {
-      const staff =
-        seededStaff.find((staff) => staff.id === staffId) ?? {
-          ...seededStaff[0],
-          id: staffId ?? "",
-        };
-
-      return {
-        ...staff,
-        confirm_password: staff.password,
-      };
-    }
-
-    return {
-      ...emptyStaffMember,
-      id: "",
-      confirm_password: "",
-    };
-  }, [mode, staffId]);
+  const createStaff = useCreateStaff();
+  const updateStaff = useUpdateStaff();
 
   const {
     control,
-    formState: { errors , isSubmitting},
+    formState: { errors, isSubmitting },
     handleSubmit,
     register,
     setValue,
-  } = useForm<StaffFormValues>({
-    defaultValues: {...initialStaff,
-      role: "staff",
-    },
-    resolver: zodResolver(staffFormSchema),
+    reset,
+  } = useForm<StaffUserFormValues>({
+    defaultValues: emptyStaff,
+    resolver: zodResolver(staffUserSchema),
   });
 
-  const onSubmit = () => {
-    router.push("/admin/user");
+  // Populate form once existing data loads in edit mode
+  useEffect(() => {
+    if (mode === "edit" && existingStaff) {
+      reset({
+        name: existingStaff.user.name,
+        email: existingStaff.user.email,
+        phone: existingStaff.user.phone,
+        idNumber: existingStaff.user.idNumber ?? undefined,
+        address: existingStaff.user.address ?? undefined,
+        isActive: existingStaff.user.isActive,
+        avatar: existingStaff.user.avatar ?? undefined,
+        avatarPath: existingStaff.user.avatarPath ?? undefined,
+        emergencyContactName: existingStaff.user.emergencyContactName ?? undefined,
+        emergencyContactPhone: existingStaff.user.emergencyContactPhone ?? undefined,
+        emergencyContactRelationship: existingStaff.user.emergencyContactRelationship ?? undefined,
+        position: existingStaff.position as StaffUserFormValues["position"],
+        department: existingStaff.department as StaffUserFormValues["department"],
+        salary: parseFloat(existingStaff.salary),
+        hireDate: existingStaff.hireDate.slice(0, 10),
+        employmentType: existingStaff.employmentType,
+        version: existingStaff.version
+      });
+    }
+  }, [mode, existingStaff, reset]);
+
+  const onSubmit = (data: StaffUserFormValues) => {
+    if (mode === "edit" && existingStaff?.id) {
+      updateStaff.mutate(
+        { id: existingStaff.id, data },
+        {
+          onSuccess: () => {
+            toast.success("Staff updated successfully");
+            router.push(listHref);
+          },
+          onError: () => {
+            toast.error("Failed to update staff. Please try again.");
+          },
+        },
+      );
+    } else {
+      createStaff.mutate(data, {
+        onSuccess: () => {
+          toast.success("Staff created successfully");
+          router.push(listHref);
+        },
+        onError: () => {
+          toast.error("Failed to create staff. Please try again.");
+        },
+      });
+    }
   };
 
   const avatar = useWatch({ control, name: "avatar" });
+  const avatarPath = useWatch({ control, name: "avatarPath" });
+  const isPending = createStaff.isPending || updateStaff.isPending;
 
   return (
-    <div className="bg-slate-50 p-3 sm:p-5 lg:p-6">
+    <div className="min-h-0 overflow-y-auto bg-slate-50 p-3 sm:p-5 lg:p-6">
       <div className="mx-auto w-full max-w-5xl space-y-5">
         <div>
           <Link
-            href="/admin/user"
+            href={listHref}
             className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-slate-900"
           >
             <ArrowLeft size={16} />
@@ -123,9 +107,6 @@ export default function StaffFormPage({
           <h1 className="mt-3 text-2xl font-bold text-blue-600 sm:text-3xl">
             {mode === "edit" ? "Edit Staff" : "Add Staff"}
           </h1>
-          <p className="mt-1 text-sm text-slate-500">
-            {mode === "edit" ? initialStaff.id : "Create a staff profile"}
-          </p>
         </div>
 
         <form
@@ -133,46 +114,21 @@ export default function StaffFormPage({
           className="overflow-hidden rounded-lg border border-orange-100 bg-white shadow-sm"
         >
           <div className="grid gap-6 p-4 sm:p-5 lg:grid-cols-2">
-            {formSections.map((section) => (
+
+            {/* Text field sections */}
+            {textSections.map((section) => (
               <section key={section.title} className="space-y-3">
-                <h2 className="text-base font-bold text-slate-950">
-                  {section.title}
-                </h2>
+                <h2 className="text-base font-bold text-slate-950">{section.title}</h2>
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
                   {section.fields.map(([key, label]) => (
                     <label key={key} className="space-y-1.5">
-                      <span className="text-sm font-medium text-slate-700">
-                        {label}
-                      </span>
-                      {key === "employment_type" ? (
-                        <select
-                          {...register("employment_type")}
-                          className={fieldClass}
-                        >
-                          {employmentTypes.map((type) => (
-                            <option key={type.value} value={type.value}>
-                              {type.label}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <input
-                          {...register(key, {
-                            valueAsNumber: key === "salary",
-                          })}
-                          className={fieldClass}
-                          type={
-                            key === "email"
-                              ? "email"
-                              : key === "salary"
-                                ? "number"
-                                : key === "hire_date"
-                                  ? "date"
-                                  : "text"
-                          }
-                        />
-                      )}
-                      {errors[key]?.message && (
+                      <span className="text-sm font-medium text-slate-700">{label}</span>
+                      <input
+                        {...register(key)}
+                        className={fieldClass}
+                        type={key === "email" ? "email" : "text"}
+                      />
+                      {errors[key] && (
                         <p className="text-xs font-medium text-red-500">
                           {errors[key]?.message}
                         </p>
@@ -183,80 +139,113 @@ export default function StaffFormPage({
               </section>
             ))}
 
-            <section className="space-y-3 lg:col-span-2">
-              <h2 className="text-base font-bold text-slate-950">Password</h2>
-              <div className="grid gap-3 sm:grid-cols-2">
+            {/* Employment section — all selects + special inputs */}
+            <section className="space-y-3">
+              <h2 className="text-base font-bold text-slate-950">Employment</h2>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+
                 <label className="space-y-1.5">
-                  <span className="text-sm font-medium text-slate-700">
-                    Password
-                  </span>
-                  <input
-                    {...register("password")}
-                    className={fieldClass}
-                    type="password"
-                  />
-                  {errors.password?.message && (
-                    <p className="text-xs font-medium text-red-500">
-                      {errors.password.message}
-                    </p>
+                  <span className="text-sm font-medium text-slate-700">Position</span>
+                  <select {...register("position")} className={fieldClass}>
+                    {POSITIONS.map((p) => (
+                      <option key={p} value={p}>{p}</option>
+                    ))}
+                  </select>
+                  {errors.position && (
+                    <p className="text-xs font-medium text-red-500">{errors.position.message}</p>
                   )}
                 </label>
 
                 <label className="space-y-1.5">
-                  <span className="text-sm font-medium text-slate-700">
-                    Confirm password
-                  </span>
+                  <span className="text-sm font-medium text-slate-700">Department</span>
+                  <select {...register("department")} className={fieldClass}>
+                    {DEPARTMENTS.map((d) => (
+                      <option key={d.code} value={d.code}>{d.name}</option>
+                    ))}
+                  </select>
+                  {errors.department && (
+                    <p className="text-xs font-medium text-red-500">{errors.department.message}</p>
+                  )}
+                </label>
+
+                <label className="space-y-1.5">
+                  <span className="text-sm font-medium text-slate-700">Salary</span>
                   <input
-                    {...register("confirm_password")}
+                    {...register("salary", { valueAsNumber: true })}
                     className={fieldClass}
-                    type="password"
+                    type="number"
+                    min={0}
+                    step={0.01}
                   />
-                  {errors.confirm_password?.message && (
-                    <p className="text-xs font-medium text-red-500">
-                      {errors.confirm_password.message}
-                    </p>
+                  {errors.salary && (
+                    <p className="text-xs font-medium text-red-500">{errors.salary.message}</p>
+                  )}
+                </label>
+
+                <label className="space-y-1.5">
+                  <span className="text-sm font-medium text-slate-700">Hire date</span>
+                  <input
+                    {...register("hireDate")}
+                    className={fieldClass}
+                    type="date"
+                    max={new Date().toISOString().slice(0, 10)}
+                  />
+                  {errors.hireDate && (
+                    <p className="text-xs font-medium text-red-500">{errors.hireDate.message}</p>
+                  )}
+                </label>
+
+                <label className="space-y-1.5">
+                  <span className="text-sm font-medium text-slate-700">Employment type</span>
+                  <select {...register("employmentType")} className={fieldClass}>
+                    {employmentTypeValues.map((type) => (
+                      <option key={type} value={type}>
+                        {employmentTypeLabels[type as EmploymentType]}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.employmentType && (
+                    <p className="text-xs font-medium text-red-500">{errors.employmentType.message}</p>
                   )}
                 </label>
               </div>
             </section>
 
-            {/* <section className="space-y-3 lg:col-span-2">
+            {/* Media */}
+            <section className="space-y-3 lg:col-span-2">
               <h2 className="text-base font-bold text-slate-950">Media</h2>
               <ImageFileField
                 id="staff-avatar"
                 label="Avatar"
-                value={avatar}
-                onChange={(value) =>
-                  setValue("avatar", value, {
-                    shouldDirty: true,
-                    shouldTouch: true,
-                    shouldValidate: true,
-                  })
-                }
+                businessId={businessId}
+                value={avatar ?? ""}
+                avatarPath={avatarPath ?? ""}
+                onChange={(url, path) => {
+                  setValue("avatar", url, { shouldDirty: true, shouldValidate: true });
+                  setValue("avatarPath", path, { shouldDirty: true });
+                }}
               />
-            </section> */}
+              {errors.avatar && (
+                <p className="text-xs text-red-600">{errors.avatar.message}</p>
+              )}
+            </section>
 
+            {/* Address & Status */}
             <section className="space-y-3 lg:col-span-2">
-              <h2 className="text-base font-bold text-slate-950">
-                Address & Status
-              </h2>
+              <h2 className="text-base font-bold text-slate-950">Address & Status</h2>
               <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_220px]">
                 <label className="space-y-1.5">
-                  <span className="text-sm font-medium text-slate-700">
-                    Address
-                  </span>
-                  <textarea
-                    {...register("address")}
-                    className={textAreaClass}
-                  />
+                  <span className="text-sm font-medium text-slate-700">Address</span>
+                  <textarea {...register("address")} className={textAreaClass} />
+                  {errors.address && (
+                    <p className="text-xs text-red-600">{errors.address.message}</p>
+                  )}
                 </label>
 
                 <label className="flex h-fit items-center justify-between gap-3 rounded-lg border border-orange-100 bg-slate-50 px-3 py-3 lg:mt-7">
-                  <span className="text-sm font-medium text-slate-700">
-                    Active staff
-                  </span>
+                  <span className="text-sm font-medium text-slate-700">Active staff</span>
                   <input
-                    {...register("is_active")}
+                    {...register("isActive")}
                     className="size-4 accent-orange-500"
                     type="checkbox"
                   />
@@ -267,18 +256,22 @@ export default function StaffFormPage({
 
           <div className="flex flex-col-reverse gap-3 border-t border-orange-100 bg-slate-50 p-4 sm:flex-row sm:justify-end">
             <Link
-              href="/admin/user"
+              href={listHref}
               className="inline-flex h-10 items-center justify-center rounded-lg border border-orange-100 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
             >
               Cancel
             </Link>
             <button
-              disabled={isSubmitting}
               type="submit"
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-sm font-semibold text-white transition hover:bg-blue-700"
+              disabled={isSubmitting || isPending}
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-400"
             >
               <Save size={16} />
-              {isSubmitting ? "saving...." : mode === "edit" ? "Save Staff" : "Create Staff"}
+              {isPending
+                ? "Saving..."
+                : mode === "edit"
+                  ? "Save Staff"
+                  : "Create Staff"}
             </button>
           </div>
         </form>

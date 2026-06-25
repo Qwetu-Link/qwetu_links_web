@@ -18,8 +18,10 @@ import {
   Users2,
 } from "lucide-react";
 import DeleteModal from "@/components/deletemodal/DeleteModal";
-import { seededStaff, StaffMember } from "../definations";
 import { formatLabel } from "./snakeTextFormatter";
+import { useDelStaff, useGetStaffs } from "../user.services";
+import { Staff } from "../definations";
+import { formatDate } from "../../maintenance/utils";
 
 function StatCard({
   label,
@@ -45,37 +47,35 @@ function StatCard({
   );
 }
 
-function StaffIdentity({ staff }: { staff: StaffMember }) {
+function StaffIdentity({ staff }: { staff: Staff }) {
   return (
     <div className="flex min-w-0 items-start gap-3">
       <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-sm font-bold text-blue-600">
-        {staff.name.slice(0, 2).toUpperCase()}
+        {staff.user.name.slice(0, 2).toUpperCase()}
       </div>
       <div className="min-w-0">
-        <p className="break-words font-semibold text-slate-950">{staff.name}</p>
+        <p className="break-words font-semibold text-slate-950">{staff.user.name}</p>
         <p className="mt-0.5 break-all text-xs text-slate-500">
-          @{staff.username}
+          @{staff.user.username}
         </p>
       </div>
     </div>
   );
 }
 
-function StaffStatus({ staff }: { staff: StaffMember }) {
+function StaffStatus({ staff }: { staff: Staff }) {
   return (
     <div>
       <span
-        className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${
-          staff.is_active
-            ? "bg-emerald-50 text-emerald-700"
-            : "bg-slate-100 text-slate-600"
-        }`}
+        className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${staff.user.isActive
+          ? "bg-emerald-50 text-emerald-700"
+          : "bg-slate-100 text-slate-600"
+          }`}
       >
-        {staff.is_active ? "Active" : "Inactive"}
+        {staff.user.isActive ? "Active" : "Inactive"}
       </span>
       <p className="mt-2 text-xs text-slate-500">
-        {/* {employmentTypeLabels[staff.employment_type]} */}
-        {formatLabel(staff.employment_type)}
+        {formatLabel(staff.employmentType)}
       </p>
     </div>
   );
@@ -119,9 +119,11 @@ function StaffActions({
 }
 
 export default function StaffManagement() {
-  const [staffList, setStaffList] = useState<StaffMember[]>(seededStaff);
+  const { data: staffResponse } = useGetStaffs()
+  const deleteStaff = useDelStaff()
+  const staffList = staffResponse.data;
   const [query, setQuery] = useState("");
-  const [deleteTarget, setDeleteTarget] = useState<StaffMember | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Staff | null>(null);
 
   const filteredStaff = useMemo(() => {
     const search = query.trim().toLowerCase();
@@ -129,23 +131,23 @@ export default function StaffManagement() {
 
     return staffList.filter((staff) =>
       [
-        staff.name,
-        staff.username,
-        staff.email,
-        staff.phone,
+        staff.user.name,
+        staff.user.username,
+        staff.user.email,
+        staff.user.phone,
         staff.position,
         staff.department,
-        staff.employment_type,
+        staff.employmentType,
       ].some((value) => value.toLowerCase().includes(search)),
     );
   }, [query, staffList]);
 
-  const activeCount = staffList.filter((staff) => staff.is_active).length;
+  const activeCount = staffList.filter((staff) => staff.user.isActive).length;
 
   const confirmDelete = () => {
     if (!deleteTarget) return;
-    setStaffList((current) =>
-      current.filter((staff) => staff.id !== deleteTarget.id),
+    deleteStaff.mutate(
+      { id: deleteTarget.id, avatarPath: deleteTarget.user.avatarPath }
     );
     setDeleteTarget(null);
   };
@@ -222,11 +224,11 @@ export default function StaffManagement() {
                 <div className="space-y-1">
                   <p className="flex items-center gap-2 break-all">
                     <Mail size={14} />
-                    {staff.email}
+                    {staff.user.email}
                   </p>
                   <p className="flex items-center gap-2">
                     <Phone size={14} />
-                    {staff.phone}
+                    {staff.user.phone}
                   </p>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -246,7 +248,7 @@ export default function StaffManagement() {
                     <p className="mt-1 font-medium text-slate-800">
                       KES {staff.salary.toLocaleString()}
                     </p>
-                    <p className="mt-1 text-xs">{staff.hire_date}</p>
+                    <p className="mt-1 text-xs">{formatDate(staff.hireDate)}</p>
                   </div>
                 </div>
               </div>
@@ -290,11 +292,11 @@ export default function StaffManagement() {
                       <div className="space-y-1 text-slate-600">
                         <p className="flex items-center gap-2 break-all">
                           <Mail size={14} />
-                          {staff.email}
+                          {staff.user.email}
                         </p>
                         <p className="flex items-center gap-2">
                           <Phone size={14} />
-                          {staff.phone}
+                          {staff.user.phone}
                         </p>
                       </div>
                     </td>
@@ -307,7 +309,7 @@ export default function StaffManagement() {
                       </p>
                       <p className="mt-1 flex items-center gap-1 text-xs">
                         <CalendarDays size={13} />
-                        {staff.hire_date}
+                        {formatDate(staff.hireDate)}
                       </p>
                     </td>
                     <td className="px-4 py-4 text-slate-600">
@@ -347,7 +349,7 @@ export default function StaffManagement() {
 
       {deleteTarget && (
         <DeleteModal
-          name={deleteTarget.name}
+          name={deleteTarget.user.name}
           title="Delete Staff"
           onConfirm={confirmDelete}
           onCancel={() => setDeleteTarget(null)}

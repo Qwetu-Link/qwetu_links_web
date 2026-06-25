@@ -150,7 +150,7 @@ export default function TenantFormPage({
               </section>
             ))}
 
-                <section className="space-y-3 lg:col-span-2">
+            <section className="space-y-3 lg:col-span-2">
               <h2 className="text-base font-bold text-slate-950">
                 Location & Status
               </h2>
@@ -201,7 +201,7 @@ export default function TenantFormPage({
               )}
             </section>
 
-        
+
           </div>
 
           <div className="flex flex-col-reverse gap-3 border-t border-orange-100 bg-slate-50 p-4 sm:flex-row sm:justify-end">

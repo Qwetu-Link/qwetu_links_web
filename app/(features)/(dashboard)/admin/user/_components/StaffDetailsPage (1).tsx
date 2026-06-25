@@ -123,9 +123,6 @@ export default function StaffDetailsPage({ staffId, listHref, editHref }: StaffD
     );
   }
 
-  const userName = staff?.user?.name ?? "Unknown Staff";
-  const avatarUrl = staff?.user?.avatar;
-
   return (
     <div className="min-h-0 overflow-y-auto bg-slate-50 p-3 sm:p-5 lg:p-6">
       <div className="mx-auto w-full max-w-6xl space-y-5">
@@ -141,22 +138,22 @@ export default function StaffDetailsPage({ staffId, listHref, editHref }: StaffD
               Back to team
             </Link>
             <div className="mt-4 flex min-w-0 items-start gap-3">
-              <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-blue-50 overflow-hidden border border-blue-100">
-                {avatarUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={avatarUrl} alt="" className="size-full object-cover" />
-                ) : (
-                  <span className="text-base font-bold text-blue-600">
-                    {userName.slice(0, 2).toUpperCase()}
-                  </span>
-                )}
+              <div
+                className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-blue-50 bg-cover bg-center text-base font-bold text-blue-600 ring-1 ring-orange-100"
+                style={
+                  staff.user.avatar
+                    ? { backgroundImage: `url("${staff.user.avatar}")` }
+                    : undefined
+                }
+              >
+                {!staff.user.avatar && staff.user.name.slice(0, 2).toUpperCase()}
               </div>
               <div className="min-w-0">
                 <h1 className="break-words text-2xl font-bold text-blue-600 sm:text-3xl">
                   {staff.user.name}
                 </h1>
                 <p className="mt-1 break-all text-sm text-slate-500">
-                  @{staff.user.username}
+                  @{staff.user.username} · {staff.id}
                 </p>
               </div>
             </div>

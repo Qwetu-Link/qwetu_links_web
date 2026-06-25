@@ -1,5 +1,40 @@
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { getServerApi } from "@/lib/axios.server";
 import StaffManagement from "./_components/StaffManagement";
+import { staffKeys } from "./user.services";
+import { getStaffs } from "./user.endpoint";
 
-export default function Page() {
-  return <StaffManagement />;
+interface PageProps {
+  searchParams: Promise<{ page?: string }>;
+};
+
+export default async function Page({ searchParams }: PageProps) {
+  const resolvedParams = await searchParams;
+  const page = Number(resolvedParams?.page ?? 1);
+
+  const serverApi = await getServerApi();
+
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 60 * 1000,
+      },
+    },
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: staffKeys.list(page),
+    queryFn: () => getStaffs(page, serverApi),
+  });
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <StaffManagement />
+    </HydrationBoundary>
+  );
 }
+

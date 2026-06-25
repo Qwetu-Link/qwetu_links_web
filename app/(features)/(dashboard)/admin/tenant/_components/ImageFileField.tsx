@@ -41,13 +41,8 @@ export default function ImageFileField({
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // If there's an existing uploaded image, delete it first
     if (avatarPath) {
-      try {
-        await deleteFile(avatarPath);
-      } catch {
-        // non-fatal — continue with new upload
-      }
+      try { await deleteFile(avatarPath); } catch { /* non-fatal */ }
     }
 
     setStatus("uploading");
@@ -61,7 +56,6 @@ export default function ImageFileField({
         module: "avatars",
         onProgress: (p) => setProgress(p),
       });
-
       setStatus("done");
       onChange(result.url, result.path);
     } catch (err) {
@@ -69,17 +63,12 @@ export default function ImageFileField({
       setError(err instanceof Error ? err.message : "Upload failed.");
     }
 
-    // Reset input so the same file can be re-selected after an error
     event.target.value = "";
   };
 
   const handleRemove = async () => {
     if (avatarPath) {
-      try {
-        await deleteFile(avatarPath);
-      } catch {
-        // non-fatal
-      }
+      try { await deleteFile(avatarPath); } catch { /* non-fatal */ }
     }
     setStatus("idle");
     setProgress(0);
@@ -87,71 +76,114 @@ export default function ImageFileField({
     onChange("", "");
   };
 
+  const hasPreview = canPreview(value);
+
   return (
     <div className="space-y-1.5">
       <span className="text-sm font-medium text-slate-700">{label}</span>
-      <div className="grid gap-3 sm:grid-cols-[132px_minmax(0,1fr)]">
 
-        {/* Preview */}
-        <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border border-orange-100 bg-slate-50 sm:w-32">
-          {canPreview(value) ? (
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+
+        {/* Avatar preview */}
+        <div className="relative mx-auto h-24 w-24 shrink-0 overflow-hidden rounded-xl border border-orange-100 bg-slate-50 sm:mx-0 sm:h-20 sm:w-20">
+          {hasPreview ? (
             <>
               <Image
                 src={value}
-                alt="Avatar preview"
+                alt="Avatar"
                 fill
                 className="object-cover"
                 unoptimized={value.startsWith("blob:")}
               />
-
-              {/* Uploading overlay */}
-              {status === "uploading" && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/50">
-                  <Loader2 size={20} className="animate-spin text-white" />
-                  <div className="w-3/4 overflow-hidden rounded-full bg-white/30">
-                    <div
-                      className="h-1.5 rounded-full bg-white transition-all duration-200"
-                      style={{ width: `${progress}%` }}
-                    />
-                  </div>
-                  <span className="text-xs font-semibold text-white">{progress}%</span>
-                </div>
-              )}
-
-              {/* Done badge */}
-              {status === "done" && (
-                <div className="absolute top-1.5 left-1.5">
-                  <CheckCircle2 size={18} className="text-emerald-400 drop-shadow" />
-                </div>
-              )}
-
-              {/* Remove button */}
               {status !== "uploading" && (
                 <button
                   type="button"
                   onClick={handleRemove}
-                  className="absolute top-1.5 right-1.5 flex size-6 items-center justify-center rounded-full bg-black/50 text-white transition hover:bg-red-500"
+                  title="Remove image"
+                  className="absolute inset-0 flex items-center justify-center bg-black/0 text-transparent transition hover:bg-black/40 hover:text-white"
                 >
-                  <Trash2 size={12} />
+                  <Trash2 size={16} />
                 </button>
               )}
             </>
           ) : (
-            <ImagePlus size={24} className="text-slate-400" />
+            <div className="flex h-full w-full items-center justify-center text-slate-300">
+              <ImagePlus size={28} />
+            </div>
           )}
         </div>
 
-        {/* Drop zone / error */}
-        {status === "error" ? (
-          <div className="flex min-h-32 flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-red-200 bg-red-50 px-4 py-5 text-center">
-            <XCircle size={20} className="text-red-400" />
-            <p className="text-sm font-semibold text-red-700">Upload failed</p>
-            <p className="text-xs text-red-500">{error}</p>
+        {/* Status panel */}
+        <div className="flex-1 space-y-2">
+          {status === "uploading" && (
+            <div className="flex flex-col justify-center gap-2 rounded-xl border border-orange-100 bg-slate-50 px-4 py-4">
+              <div className="flex items-center gap-2">
+                <Loader2 size={15} className="animate-spin text-orange-500" />
+                <span className="text-sm font-medium text-slate-700">Uploading…</span>
+                <span className="ml-auto text-xs font-semibold tabular-nums text-slate-500">
+                  {progress}%
+                </span>
+              </div>
+              <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
+                <div
+                  className="h-full rounded-full bg-orange-500 transition-all duration-200"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            </div>
+          )}
+
+          {status === "done" && (
+            <div className="flex items-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3">
+              <CheckCircle2 size={16} className="shrink-0 text-emerald-500" />
+              <span className="text-sm font-medium text-emerald-700">Image uploaded</span>
+              <label
+                htmlFor={id}
+                className="ml-auto cursor-pointer text-xs font-semibold text-slate-500 underline underline-offset-2 hover:text-slate-800"
+              >
+                Replace
+                <input
+                  id={id}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="sr-only"
+                />
+              </label>
+            </div>
+          )}
+
+          {status === "error" && (
+            <div className="space-y-1.5 rounded-xl border border-red-100 bg-red-50 px-4 py-3">
+              <div className="flex items-center gap-2">
+                <XCircle size={16} className="shrink-0 text-red-500" />
+                <span className="text-sm font-medium text-red-700">Upload failed</span>
+              </div>
+              {error && <p className="text-xs text-red-500">{error}</p>}
+              <label
+                htmlFor={id}
+                className="inline-block cursor-pointer text-xs font-semibold text-blue-600 underline underline-offset-2"
+              >
+                Try again
+                <input
+                  id={id}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="sr-only"
+                />
+              </label>
+            </div>
+          )}
+
+          {status === "idle" && (
             <label
               htmlFor={id}
-              className="mt-1 cursor-pointer text-xs font-semibold text-blue-600 underline"
+              className="flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-orange-200 bg-white px-4 py-5 text-center transition hover:bg-orange-50/50"
             >
-              Try again
+              <ImagePlus size={18} className="text-orange-400" />
+              <span className="text-sm font-semibold text-slate-700">Choose a photo</span>
+              <span className="text-xs text-slate-400">PNG, JPG, WEBP or SVG</span>
               <input
                 id={id}
                 type="file"
@@ -160,29 +192,8 @@ export default function ImageFileField({
                 className="sr-only"
               />
             </label>
-          </div>
-        ) : (
-          <label
-            htmlFor={id}
-            className="flex min-h-32 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-orange-200 bg-white px-4 py-5 text-center transition hover:bg-orange-50/50"
-          >
-            <ImagePlus className="mb-2 text-orange-500" size={20} />
-            <span className="text-sm font-semibold text-slate-800">
-              {status === "uploading" ? "Uploading..." : "Choose file from device"}
-            </span>
-            <span className="mt-1 max-w-full truncate text-xs text-slate-500">
-              {value || "PNG, JPG, WEBP, GIF, or SVG"}
-            </span>
-            <input
-              id={id}
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              disabled={status === "uploading"}
-              className="sr-only"
-            />
-          </label>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
