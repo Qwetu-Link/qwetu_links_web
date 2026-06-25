@@ -1,74 +1,34 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Save } from "lucide-react";
 import ImageFileField from "./ImageFileField";
-import { emptyTenant, seededTenants } from "../definations";
 import { useForm, useWatch } from "react-hook-form";
-import { tenantFormSchema, TenantFormValues } from "@/app/lib/tenant.zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-const fieldClass =
-  "h-10 w-full rounded-lg border border-orange-100 bg-white px-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
-
-const textAreaClass =
-  "min-h-24 w-full resize-y rounded-lg border border-orange-100 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
-
-const formSections = [
-  {
-    title: "Tenant Details",
-    fields: [
-      ["name", "Full name"],
-      ["username", "Username"],
-      ["email", "Email"],
-      ["phone", "Phone"],
-      ["id_number", "ID/PASSPORT number"],
-      // ["role", "Role"],
-    ],
-  },
-  {
-    title: "Contacts",
-    fields: [
-      ["next_of_kin_name", "Next of kin name"],
-      ["next_of_kin_phone", "Next of kin phone"],
-      ["emergency_contact_name", "Emergency contact name"],
-      ["emergency_contact_phone", "Emergency contact phone"],
-      ["emergency_contact_relationship", "Relationship"],
-    ],
-  },
-] as const;
+import { toast } from "sonner";
+import { useCreateTenants, useUpdateTenants } from "../tenant.services";
+import { TenantUserFormValues, tenantUserSchema } from "../tenant.zod";
+import { emptyTenant, fieldClass, formSections, Tenant, textAreaClass } from "../definations"; // Double-check spelling of definitions
 
 type TenantFormPageProps = {
   mode: "add" | "edit";
-  tenantId?: string;
+  tenant?: Tenant;
+  businessId: string;
   listHref: string;
+  initialValues?: TenantUserFormValues;
 };
 
 export default function TenantFormPage({
+  businessId,
   mode,
-  tenantId,
+  tenant,
   listHref,
 }: TenantFormPageProps) {
   const router = useRouter();
-  const initialTenant = useMemo(() => {
-    if (mode === "edit") {
-      return (
-        seededTenants.find((tenant) => tenant.id === tenantId) ?? {
-          ...seededTenants[0],
-          id: tenantId ?? "",
-          role: "tenant",
-        }
-      );
-    }
-
-    return {
-      ...emptyTenant,
-      id: "",
-      role: "tenant",
-    };
-  }, [mode, tenantId]);
+  const createTenant = useCreateTenants();
+  const updateTenant = useUpdateTenants();
 
   const {
     control,
@@ -76,24 +36,66 @@ export default function TenantFormPage({
     handleSubmit,
     register,
     setValue,
-  } = useForm<TenantFormValues>({
-    defaultValues: {
-      ...initialTenant,
-      role: "tenant",
-    },
-    resolver: zodResolver(tenantFormSchema),
+    reset,
+  } = useForm<TenantUserFormValues>({
+    defaultValues: emptyTenant,
+    resolver: zodResolver(tenantUserSchema),
   });
 
-  const onSubmit = (data: TenantFormValues) => {
-    const payload = {
-      ...data,
-      role: "tenant",
-    };
-    console.log("Tenant Data", payload);
-    router.push(listHref);
+  // Populate form once existing data loads in edit mode, clear it otherwise
+  useEffect(() => {
+    if (mode === "edit" && tenant) {
+      reset({
+        name: tenant.user.name,
+        email: tenant.user.email,
+        phone: tenant.user.phone,
+        idNumber: tenant.user.idNumber,
+        address: tenant.user.address ?? "",
+        isActive: tenant.isActive,
+        avatar: tenant.user.avatar ?? "",
+        avatarPath: tenant.user.avatarPath ?? "",
+        nextOfKinName: tenant.nextOfKinName,
+        nextOfKinPhone: tenant.nextOfKinPhone,
+        emergencyContactName: tenant.user.emergencyContactName,
+        emergencyContactPhone: tenant.user.emergencyContactPhone,
+        emergencyContactRelationship: tenant.user.emergencyContactRelationship,
+        version: tenant.version,
+      });
+    } else if (mode === "add") {
+      reset(emptyTenant);
+    }
+  }, [mode, tenant, reset]);
+
+  const onSubmit = (data: TenantUserFormValues) => {
+    if (mode === "edit" && tenant?.id) {
+      updateTenant.mutate(
+        { id: tenant.id, data },
+        {
+          onSuccess: () => {
+            toast.success("Tenant updated successfully");
+            router.push(listHref);
+          },
+          onError: () => {
+            toast.error("Failed to update tenant. Please try again.");
+          },
+        },
+      );
+    } else {
+      createTenant.mutate(data, {
+        onSuccess: () => {
+          toast.success("Tenant created successfully");
+          router.push(listHref);
+        },
+        onError: () => {
+          toast.error("Failed to create tenant. Please try again.");
+        },
+      });
+    }
   };
 
   const avatar = useWatch({ control, name: "avatar" });
+  const avatarPath = useWatch({ control, name: "avatarPath" });
+  const isPending = createTenant.isPending || updateTenant.isPending;
 
   return (
     <div className="min-h-full bg-slate-50 p-3 sm:p-5 lg:p-6">
@@ -110,9 +112,6 @@ export default function TenantFormPage({
             <h1 className="mt-3 text-2xl font-bold text-blue-600 sm:text-3xl">
               {mode === "edit" ? "Edit Tenant" : "Add Tenant"}
             </h1>
-            <p className="mt-1 text-sm text-slate-500">
-              {mode === "edit" ? initialTenant.id : "Create a tenant profile"}
-            </p>
           </div>
         </div>
 
@@ -127,97 +126,43 @@ export default function TenantFormPage({
                   {section.title}
                 </h2>
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-                  {section.fields.map(([key, label]) => (
-                    <label key={key} className="space-y-1.5">
-                      <span className="text-sm font-medium text-slate-700">
-                        {label}
-                      </span>
-                      <input
-                        {...register(key)}
-                        className={fieldClass}
-                        type={key === "email" ? "email" : "text"}
-                      />
-                      {errors[key] && (
-                        <p className="text-xs text-red-600">
-                          {errors[key]?.message}
-                        </p>
-                      )}
-                    </label>
-                  ))}
+                  {section.fields.map(([key, label]) => {
+                    const fieldKey = key as keyof TenantUserFormValues;
+                    return (
+                      <label key={key} className="space-y-1.5">
+                        <span className="text-sm font-medium text-slate-700">
+                          {label}
+                        </span>
+                        <input
+                          {...register(fieldKey)}
+                          className={fieldClass}
+                          type={key === "email" ? "email" : "text"}
+                        />
+                        {errors[fieldKey] && (
+                          <p className="text-xs text-red-600">
+                            {errors[fieldKey]?.message}
+                          </p>
+                        )}
+                      </label>
+                    );
+                  })}
                 </div>
               </section>
             ))}
 
-            <section className="space-y-3 lg:col-span-2">
-              <h2 className="text-base font-bold text-slate-950">Password</h2>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <label className="space-y-1.5">
-                  <span className="text-sm font-medium text-slate-700">
-                    Password
-                  </span>
-                  <input
-                    {...register("password")}
-                    className={fieldClass}
-                    type="password"
-                  />
-                  {errors.password?.message && (
-                    <p className="text-xs font-medium text-red-500">
-                      {errors.password.message}
-                    </p>
-                  )}
-                </label>
-
-                <label className="space-y-1.5">
-                  <span className="text-sm font-medium text-slate-700">
-                    Confirm password
-                  </span>
-                  <input
-                    {...register("confirm_password")}
-                    className={fieldClass}
-                    type="password"
-                  />
-                  {errors.confirm_password?.message && (
-                    <p className="text-xs font-medium text-red-500">
-                      {errors.confirm_password.message}
-                    </p>
-                  )}
-                </label>
-              </div>
-            </section>
-
-            <section className="space-y-3 lg:col-span-2">
-              <h2 className="text-base font-bold text-slate-950">Media</h2>
-              <ImageFileField
-                id="tenant-avatar"
-                label="Avatar"
-                value={avatar}
-                onChange={(value) =>
-                  setValue("avatar", value, {
-                    shouldDirty: true,
-                    shouldTouch: true,
-                    shouldValidate: true,
-                  })
-                }
-              />
-              {errors.avatar && (
-                <p className="text-xs text-red-600">{errors.avatar.message}</p>
-              )}
-            </section>
-
-            <section className="space-y-3 lg:col-span-2">
+                <section className="space-y-3 lg:col-span-2">
               <h2 className="text-base font-bold text-slate-950">
-                Address & Status
+                Location & Status
               </h2>
               <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_220px]">
                 <label className="space-y-1.5">
                   <span className="text-sm font-medium text-slate-700">
-                    Address
+                    Location
                   </span>
                   <textarea
                     {...register("address")}
                     className={textAreaClass}
                   />
-
                   {errors.address && (
                     <p className="text-xs text-red-600">
                       {errors.address.message}
@@ -230,13 +175,33 @@ export default function TenantFormPage({
                     Active tenant
                   </span>
                   <input
-                    {...register("is_active")}
+                    {...register("isActive")}
                     className="size-4 accent-orange-500"
                     type="checkbox"
                   />
                 </label>
               </div>
             </section>
+
+            <section className="space-y-3 lg:col-span-2">
+              <h2 className="text-base font-bold text-slate-950">Media</h2>
+              <ImageFileField
+                id="tenant-avatar"
+                label="Avatar"
+                businessId={businessId}
+                value={avatar ?? ""}
+                avatarPath={avatarPath ?? ""}
+                onChange={(url, path) => {
+                  setValue("avatar", url, { shouldDirty: true, shouldValidate: true });
+                  setValue("avatarPath", path, { shouldDirty: true });
+                }}
+              />
+              {errors.avatar && (
+                <p className="text-xs text-red-600">{errors.avatar.message}</p>
+              )}
+            </section>
+
+        
           </div>
 
           <div className="flex flex-col-reverse gap-3 border-t border-orange-100 bg-slate-50 p-4 sm:flex-row sm:justify-end">
@@ -248,11 +213,11 @@ export default function TenantFormPage({
             </Link>
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || isPending}
               className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-400"
             >
               <Save size={16} />
-              {isSubmitting
+              {isPending
                 ? "Saving..."
                 : mode === "edit"
                   ? "Save Tenant"

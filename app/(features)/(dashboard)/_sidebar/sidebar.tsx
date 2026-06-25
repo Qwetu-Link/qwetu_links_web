@@ -58,7 +58,10 @@ const SidebarBody = ({
   const user = useAuthStore((state) => state.user);
   // const logout = useAuthStore((state) => state.logout);
 
-  const usertype: Role = user?.userType ?? "tenant";
+  // const usertype: Role = user?.userType ?? "tenant";
+  // const mainMenu = links[usertype];
+  // const bottomMenu = helpLinks[usertype];
+  const usertype = (user?.userType ?? "tenant") as Role;
   const mainMenu = links[usertype];
   const bottomMenu = helpLinks[usertype];
 
@@ -69,11 +72,11 @@ const SidebarBody = ({
 
   const initials = user?.name
     ? user.name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2)
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2)
     : "?";
 
   return (

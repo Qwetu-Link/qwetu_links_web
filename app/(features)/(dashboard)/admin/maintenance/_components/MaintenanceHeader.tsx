@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus, Wrench } from "lucide-react";
+import { Plus } from "lucide-react";
 
 type MaintenanceHeaderProps = {
   basePath: string;
@@ -11,10 +11,6 @@ export default function MaintenanceHeader({
   return (
     <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <div className="mb-2 inline-flex items-center gap-2 rounded-lg bg-white px-3 py-1.5 text-sm font-medium text-orange-700 ring-1 ring-orange-100">
-          <Wrench size={16} />
-          Maintenance
-        </div>
         <h1 className="text-3xl font-bold tracking-tight text-slate-950">
           Maintenance Requests
         </h1>

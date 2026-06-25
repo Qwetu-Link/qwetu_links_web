@@ -1,17 +1,18 @@
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import { getServerApi } from "@/lib/axios.server";
-import MaintenanceRequestsPage from "./_components/MaintenanceRequestsPage";
-import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
-import { maintenancekeys } from "./maintenance.services";
-import { getMaintenances } from "./maintenance.endpoint";
-
+import { tenantKeys } from "./tenant.services";
+import { getTenants } from "./tenant.endpoint";
+import TenantManagement from "./_components/TenantManagement";
 
 interface PageProps {
   searchParams: Promise<{ page?: string }>;
 };
 
-
 export default async function Page({ searchParams }: PageProps) {
-
   const resolvedParams = await searchParams;
   const page = Number(resolvedParams?.page ?? 1);
 
@@ -26,13 +27,13 @@ export default async function Page({ searchParams }: PageProps) {
   });
 
   await queryClient.prefetchQuery({
-    queryKey: maintenancekeys.list(page),
-    queryFn: () => getMaintenances(page, serverApi),
+    queryKey: tenantKeys.list(page),
+    queryFn: () => getTenants(page, serverApi),
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <MaintenanceRequestsPage basePath="/admin/maintenance" />
+      <TenantManagement />
     </HydrationBoundary>
   );
 }

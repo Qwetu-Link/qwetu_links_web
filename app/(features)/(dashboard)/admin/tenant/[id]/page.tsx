@@ -7,6 +7,8 @@ export default async function Page({
 }) {
   const { id } = await params;
 
+
+  console.log("tenant id detail", id)
   return (
     <TenantDetailsPage
       tenantId={id}

@@ -4,14 +4,12 @@ export const priorityStyles: Record<MaintenancePriority, string> = {
   low: "bg-emerald-50 text-emerald-700 ring-emerald-200",
   medium: "bg-sky-50 text-sky-700 ring-sky-200",
   high: "bg-amber-50 text-amber-700 ring-amber-200",
-  urgent: "bg-red-50 text-red-700 ring-red-200",
 };
 
 export const statusStyles: Record<MaintenanceStatus, string> = {
-  reported: "bg-slate-50 text-slate-700 ring-slate-200",
   in_progress: "bg-orange-50 text-orange-700 ring-orange-200",
   resolved: "bg-blue-50 text-blue-700 ring-blue-200",
-  closed: "bg-zinc-50 text-zinc-700 ring-zinc-200",
+  pending: "bg-zinc-50 text-zinc-700 ring-zinc-200",
 };
 
 export const fieldClass =

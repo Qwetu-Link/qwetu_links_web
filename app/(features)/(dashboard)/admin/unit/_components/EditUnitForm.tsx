@@ -4,7 +4,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
-import { Images, UnitProperty } from "../definations";
+import { UnitProperty } from "../definations";
 import { UnitFormFields } from "./UnitFormField";
 import { unitFormSchema, UnitFormValues } from "../units.zod";
 import { PropertyStatus } from "../../property/definations";
@@ -31,7 +31,6 @@ export default function UnitEditForm({ unit }: UnitEditFormProps) {
       bathrooms: unit.bathrooms,
       // rentAmount: unit.rentAmount,
       parking: unit.parking,
-      image: unit.images?.map((img: Images) => img.url) ?? [],
       version: unit.version,
     },
   });

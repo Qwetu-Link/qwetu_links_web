@@ -11,7 +11,7 @@ export default async function Page({
     <TenantDetailsPage
       tenantId={id}
       listHref="/caretaker/tenant"
-      editHref={`/caretaker/tenant/${id}/edit`}
+      editHref=""
     />
   );
 }

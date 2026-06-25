@@ -25,7 +25,7 @@ export default function UnitCreateForm({ propertyId }: UnitCreateFormProps) {
       unitNumber: "",
       unitFloor: "",
       status: "available",
-      size: 0,
+      size: "0.00",
       bedrooms: 0,
       bathrooms: 0,
       parking: 0,

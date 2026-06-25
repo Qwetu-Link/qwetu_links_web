@@ -1,3 +1,5 @@
+export type UnitStatus = "available" | "occupied" | "maintenance" | "reserved";
+
 export type Images = {
   id:string;
   url: string;
@@ -10,17 +12,19 @@ export type Images = {
 
 export interface UnitProperty {
   id: string;
-  propertyID: string;
-  unitNumber: string;
-  unitFloor: string;
-  status: string;
-  size: number;
-  parking: number;
-  bedrooms: number;
-  bathrooms: number;
-  rentAmount: string;
-  images?: Images[];
-  version?: number;
+    unitNumber: string;
+    unitFloor: string;
+    status: UnitStatus;
+    size: string; // Stored as a decimal string in DB (e.g., "50.00")
+    sizeUnit: string; // e.g., "sqm" or "sqft"
+    bedrooms: number;
+    parking: number;
+    bathrooms: number;
+    rentAmount: string; // Stored as a decimal string (e.g., "0.00")
+    depositAmount: string; // Stored as a decimal string (e.g., "0.00")
+    propertyID: string;
+    businessID: string;
+    version?: number;
 }
 
 export interface UnitsResponse {

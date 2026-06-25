@@ -44,9 +44,8 @@ export default function MaintenanceFilters({
             className={`${fieldClass} pl-10`}
           >
             <option value="all">All statuses</option>
-            <option value="reported">Reported</option>
+            <option value="pending">Pending</option>
             <option value="in_progress">In Progress</option>
-            <option value="resolved">Resolved</option>
             <option value="closed">Closed</option>
           </select>
         </div>

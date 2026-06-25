@@ -1,25 +1,32 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { initialMaintenanceRequest } from "./data";
-import type { MaintenanceStatusFilter } from "./definitions";
-import MaintenanceFilters from "./_components/MaintenanceFilters";
-import MaintenanceHeader from "./_components/MaintenanceHeader";
-import MaintenanceStats from "./_components/MaintenanceStats";
-import MaintenanceTable from "./_components/MaintenanceTable";
+import type { MaintenanceRequest, MaintenanceStatusFilter } from "../definitions";
+import MaintenanceFilters from "./MaintenanceFilters";
+import MaintenanceHeader from "./MaintenanceHeader";
+import MaintenanceStats from "./MaintenanceStats";
+import MaintenanceTable from "./MaintenanceTable";
+import { useDelMaintenances, useGetMaintenances } from "../maintenance.services";
+import DeleteModal from "@/components/deletemodal/DeleteModal";
+import { toast } from "sonner";
 
 type MaintenanceRequestsPageProps = {
   basePath?: string;
 };
 
-const maintenanceRequests = [initialMaintenanceRequest];
 
 export default function MaintenanceRequestsPage({
   basePath = "/maintenance",
 }: MaintenanceRequestsPageProps) {
-  const requests = maintenanceRequests;
+
+  const { data: maintenanceData } = useGetMaintenances();
+  const requests = maintenanceData.data;
+  const deleteMaintenance = useDelMaintenances();
+
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<MaintenanceStatusFilter>("all");
+  const [deleteTarget, setDeleteTarget] = useState<MaintenanceRequest | null>(null);
+
 
   const filteredRequests = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -29,8 +36,8 @@ export default function MaintenanceRequestsPage({
         !query ||
         request.title.toLowerCase().includes(query) ||
         request.issue.toLowerCase().includes(query) ||
-        request.unit_id.toLowerCase().includes(query) ||
-        request.tenant_id.toLowerCase().includes(query);
+        request.unitID.toLowerCase().includes(query)
+
       const matchesStatus = status === "all" || request.status === status;
 
       return matchesSearch && matchesStatus;
@@ -47,6 +54,22 @@ export default function MaintenanceRequestsPage({
   const resolvedCount = requests.filter(
     (request) => request.status === "resolved",
   ).length;
+
+  const confirmDelete = () => {
+    if (!deleteTarget) return;
+    deleteMaintenance.mutate(
+      { id: deleteTarget.id },
+      {
+        onSuccess: () => {
+          toast.success(`"${deleteTarget.maintainanceNo}" deleted successfully`);
+        },
+        onError: () => {
+          toast.error("Failed to delete Maintenance. Please try again.");
+        },
+      },
+    );
+    setDeleteTarget(null);
+  };
 
   return (
     <div className="custom-scrollbar h-full overflow-y-auto bg-slate-50 p-4 text-slate-950 sm:p-6">
@@ -66,8 +89,17 @@ export default function MaintenanceRequestsPage({
             onSearchChange={setSearch}
             onStatusChange={setStatus}
           />
-          <MaintenanceTable requests={filteredRequests} basePath={basePath} />
+          <MaintenanceTable requests={filteredRequests} basePath={basePath} onDelete={setDeleteTarget} />
         </section>
+
+        {deleteTarget && (
+          <DeleteModal
+            name={deleteTarget.maintainanceNo}
+            title="Delete Tenant"
+            onConfirm={confirmDelete}
+            onCancel={() => setDeleteTarget(null)}
+          />
+        )}
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { ArrowLeft, Save } from "lucide-react";
-import ImageFileField from "@/app/(features)/(dashboard)/admin/tenant/_components/ImageFileField";
+// import ImageFileField from "@/app/(features)/(dashboard)/admin/tenant/_components/ImageFileField";
 import {
   EmploymentType,
   emptyStaffMember,
@@ -220,7 +220,7 @@ export default function StaffFormPage({
               </div>
             </section>
 
-            <section className="space-y-3 lg:col-span-2">
+            {/* <section className="space-y-3 lg:col-span-2">
               <h2 className="text-base font-bold text-slate-950">Media</h2>
               <ImageFileField
                 id="staff-avatar"
@@ -234,7 +234,7 @@ export default function StaffFormPage({
                   })
                 }
               />
-            </section>
+            </section> */}
 
             <section className="space-y-3 lg:col-span-2">
               <h2 className="text-base font-bold text-slate-950">

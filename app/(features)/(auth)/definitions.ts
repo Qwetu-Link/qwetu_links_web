@@ -3,13 +3,24 @@ export type Role = "owner" | "staff" | "tenant" | "qwetulinks";
 
 export type User = {
   id: string;
+  businessID: string;
   name: string;
+  username: string;
   email: string;
   userType: Role;
+  phone: string;
+  emergencyContactName?: string;
+  emergencyContactPhone?: string;
+  emergencyContactRelationship?: string;
+  idNumber?: string;
+  address: string;
   isActive: boolean;
-  businessID: string;
-  staff: [];
-  tenant: [];
+  avatar?: string;
+  avatarPath?: string;
+  version?: number;
+  staff: [],
+  tenant: []
+
 };
 
 export type LoginFormInputs = {
