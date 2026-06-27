@@ -1,7 +1,7 @@
 "use client";
 
-import { useAuthStore } from "@/app/stores/useAuthStore";
-import PropertyFormPage from "../_component/PropertyFormPage";
+import { useAuthStore } from "@/stores/useAuthStore";
+import PropertyFormPage from "@/features/forms/PropertyFormPage";
 
 export default function Page() {
   const user = useAuthStore((state) => state.user);

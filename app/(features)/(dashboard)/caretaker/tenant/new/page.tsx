@@ -1,5 +1,18 @@
-import TenantFormPage from "../../../admin/tenant/_components/TenantFormPage";
+"use client";
+
+import { useAuthStore } from "@/stores/useAuthStore";
+import TenantFormPage from "@/features/forms/TenantFormPage";
 
 export default function Page() {
-  return <TenantFormPage mode="add" listHref="/caretaker/tenant" />;
+  const user = useAuthStore((state) => state.user);
+
+  if (!user?.businessID) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        Business information not found
+      </div>
+    );
+  }
+
+  return <TenantFormPage mode="add" businessId={user.businessID} listHref="/caretaker/tenant" />;
 }

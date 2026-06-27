@@ -1,9 +1,8 @@
-import MaintenanceRequestFormPage from "../../../admin/maintenance/MaintenanceRequestFormPage";
+import MaintenanceForm from "@/features/forms/AddMaintenanceForm";
 
 export default function Page() {
   return (
-    <MaintenanceRequestFormPage
-      mode="create"
+    <MaintenanceForm
       basePath="/caretaker/maintenance"
     />
   );

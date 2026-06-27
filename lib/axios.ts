@@ -47,11 +47,14 @@ api.interceptors.response.use(
   (res) => res,
   (error) => {
     if (error.response?.status === 401) {
-      // Remove the auth cookie and redirect to login
-      document.cookie =
-        "auth-store=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      window.location.href = "/login";
+      // Safely ensure browser variables only run on client environments
+      if (isBrowser) {
+        // Remove the auth cookie and redirect to login
+        document.cookie =
+          "auth-store=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        window.location.href = "/login";
+      }
     }
     return Promise.reject(error);
-  },
+  }
 );

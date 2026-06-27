@@ -1,4 +1,4 @@
-import StaffDetailsPage from "../_components/StaffDetailsPage";
+import StaffDetailsPage from "@/features/private/staff/StaffDetailsPage";
 
 export default async function Page({
   params,
@@ -7,5 +7,5 @@ export default async function Page({
 }) {
   const { id } = await params;
 
-  return <StaffDetailsPage staffId={id} />;
+  return <StaffDetailsPage staffId={id} editHref={`/admin/staff/${id}/edit`} listHref="/admin/staff"/>;
 }

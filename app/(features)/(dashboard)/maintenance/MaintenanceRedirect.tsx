@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getMaintenanceForRole } from "@/app/lib/roles";
-import { useAuthStore } from "@/app/stores/useAuthStore";
+import { getMaintenanceForRole } from "@/utils/roles";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 type MaintenanceRedirectProps = {
   suffix?: string;

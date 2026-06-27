@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
-import VerifyEmailForm from "../forms/business_verification";
+import VerifyEmailForm from "@/features/forms/BusinessVerification";
 
 export default function VerifyBusinessPage() {
   return (

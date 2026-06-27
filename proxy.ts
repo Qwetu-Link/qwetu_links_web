@@ -1,7 +1,7 @@
 // middleware.ts
 import { NextRequest, NextResponse } from "next/server";
-import { Role } from "@/app/(features)/(auth)/definitions";
-import { getDashboardForRole, isRoleAllowedOnPath } from "@/app/lib/roles";
+import { getDashboardForRole, isRoleAllowedOnPath } from "@/utils/roles";
+import { Role } from "./types/auth.definitions";
 
 const PUBLIC_PATHS = [
   "/",

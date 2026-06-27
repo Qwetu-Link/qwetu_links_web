@@ -1,4 +1,4 @@
-import TenantDetailsPage from "../_components/TenantDetailsPage";
+import TenantDetailsPage from "@/features/private/tenant/TenantDetailsPage";
 
 export default async function Page({
   params,
@@ -7,6 +7,8 @@ export default async function Page({
 }) {
   const { id } = await params;
 
+
+  console.log("tenant id detail", id)
   return (
     <TenantDetailsPage
       tenantId={id}

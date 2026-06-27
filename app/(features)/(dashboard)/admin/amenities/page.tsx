@@ -1,13 +1,12 @@
-import { amenityKeys } from "./amenities.services";
+import { amenityKeys } from "@/hooks/useAmenities";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import PropertyAmenities from "./_components/PropertyAmenities";
-import { getAmenities } from "./amenities.endpoints";
+import { getAmenities } from "@/services/amenities.endpoints";
 import { getServerApi } from "@/lib/axios.server";
-// import { Suspense } from "react";
+import PropertyAmenities from "@/features/private/amenity/PropertyAmenities";
 
 type PageProps = {
   searchParams?: Promise<{

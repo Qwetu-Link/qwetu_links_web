@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import AuthImagePanel from "../_components/AuthImagePanel";
-import AuthMobileHeader from "../_components/AuthMobileHeader";
-import ResetPasswordForm from "./form/reset-password-form";
+import AuthImagePanel from "@/features/auth/AuthImagePanel";
+import AuthMobileHeader from "@/features/auth/AuthMobileHeader";
+import ResetPasswordForm from "@/features/forms/ResetPasswordForm";
 
 export default function ResetPasswordPage() {
   return (

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Sidebar } from "./_sidebar/sidebar";
-import { Topbar } from "./_topbar/topbar";
+import { Sidebar } from "@/components/layouts/SideBar";
+import { Topbar } from "@/components/layouts/TopBar";
 
 export default function MainLayout({
   children,

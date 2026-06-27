@@ -1,4 +1,5 @@
-import MaintenanceRequestFormPage from "../../MaintenanceRequestFormPage";
+import { getServerApi } from "@/lib/axios.server";
+import EditMaintenanceForm from "@/features/forms/EditMaintenanceForm";
 
 type PageProps = {
   params: Promise<{
@@ -9,10 +10,23 @@ type PageProps = {
 export default async function Page({ params }: PageProps) {
   const { id } = await params;
 
+  const axiosServer = await getServerApi();
+
+  // 2. Since baseURL is already defined in your axios config,
+  //    you can just pass the relative path.
+  const res = await axiosServer.get(`/businesses/maintainance/${id}`);
+
+  // 3. Axios automatically parses JSON into res.data
+  const data = res.data;
+
+  console.log("Raw payload object structure from API:", data);
+  const maintenance = data?.data ?? data;
+
+  console.log("edit server", maintenance);
+
   return (
-    <MaintenanceRequestFormPage
-      mode="edit"
-      requestId={id}
+    <EditMaintenanceForm
+      maintenance={maintenance}
       basePath="/admin/maintenance"
     />
   );
