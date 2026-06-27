@@ -1,8 +1,8 @@
 "use client";
 
 import { toast } from "sonner";
-import { useCreateUtility } from "../utility.services";
-import { UtilityFormValues } from "../utility.zod";
+import { useCreateUtility } from "@/hooks/useUtility";
+import { UtilityFormValues } from "@/schemas/utility.zod";
 import { UtilityBaseForm } from "./UtilityForm";
 // import { handleFormErrors } from "@/app/lib/errors";
 

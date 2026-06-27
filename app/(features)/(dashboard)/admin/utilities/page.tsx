@@ -4,8 +4,8 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { getServerApi } from "@/lib/axios.server";
-import { propertykeys } from "../property/property.services";
-import { getProperties } from "../property/property.endpoints";
+import { propertykeys } from "@/hooks/useProperty";
+import { getProperties } from "@/services/property.endpoints";
 import UtilityManagementPage from "./components/UtilityMgt";
 
 type PageProps = {

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Edit3, Eye, Trash2 } from "lucide-react";
-import { TenantActionsProps } from "./types";
+import { TenantActionsProps } from "./props";
 
 export default function TenantActions({
   viewHref,

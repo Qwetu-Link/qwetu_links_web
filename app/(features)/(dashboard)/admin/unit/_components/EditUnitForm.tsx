@@ -4,14 +4,14 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
-import { UnitProperty } from "../definations";
+import { UnitProperty } from "@/types/unit.definations";
 import { UnitFormFields } from "./UnitFormField";
-import { unitFormSchema, UnitFormValues } from "../units.zod";
-import { PropertyStatus } from "../../property/definations";
+import { unitFormSchema, UnitFormValues } from "@/schemas/units.zod";
 import { toast } from "sonner";
-import { useUpdateUnit } from "../units.services";
+import { useUpdateUnit } from "@/hooks/useUnits";
 import Link from "next/link";
-import { handleFormErrors } from "@/app/lib/errors";
+import { handleFormErrors } from "@/utils/errors";
+import { PropertyStatus } from "@/utils/selectConstants";
 
 interface UnitEditFormProps {
   unit: UnitProperty;

@@ -4,12 +4,12 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Plus, Search, ShieldCheck, UserRound, Users2 } from "lucide-react";
-import DeleteModal from "@/components/deletemodal/DeleteModal";
-import { useDelTenants, useGetTenants } from "../tenant.services";
-import { Tenant } from "./types";
+import DeleteModal from "@/components/custom/DeleteModal";
+import { useDelTenants, useGetTenants } from "@/hooks/useTenant";
 import StatCard from "./StatCard";
 import TenantCard from "./TenantCard";
 import TenantTable from "./TenantTable";
+import { Tenant } from "@/types/tenant.definations";
 
 export default function TenantManagement() {
   const pathname = usePathname();

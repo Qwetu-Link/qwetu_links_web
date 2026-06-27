@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { GOOGLE_AUTH_URL } from "../auth.endpoints";
+import { GOOGLE_AUTH_URL } from "../../../../services/auth.endpoints";
 
 export default function GoogleSignupButton() {
   return (

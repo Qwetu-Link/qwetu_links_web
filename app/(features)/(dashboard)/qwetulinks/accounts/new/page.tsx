@@ -1,4 +1,4 @@
-import RegisterBusinessForm from "../forms/register_business";
+import RegisterBusinessForm from "../forms/RegisterBusiness";
 
 export default function RegisterBusinessPage() {
   return <RegisterBusinessForm />;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuthStore } from "@/app/stores/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import PropertyFormPage from "../_component/PropertyFormPage";
 
 export default function Page() {

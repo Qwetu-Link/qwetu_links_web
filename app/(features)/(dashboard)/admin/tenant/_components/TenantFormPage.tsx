@@ -4,13 +4,16 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Save } from "lucide-react";
-import ImageFileField from "./ImageFileField";
+import ImageFileField from "@/components/custom/ImageFileField";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useCreateTenants, useUpdateTenants } from "../tenant.services";
-import { TenantUserFormValues, tenantUserSchema } from "../tenant.zod";
-import { emptyTenant, fieldClass, formSections, Tenant, textAreaClass } from "../definations"; // Double-check spelling of definitions
+import { useCreateTenants, useUpdateTenants } from "@/hooks/useTenant";
+import { TenantUserFormValues, tenantUserSchema } from "@/schemas/tenant.zod";
+import { emptyTenant, Tenant } from "@/types/tenant.definations";
+import { tenantFormSections } from "@/components/custom/FormSection";
+import { fieldClass, textAreaClass } from "@/components/custom/FormFields";
+
 
 type TenantFormPageProps = {
   mode: "add" | "edit";
@@ -120,7 +123,7 @@ export default function TenantFormPage({
           className="overflow-hidden rounded-lg border border-orange-100 bg-white shadow-sm"
         >
           <div className="grid gap-6 p-4 sm:p-5 lg:grid-cols-2">
-            {formSections.map((section) => (
+            {tenantFormSections.map((section) => (
               <section key={section.title} className="space-y-3">
                 <h2 className="text-base font-bold text-slate-950">
                   {section.title}

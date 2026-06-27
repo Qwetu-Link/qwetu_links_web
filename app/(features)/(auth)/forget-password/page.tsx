@@ -1,6 +1,6 @@
 import AuthImagePanel from "../_components/AuthImagePanel";
 import AuthMobileHeader from "../_components/AuthMobileHeader";
-import ForgotPasswordForm from "./form/forgot-password-form";
+import ForgotPasswordForm from "../form/ForgetPassForm";
 
 export default function ForgotPasswordPage() {
   return (

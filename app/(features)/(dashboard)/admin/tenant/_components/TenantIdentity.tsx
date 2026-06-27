@@ -1,4 +1,4 @@
-import { TenantIdentityProps } from "./types";
+import { TenantIdentityProps } from "./props";
 
 export default function TenantIdentity({ tenant }: TenantIdentityProps) {
   return (

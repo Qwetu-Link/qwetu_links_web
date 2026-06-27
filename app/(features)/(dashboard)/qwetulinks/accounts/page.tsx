@@ -4,8 +4,8 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import AccManagement from "./_components/AccManagement";
-import { getBusinesses } from "./business.endpoints";
-import { businessQueryKeys } from "./business.service";
+import { getBusinesses } from "@/services/business.endpoints";
+import { businessQueryKeys } from "@/hooks/useBusiness";
 
 export default async function AccountsPage() {
   const queryClient = new QueryClient();

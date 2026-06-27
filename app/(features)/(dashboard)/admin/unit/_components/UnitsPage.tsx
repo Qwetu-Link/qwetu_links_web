@@ -3,8 +3,8 @@
 import { Suspense, useState } from "react";
 import PropertyListings from "./PropertyListing";
 import UnitListing from "./UnitListing";
-import { useGetProperties } from "../../property/property.services";
-import { Property } from "../../property/definations";
+import { useGetProperties } from "@/hooks/useProperty";
+import { Property } from "@/types/property.definations";
 import { Building2, Plus } from "lucide-react";
 import Link from "next/link";
 

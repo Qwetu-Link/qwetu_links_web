@@ -2,13 +2,13 @@
 
 import { JSX, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/app/stores/useAuthStore";
-import { Role } from "@/app/(features)/(auth)/definitions";
 import AdminDashboard from "./_pages/admindashboard";
 import LandlordDashboard from "./_pages/landlorddashboard";
 // import CaretakerDashboard from "./_pages/caretakerdashboard";
 import TenantDashboard from "./_pages/tenantdashboard";
 import QwetuDashboard from "./_pages/qwetudashboard";
+import { Role } from "@/types/auth.definitions";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 // Lazy map of role to dashboard component
 const DASHBOARD_MAP: Record<Role, () => JSX.Element> = {
@@ -34,7 +34,7 @@ export default function DashboardPage() {
   // Avoid flash of broken UI while redirect fires
   if (!user) return null;
 
-  const DashboardComponent = DASHBOARD_MAP[user.userType];
+  const DashboardComponent = DASHBOARD_MAP[user.userType as Role];
 
   // Role from API doesn't match any known role
   if (!DashboardComponent) {

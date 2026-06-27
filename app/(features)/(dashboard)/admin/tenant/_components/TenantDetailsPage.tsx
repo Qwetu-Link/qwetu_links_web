@@ -10,8 +10,8 @@ import {
   ShieldCheck,
   UserRound,
 } from "lucide-react";
-import { useGetTenantDetails } from "../tenant.services";
-import { TenantDetailsPageProps } from "./types";
+import { useGetTenantDetails } from "@/hooks/useTenant";
+import { TenantDetailsPageProps } from "./props";
 
 function DetailItem({
   label,

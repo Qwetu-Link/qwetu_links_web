@@ -13,8 +13,8 @@ import {
   ShieldCheck,
   Store,
 } from "lucide-react";
-import { Business } from "../definations";
-import { useBusinesses } from "../business.service";
+import { Business } from "@/types/business.definations";
+import { useBusinesses } from "@/hooks/useBusiness";
 import { StatCard } from "./StatCard";
 import { StatusPills } from "./AccStatusPill";
 // import { BusinessActions } from "./ActionBtns";

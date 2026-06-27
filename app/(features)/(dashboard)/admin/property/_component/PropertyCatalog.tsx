@@ -4,11 +4,12 @@ import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import PropertyCard from "./PropertyCard";
 import { Building2, Package, Plus, Search } from "lucide-react";
-import { Property, PropertyFilters, PropertyStatus } from "../definations";
-import DeleteModal from "@/components/deletemodal/DeleteModal";
-import { useDelProperty, useGetProperties } from "../property.services";
-import Pagination from "@/app/lib/Pagination";
+import { Property, PropertyFilters} from "@/types/property.definations";
+import DeleteModal from "@/components/custom/DeleteModal";
+import { useDelProperty, useGetProperties } from "@/hooks/useProperty";
+import Pagination from "@/components/custom/Pagination";
 import { toast } from "sonner";
+import { PropertyStatus } from "@/utils/selectConstants";
 
 const STATUSES: PropertyStatus[] = [
   "available",

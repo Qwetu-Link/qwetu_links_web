@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { inter } from "@/app/fonts/fonts";
-import "./styles/globals.css";
+import { inter } from "@/utils/fonts";
+import "@/styles/globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
-import QueryProvider from "@/providers/query-provider";
-import NavBar from "./(features)/_portfolio/_navbar/NavBar";
-import PropertyFooter from "./(features)/_portfolio/_footer/PropertyFooter";
+import QueryProvider from "@/lib/query-provider";
+import NavBar from "../components/layouts/NavBar";
+import PropertyFooter from "../components/layouts/PropertyFooter";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 

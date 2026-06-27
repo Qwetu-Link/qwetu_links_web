@@ -1,5 +1,5 @@
 import { getServerApi } from "@/lib/axios.server";
-import EditMaintenanceForm from "../../forms/EditMaintenanceForm";
+import EditMaintenanceForm from "@/features/forms/EditMaintenanceForm";
 
 type PageProps = {
   params: Promise<{

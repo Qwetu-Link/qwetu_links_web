@@ -2,7 +2,7 @@ import { Mail, Phone } from "lucide-react";
 import TenantIdentity from "./TenantIdentity";
 import TenantStatus from "./TenantStatus";
 import TenantActions from "./TenantActions";
-import { TenantTableProps } from "./types";
+import { TenantTableProps } from "./props";
 
 export default function TenantTable({ tenants, pathname, onDelete }: TenantTableProps) {
   return (

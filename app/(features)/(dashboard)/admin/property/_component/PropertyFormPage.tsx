@@ -15,21 +15,19 @@ import {
 import { toast } from "sonner";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Amenity } from "../../amenities/definations";
-import { useCreateProperty, useUpdateProperty } from "../property.services";
-import { useGetPropertyAmenities } from "../../amenities/amenities.services";
-import { propertyFormSchema, propertyTypeGroups } from "@/app/lib/property.zod";
-import { PropertiesFormValues, Property } from "../definations";
+import { Amenity } from "@/types/amenity.definations";
+import { useCreateProperty, useUpdateProperty } from "../../../../../../hooks/useProperty";
+import { useGetPropertyAmenities } from "@/hooks/useAmenities";
+import { propertyFormSchema } from "@/schemas/property.zod";
+import { PropertiesFormValues, Property } from "@/types/property.definations";
 import {
   deleteFile,
   uploadFiles,
   UploadResult,
-} from "@/components/firebaseStorage";
+} from "@/utils/firebaseStorage";
+import { inputClass, labelClass } from "@/components/custom/FormFields";
+import { propertyTypeGroups } from "@/utils/selectConstants";
 
-const labelClass =
-  "text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2 block";
-const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 outline-none transition-all duration-200 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10";
 
 type PropertyFormInput = z.input<typeof propertyFormSchema>;
 

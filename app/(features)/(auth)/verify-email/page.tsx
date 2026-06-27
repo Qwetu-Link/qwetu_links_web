@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import AuthImagePanel from "../_components/AuthImagePanel";
 import AuthMobileHeader from "../_components/AuthMobileHeader";
-import VerifyEmailForm from "./form/verify-email-form";
+import VerifyEmailForm from "../form/VerifyEmailForm";
 
 export default function VerifyEmailPage() {
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuthStore } from "@/app/stores/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import StaffFormPage from "../_components/StaffFormPage";
 
 export default function Page() {

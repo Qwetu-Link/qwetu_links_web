@@ -4,8 +4,8 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import PropertyCatalog from "./_component/PropertyCatalog";
-import { propertykeys } from "./property.services";
-import { getProperties } from "./property.endpoints";
+import { propertykeys } from "../../../../../hooks/useProperty";
+import { getProperties } from "../../../../../services/property.endpoints";
 import { getServerApi } from "@/lib/axios.server";
 
 interface PageProps {

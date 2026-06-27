@@ -1,6 +1,6 @@
 import { Search} from "lucide-react";
 import PropertyCard from "./PropertyCard";
-import { Property } from "../../property/definations";
+import { Property } from "@/types/property.definations";
 import { useState } from "react";
 
 interface PropertyListingsProps {

@@ -11,14 +11,11 @@ import {
   ShieldCheck,
   UserRound,
 } from "lucide-react";
-import { useGetStaffDetails } from "../user.services";
-import { employmentTypeLabels, DEPARTMENTS, EmploymentType } from "../staffConstants";
+import { useGetStaffDetails } from "@/hooks/useStaff";
+import { employmentTypeLabels, DEPARTMENTS, EmploymentType } from "@/utils/selectConstants";
+import { StaffDetailsPageProps } from "./props";
 
-type StaffDetailsPageProps = {
-  staffId: string;
-  listHref: string;
-  editHref: string;
-};
+
 
 function DetailItem({
   label,

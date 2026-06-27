@@ -1,10 +1,10 @@
 "use client";
 
 import { useMemo } from "react";
-import { Utility } from "../definations";
-import { UtilityFormValues } from "../utility.zod";
+import { Utility } from "@/types/utilities.definations";
+import { UtilityFormValues } from "@/schemas/utility.zod";
 import { KNOWN_NAMES, UtilityBaseForm } from "./UtilityForm";
-import { useUpdateUtility } from "../utility.services";
+import { useUpdateUtility } from "@/hooks/useUtility";
 import { toast } from "sonner";
 
 interface EditUtilityFormProps {

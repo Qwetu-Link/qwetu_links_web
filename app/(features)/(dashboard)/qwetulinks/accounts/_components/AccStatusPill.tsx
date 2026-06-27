@@ -1,4 +1,4 @@
-import { Business } from "../definations";
+import { Business } from "@/types/business.definations";
 
 export function StatusPills({ business }: { business: Business }) {
   return (

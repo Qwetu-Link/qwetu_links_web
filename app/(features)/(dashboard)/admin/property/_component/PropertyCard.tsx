@@ -3,19 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Box, Edit, Gauge, MapPin, Trash2 } from "lucide-react";
-import { Property } from "../definations";
+import { Property } from "@/types/property.definations";
+import { propertyStatusStyles } from "@/components/custom/CustomBadges";
 
 interface Props {
   property: Property;
   onDelete: (id: string, name: string) => void;
 }
-
-const statusStyles: Record<Property["status"], string> = {
-  occupied: "bg-blue-600 text-white",
-  available: "bg-purple-600 text-white",
-  maintenance: "bg-amber-500 text-white",
-  reserved: "bg-orange-600 text-white",
-};
 
 export default function PropertyCard({ property, onDelete }: Props) {
   const imageUrl =
@@ -34,7 +28,7 @@ export default function PropertyCard({ property, onDelete }: Props) {
           unoptimized
         />
         <div
-          className={`absolute right-3 top-3 rounded-full px-3 py-1 text-xs font-semibold ${statusStyles[property.status]}`}
+          className={`absolute right-3 top-3 rounded-full px-3 py-1 text-xs font-semibold ${propertyStatusStyles[property.status]}`}
         >
           {property.status}
         </div>

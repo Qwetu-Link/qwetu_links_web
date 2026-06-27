@@ -4,8 +4,8 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { getServerApi } from "@/lib/axios.server";
-import { tenantKeys } from "./tenant.services";
-import { getTenants } from "./tenant.endpoint";
+import { tenantKeys } from "@/hooks/useTenant";
+import { getTenants } from "@/services/tenant.endpoint";
 import TenantManagement from "./_components/TenantManagement";
 
 interface PageProps {

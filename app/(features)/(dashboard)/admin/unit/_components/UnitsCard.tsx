@@ -1,5 +1,5 @@
 import { Bath, Bed, Car, Edit, Maximize, Trash2 } from "lucide-react";
-import { UnitProperty } from "../definations";
+import { UnitProperty } from "@/types/unit.definations";
 import Link from "next/link";
 
 interface Props {

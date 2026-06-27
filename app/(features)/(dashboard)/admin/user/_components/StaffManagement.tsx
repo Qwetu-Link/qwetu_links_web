@@ -17,11 +17,10 @@ import {
   UserRound,
   Users2,
 } from "lucide-react";
-import DeleteModal from "@/components/deletemodal/DeleteModal";
-import { formatLabel } from "./snakeTextFormatter";
-import { useDelStaff, useGetStaffs } from "../user.services";
-import { Staff } from "../definations";
-import { formatDate } from "../../maintenance/utils";
+import DeleteModal from "@/components/custom/DeleteModal";
+import { useDelStaff, useGetStaffs } from "@/hooks/useStaff";
+import { Staff } from "@/types/staff.definations";
+import { formatDate, snakeFormater } from "@/utils/utils";
 
 function StatCard({
   label,
@@ -75,7 +74,7 @@ function StaffStatus({ staff }: { staff: Staff }) {
         {staff.user.isActive ? "Active" : "Inactive"}
       </span>
       <p className="mt-2 text-xs text-slate-500">
-        {formatLabel(staff.employmentType)}
+        {snakeFormater(staff.employmentType)}
       </p>
     </div>
   );

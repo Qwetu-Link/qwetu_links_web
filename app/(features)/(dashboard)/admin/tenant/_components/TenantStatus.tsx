@@ -1,4 +1,4 @@
-import { TenantStatusProps } from "./types";
+import { TenantStatusProps } from "./props";
 
 export default function TenantStatus({ tenant }: TenantStatusProps) {
   return (

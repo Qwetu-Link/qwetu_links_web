@@ -1,8 +1,8 @@
 import { getServerApi } from "@/lib/axios.server";
-import MaintenanceRequestsPage from "./_components/MaintenanceRequestsPage";
+import MaintenanceRequestsPage from "../../../../../features/private/maintenance/MaintenanceRequestsPage";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
-import { maintenancekeys } from "./maintenance.services";
-import { getMaintenances } from "./maintenance.endpoint";
+import { maintenancekeys } from "@/hooks/useMaintenance";
+import { getMaintenances } from "@/services/maintenance.endpoint";
 
 
 interface PageProps {

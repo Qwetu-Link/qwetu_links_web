@@ -1,6 +1,6 @@
 import { Box, Gauge, MapPin } from "lucide-react";
 import Image from "next/image";
-import { Property } from "../../property/definations";
+import { Property } from "@/types/property.definations";
 
 interface PropertyCardProps {
   property: Property;

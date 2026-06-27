@@ -7,8 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { BillingPeriod } from "../definations";
-import { UtilityFormValues, UtilitySchema } from "../utility.zod";
+import { BillingPeriod } from "@/types/utilities.definations";
+import { UtilityFormValues, UtilitySchema } from "@/schemas/utility.zod";
 import { useState } from "react";
 import Link from "next/link";
 

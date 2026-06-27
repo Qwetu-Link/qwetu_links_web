@@ -1,9 +1,9 @@
-import SetupBusinessForm from "./form/setup-business-form";
+import SetupBusinessForm from "../form/SetupBuzForm";
 import { Suspense } from "react";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { heroImages } from "../../_portfolio/_component/propertyData";
+import { heroImages } from "@/utils/propertyData";
 
 export default function SetUpBusinessPage() {
   //   return <SetupBusinessForm />;

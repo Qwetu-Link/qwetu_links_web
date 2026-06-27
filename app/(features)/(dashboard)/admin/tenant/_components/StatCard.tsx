@@ -1,10 +1,4 @@
-import { Users2 } from "lucide-react";
-
-interface StatCardProps {
-  label: string;
-  value: string | number;
-  icon: typeof Users2;
-}
+import { StatCardProps } from "./props";
 
 export default function StatCard({ label, value, icon: Icon }: StatCardProps) {
   return (

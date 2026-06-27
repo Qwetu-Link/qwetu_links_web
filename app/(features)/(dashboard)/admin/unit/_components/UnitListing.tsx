@@ -1,9 +1,9 @@
 import { ArrowLeft, BedDouble, Building2, Gauge, Plus } from "lucide-react";
 import { useCallback, useState } from "react";
-import DeleteModal from "@/components/deletemodal/DeleteModal";
+import DeleteModal from "@/components/custom/DeleteModal";
 import UnitCard from "./UnitsCard";
-import { Property } from "../../property/definations";
-import { useUnitDel } from "../units.services";
+import { Property } from "@/types/property.definations";
+import { useUnitDel } from "@/hooks/useUnits";
 import Link from "next/link";
 
 interface Props {

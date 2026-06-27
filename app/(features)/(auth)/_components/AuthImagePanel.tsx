@@ -1,7 +1,7 @@
+import { heroImages } from "@/utils/propertyData";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { heroImages } from "../../_portfolio/_component/propertyData";
 
 type AuthImagePanelProps = {
   imageIndex?: number;

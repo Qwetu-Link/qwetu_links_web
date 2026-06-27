@@ -11,25 +11,7 @@ import {
   Phone,
   Store,
 } from "lucide-react";
-// import { Business } from "../definations";/
-import { useBizDetails } from "../business.service";
-
-// function findSeededBusiness(id: string) {
-//   const decodedId = decodeURIComponent(id);
-
-//   return (
-//     seededBusinesses.find(
-//       (business) =>
-//         String(business.id) === decodedId ||
-//         business.slug === decodedId ||
-//         business.email === decodedId,
-//     ) ?? {
-//       ...seededBusinesses[0],
-//       id: decodedId,
-//       slug: decodedId,
-//     }
-//   );
-// }
+import { useBizDetails } from "@/hooks/useBusiness";
 
 function DetailItem({
   label,

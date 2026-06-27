@@ -7,20 +7,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { ArrowLeft, Save } from "lucide-react";
 import { toast } from "sonner";
-import ImageFileField from "../../tenant/_components/ImageFileField";
+import ImageFileField from "@/components/custom/ImageFileField";
 import {
   DEPARTMENTS,
   POSITIONS,
   employmentTypeValues,
   employmentTypeLabels,
   EmploymentType,
-} from "../staffConstants";
-import { StaffUserFormValues, staffUserSchema } from "../user.zod";
-import { emptyStaff } from "../definations";
-import { fieldClass, StaffFormPageProps, textAreaClass, textSections } from "./formSection";
-import { useCreateStaff,useUpdateStaff } from "../user.services";
+} from "@/utils/selectConstants";
+import { StaffUserFormValues, staffUserSchema } from "@/schemas/staff.zod";
+import { emptyStaff } from "@/types/staff.definations";
+import { useCreateStaff, useUpdateStaff } from "@/hooks/useStaff";
+import { StaffFormPageProps } from "./props";
+import { staffFormSections } from "@/components/custom/FormSection";
+import { fieldClass, textAreaClass } from "@/components/custom/FormFields";
 
-export default function StaffFormPage({ mode,businessId, existingStaff,listHref }: StaffFormPageProps) {
+export default function StaffFormPage({ mode, businessId, existingStaff, listHref }: StaffFormPageProps) {
   const router = useRouter();
   const createStaff = useCreateStaff();
   const updateStaff = useUpdateStaff();
@@ -116,7 +118,7 @@ export default function StaffFormPage({ mode,businessId, existingStaff,listHref 
           <div className="grid gap-6 p-4 sm:p-5 lg:grid-cols-2">
 
             {/* Text field sections */}
-            {textSections.map((section) => (
+            {staffFormSections.map((section) => (
               <section key={section.title} className="space-y-3">
                 <h2 className="text-base font-bold text-slate-950">{section.title}</h2>
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">

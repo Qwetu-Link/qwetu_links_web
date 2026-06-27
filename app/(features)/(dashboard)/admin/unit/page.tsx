@@ -5,8 +5,8 @@ import {
 } from "@tanstack/react-query";
 import UnitsPage from "./_components/UnitsPage";
 import { getServerApi } from "@/lib/axios.server";
-import { propertykeys } from "../property/property.services";
-import { getProperties } from "../property/property.endpoints";
+import { propertykeys } from "@/hooks/useProperty";
+import { getProperties } from "@/services/property.endpoints";
 
 type PageProps = {
   searchParams?: Promise<{

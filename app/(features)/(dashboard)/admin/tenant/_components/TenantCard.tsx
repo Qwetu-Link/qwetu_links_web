@@ -2,7 +2,7 @@ import { Mail, Phone } from "lucide-react";
 import TenantIdentity from "./TenantIdentity";
 import TenantStatus from "./TenantStatus";
 import TenantActions from "./TenantActions";
-import { TenantCardProps } from "./types";
+import { TenantCardProps } from "./props";
 
 export default function TenantCard({ tenant, pathname, onDelete }: TenantCardProps) {
   return (

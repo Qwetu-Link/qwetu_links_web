@@ -5,8 +5,8 @@ import {
 } from "@tanstack/react-query";
 import { getServerApi } from "@/lib/axios.server";
 import StaffManagement from "./_components/StaffManagement";
-import { staffKeys } from "./user.services";
-import { getStaffs } from "./user.endpoint";
+import { staffKeys } from "@/hooks/useStaff";
+import { getStaffs } from "@/services/staff.endpoint";
 
 interface PageProps {
   searchParams: Promise<{ page?: string }>;

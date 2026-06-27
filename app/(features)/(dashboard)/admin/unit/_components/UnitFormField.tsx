@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { Bath, Bed, Car, Hash, Layers, Ruler } from "lucide-react";
-import { UnitFormValues } from "../units.zod";
+import { UnitFormValues } from "@/schemas/units.zod";
 
 const statusOptions: { label: string; value: string }[] = [
   { label: "Available", value: "available" },

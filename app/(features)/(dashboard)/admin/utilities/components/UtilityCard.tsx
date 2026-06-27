@@ -1,6 +1,6 @@
 import { Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { Utility } from "../definations";
+import { Utility } from "@/types/utilities.definations";
 
 interface Props {
     utility: Utility;
