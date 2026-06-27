@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useGetPublicSlugProperty } from "@/hooks/useProperty";
-import PropertyDetails from "../../_portfolio/_component/_propertylisting/propertyDetails";
+import PropertyDetails from "../../../../../features/public/property/propertyDetails";
 
 export default function Page() {
   const params = useParams();

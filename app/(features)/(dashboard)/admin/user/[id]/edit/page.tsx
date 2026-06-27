@@ -1,5 +1,5 @@
 import { getServerApi } from "@/lib/axios.server";
-import StaffFormPage from "../../_components/StaffFormPage";
+import StaffFormPage from "@/features/forms/StaffFormPage";
 interface PageProps {
   params: Promise<{ id: string; businessId: string }>;
 }

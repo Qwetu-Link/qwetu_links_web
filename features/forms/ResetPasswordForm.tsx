@@ -10,7 +10,7 @@ import {
   ResetPasswordFormData,
   resetPasswordSchema,
 } from "@/schemas/auth.zod";
-import OtpInput from "../../../../components/custom/OtpInput";
+import OtpInput from "../../components/custom/OtpInput";
 import { useResetPassword } from "@/hooks/useAuth";
 import { AxiosError } from "axios";
 

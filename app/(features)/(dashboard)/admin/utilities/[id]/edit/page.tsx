@@ -1,6 +1,6 @@
 
 import { getServerApi } from "@/lib/axios.server";
-import { EditUtilityForm } from "../../components/EditUtilityForm";
+import { EditUtilityForm } from "@/features/forms/EditUtilityForm";
 
 interface PageProps {
   params: Promise<{ id: string }>;

@@ -1,4 +1,4 @@
-import { CreateUtilityForm } from "../../components/CreateUtilityForm";
+import { CreateUtilityForm } from "@/features/forms/CreateUtilityForm";
 
 interface PageProps {
   params: Promise<{

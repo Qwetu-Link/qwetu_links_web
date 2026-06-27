@@ -1,4 +1,4 @@
-import MaintenanceRequestsPage from "../../../../../features/private/maintenance/MaintenanceRequestsPage";
+import MaintenanceRequestsPage from "@/features/private/maintenance/MaintenanceRequestsPage";
 
 export const dynamic = "force-dynamic"
 

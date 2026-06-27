@@ -1,4 +1,4 @@
-import LandingPage from "../_portfolio/_component/_dashoverview/portfolio";
+import LandingPage from "@/features/public/home/portfolio";
 
 export default function Page() {
   return <LandingPage />;

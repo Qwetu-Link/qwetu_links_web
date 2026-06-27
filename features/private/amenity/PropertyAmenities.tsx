@@ -5,7 +5,7 @@ import { Building2, PackageSearch, Plus, Search } from "lucide-react";
 import AmenityCard from "./AmenityCard";
 import AmenityModal from "./AmenityModal";
 import { AmenityFormValues, Amenity } from "@/types/amenity.definations";
-import DeleteModal from "@/components/custom/DeleteModal";
+import DeleteModal from "@/components/common/DeleteModal";
 import {
   useAmenityDel,
   useCreateAmenity,
@@ -13,7 +13,7 @@ import {
   useUpdateAmenity,
 } from "@/hooks/useAmenities";
 import { toast } from "sonner";
-import Pagination from "@/components/custom/Pagination";
+import Pagination from "@/components/common/Pagination";
 
 export default function PropertyAmenities() {
   // get amenities

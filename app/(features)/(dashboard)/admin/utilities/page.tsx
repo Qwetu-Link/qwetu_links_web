@@ -6,7 +6,7 @@ import {
 import { getServerApi } from "@/lib/axios.server";
 import { propertykeys } from "@/hooks/useProperty";
 import { getProperties } from "@/services/property.endpoints";
-import UtilityManagementPage from "./components/UtilityMgt";
+import UtilityManagementPage from "@/features/private/utility/UtilityMgt";
 
 type PageProps = {
   searchParams?: Promise<{

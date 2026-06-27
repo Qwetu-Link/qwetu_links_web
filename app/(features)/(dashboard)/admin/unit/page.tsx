@@ -3,7 +3,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import UnitsPage from "./_components/UnitsPage";
+import UnitsPage from "@/features/private/unit/UnitsPage";
 import { getServerApi } from "@/lib/axios.server";
 import { propertykeys } from "@/hooks/useProperty";
 import { getProperties } from "@/services/property.endpoints";

@@ -1,7 +1,7 @@
-import ContactCards from "./_components/ContactCards";
-import ContactForm from "./_components/ContactForm";
-import ContactHero from "./_components/ContactHero";
-import ContactSidebar from "./_components/ContactSidebar";
+import ContactCards from "@/features/public/contact/ContactCards";
+import ContactForm from "@/features/forms/ContactForm";
+import ContactHero from "@/features/public/contact/ContactHero";
+import ContactSidebar from "@/features/public/contact/ContactSidebar";
 
 export default function ContactPage() {
   return (

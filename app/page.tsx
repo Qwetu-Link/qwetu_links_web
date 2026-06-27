@@ -1,4 +1,4 @@
-import PropertyPage from "./(features)/(web)/_portfolio/_component/_propertylisting/propertyPage";
+import PropertyPage from "@/features/public/property/propertyPage";
 
 export default function Home() {
   return <PropertyPage listingLimit={6} />;

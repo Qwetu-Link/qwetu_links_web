@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Amenity } from "@/types/amenity.definations";
-import { useCreateProperty, useUpdateProperty } from "../../../../../../hooks/useProperty";
+import { useCreateProperty, useUpdateProperty } from "../../hooks/useProperty";
 import { useGetPropertyAmenities } from "@/hooks/useAmenities";
 import { propertyFormSchema } from "@/schemas/property.zod";
 import { PropertiesFormValues, Property } from "@/types/property.definations";

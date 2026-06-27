@@ -5,7 +5,7 @@ import { useGetProperties } from "@/hooks/useProperty";
 import { Property } from "@/types/property.definations";
 import { Building2, Plus } from "lucide-react";
 import Link from "next/link";
-import PropertyListings from "../../unit/_components/PropertyListing";
+import PropertyListings from "../unit/PropertyListing";
 import UtilityListing from "./UtilityListing";
 
 export default function UtilityManagementPage() {

@@ -1,5 +1,5 @@
 import { getServerApi } from "@/lib/axios.server";
-import PropertyFormPage from "../../_component/PropertyFormPage";
+import PropertyFormPage from "@/features/forms/PropertyFormPage";
 
 interface PageProps {
   params: Promise<{ id: string; businessId: string }>;

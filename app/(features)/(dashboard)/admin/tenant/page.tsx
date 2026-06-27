@@ -6,7 +6,7 @@ import {
 import { getServerApi } from "@/lib/axios.server";
 import { tenantKeys } from "@/hooks/useTenant";
 import { getTenants } from "@/services/tenant.endpoint";
-import TenantManagement from "./_components/TenantManagement";
+import TenantManagement from "@/features/private/tenant/TenantManagement";
 
 interface PageProps {
   searchParams: Promise<{ page?: string }>;

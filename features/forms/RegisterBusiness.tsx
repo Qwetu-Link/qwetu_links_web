@@ -11,7 +11,7 @@ import { useRegister } from "@/hooks/useBusiness";
 import { BusinessFormValues } from "@/schemas/acc.zod";
 import { uploadFile } from "@/utils/firebaseStorage";
 import Image from "next/image";
-import { getBusinessFormSchema } from "../utils";
+import { getBusinessFormSchema } from "../../app/(features)/(dashboard)/qwetulinks/accounts/utils";
 import { fieldClass, textAreaClass } from "@/components/custom/FormFields";
 import { businessRoleOptions } from "@/utils/selectConstants";
 

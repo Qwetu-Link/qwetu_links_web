@@ -3,7 +3,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import AccManagement from "./_components/AccManagement";
+import AccManagement from "@/features/accounts/AccManagement";
 import { getBusinesses } from "@/services/business.endpoints";
 import { businessQueryKeys } from "@/hooks/useBusiness";
 

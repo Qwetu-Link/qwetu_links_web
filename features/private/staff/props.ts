@@ -1,4 +1,4 @@
-import { Staff } from "../../../../../../types/staff.definations";
+import { Staff } from "@/types/staff.definations";
 
 export type StaffFormPageProps = {
   mode: "add" | "edit";

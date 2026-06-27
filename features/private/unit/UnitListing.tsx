@@ -1,6 +1,6 @@
 import { ArrowLeft, BedDouble, Building2, Gauge, Plus } from "lucide-react";
 import { useCallback, useState } from "react";
-import DeleteModal from "@/components/custom/DeleteModal";
+import DeleteModal from "@/components/common/DeleteModal";
 import UnitCard from "./UnitsCard";
 import { Property } from "@/types/property.definations";
 import { useUnitDel } from "@/hooks/useUnits";

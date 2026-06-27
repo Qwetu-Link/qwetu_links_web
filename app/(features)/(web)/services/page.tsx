@@ -1,7 +1,7 @@
-import ServicesCta from "./_components/ServicesCta";
-import ServicesGrid from "./_components/ServicesGrid";
-import ServicesHero from "./_components/ServicesHero";
-import ServicesProcess from "./_components/ServicesProcess";
+import ServicesCta from "@/features/public/service/ServicesCta";
+import ServicesGrid from "@/features/public/service/ServicesGrid";
+import ServicesHero from "@/features/public/service/ServicesHero";
+import ServicesProcess from "@/features/public/service/ServicesProcess";
 
 export default function ServicesPage() {
   return (

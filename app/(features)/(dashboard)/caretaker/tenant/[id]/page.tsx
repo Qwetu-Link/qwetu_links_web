@@ -1,4 +1,4 @@
-import TenantDetailsPage from "../../../admin/tenant/_components/TenantDetailsPage";
+import TenantDetailsPage from "@/features/private/tenant/TenantDetailsPage";
 
 export default async function Page({
   params,

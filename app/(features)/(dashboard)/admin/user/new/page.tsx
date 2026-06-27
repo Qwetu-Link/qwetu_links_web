@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuthStore } from "@/stores/useAuthStore";
-import StaffFormPage from "../_components/StaffFormPage";
+import StaffFormPage from "@/features/forms/StaffFormPage";
 
 export default function Page() {
   const user = useAuthStore((state) => state.user);

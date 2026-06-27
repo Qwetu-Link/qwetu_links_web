@@ -18,7 +18,7 @@ import {
 import { StaffUserFormValues, staffUserSchema } from "@/schemas/staff.zod";
 import { emptyStaff } from "@/types/staff.definations";
 import { useCreateStaff, useUpdateStaff } from "@/hooks/useStaff";
-import { StaffFormPageProps } from "./props";
+import { StaffFormPageProps } from "../private/staff/props";
 import { staffFormSections } from "@/components/custom/FormSection";
 import { fieldClass, textAreaClass } from "@/components/custom/FormFields";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuthStore } from "@/stores/useAuthStore";
-import TenantFormPage from "../../../admin/tenant/_components/TenantFormPage";
+import TenantFormPage from "@/features/forms/TenantFormPage";
 
 export default function Page() {
   const user = useAuthStore((state) => state.user);

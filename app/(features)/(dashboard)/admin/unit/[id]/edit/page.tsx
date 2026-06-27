@@ -1,5 +1,5 @@
 import { getServerApi } from "@/lib/axios.server";
-import UnitEditForm from "../../_components/EditUnitForm";
+import UnitEditForm from "@/features/forms/EditUnitForm";
 
 interface PageProps {
   params: Promise<{ id: string }>;

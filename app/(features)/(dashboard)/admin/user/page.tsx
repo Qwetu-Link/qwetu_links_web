@@ -4,7 +4,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { getServerApi } from "@/lib/axios.server";
-import StaffManagement from "./_components/StaffManagement";
+import StaffManagement from "@/features/private/staff/StaffManagement";
 import { staffKeys } from "@/hooks/useStaff";
 import { getStaffs } from "@/services/staff.endpoint";
 

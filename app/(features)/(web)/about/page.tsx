@@ -1,8 +1,8 @@
-import AboutCta from "./_components/AboutCta";
-import AboutHero from "./_components/AboutHero";
-import AboutStats from "./_components/AboutStats";
-import AboutStory from "./_components/AboutStory";
-import AboutValues from "./_components/AboutValues";
+import AboutCta from "@/features/public/about/AboutCta";
+import AboutHero from "@/features/public/about/AboutHero";
+import AboutStats from "@/features/public/about/AboutStats";
+import AboutStory from "@/features/public/about/AboutStory";
+import AboutValues from "@/features/public/about/AboutValues";
 
 export default function AboutPage() {
   return (

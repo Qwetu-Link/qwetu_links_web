@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import LoginForm from "../form/LoginForm";
+import LoginForm from "@/features/forms/LoginForm";
 import { heroImages } from "@/utils/propertyData";
 
 export default function LoginPage() {

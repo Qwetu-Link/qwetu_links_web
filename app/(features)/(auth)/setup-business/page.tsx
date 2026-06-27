@@ -1,4 +1,4 @@
-import SetupBusinessForm from "../form/SetupBuzForm";
+import SetupBusinessForm from "@/features/forms/SetupBuzForm";
 import { Suspense } from "react";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";

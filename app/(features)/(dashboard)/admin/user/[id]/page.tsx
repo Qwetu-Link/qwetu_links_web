@@ -1,4 +1,4 @@
-import StaffDetailsPage from "../_components/StaffDetailsPage";
+import StaffDetailsPage from "@/features/private/staff/StaffDetailsPage";
 
 export default async function Page({
   params,

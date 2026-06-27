@@ -3,9 +3,9 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import PropertyCatalog from "./_component/PropertyCatalog";
-import { propertykeys } from "../../../../../hooks/useProperty";
-import { getProperties } from "../../../../../services/property.endpoints";
+import PropertyCatalog from "@/features/private/property/PropertyCatalog";
+import { propertykeys } from "@/hooks/useProperty";
+import { getProperties } from "@/services/property.endpoints";
 import { getServerApi } from "@/lib/axios.server";
 
 interface PageProps {

@@ -1,5 +1,5 @@
 import { getServerApi } from "@/lib/axios.server";
-import TenantFormPage from "../../_components/TenantFormPage";
+import TenantFormPage from "@/features/forms/TenantFormPage";
 
 
 interface PageProps {

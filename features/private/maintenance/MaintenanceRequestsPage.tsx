@@ -7,7 +7,7 @@ import MaintenanceHeader from "./MaintenanceHeader";
 import MaintenanceStats from "./MaintenanceStats";
 import MaintenanceTable from "./MaintenanceTable";
 import { useDelMaintenances, useGetMaintenances } from "@/hooks/useMaintenance";
-import DeleteModal from "@/components/custom/DeleteModal";
+import DeleteModal from "@/components/common/DeleteModal";
 import { toast } from "sonner";
 
 type MaintenanceRequestsPageProps = {

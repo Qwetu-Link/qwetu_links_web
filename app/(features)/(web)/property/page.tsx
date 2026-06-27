@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import PropertyListing from "../_portfolio/_component/_propertylisting/propertyListing";
-import type { PropertyFilters } from "../_portfolio/_component/_propertylisting/propertyPage";
-import PropertyPageHeroSection from "../_portfolio/_component/_propertylisting/PropertyHeroSection";
+import PropertyListing from "../../../../features/public/property/propertyListing";
+import type { PropertyFilters } from "../../../../features/public/property/propertyPage";
+import PropertyPageHeroSection from "../../../../features/public/property/PropertyHeroSection";
 import { usePublicProperties } from "@/hooks/useProperty";
-import PropertySearch from "../_portfolio/_component/_propertylisting/PropertySearch";
+import PropertySearch from "../../../../features/public/property/PropertySearch";
 
 export default function PropertyPage() {
   const [filters, setFilters] = useState<PropertyFilters>({

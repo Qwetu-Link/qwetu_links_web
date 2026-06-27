@@ -2,7 +2,7 @@
 
 import { ArrowLeft, Building2, Coins, HomeIcon, Plus, Wallet } from "lucide-react";
 import { useCallback, useState } from "react";
-import DeleteModal from "@/components/custom/DeleteModal";
+import DeleteModal from "@/components/common/DeleteModal";
 import { Property } from "@/types/property.definations";
 import Link from "next/link";
 import UtilityCard from "./UtilityCard";

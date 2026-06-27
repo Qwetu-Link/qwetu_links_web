@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Plus, Search, ShieldCheck, UserRound, Users2 } from "lucide-react";
-import DeleteModal from "@/components/custom/DeleteModal";
+import DeleteModal from "@/components/common/DeleteModal";
 import { useDelTenants, useGetTenants } from "@/hooks/useTenant";
 import StatCard from "./StatCard";
 import TenantCard from "./TenantCard";

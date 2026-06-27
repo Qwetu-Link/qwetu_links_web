@@ -10,7 +10,7 @@ import {
   VerifyEmailFormData,
   verifyEmailSchema,
 } from "@/schemas/auth.zod";
-import OtpInput from "../../../../components/custom/OtpInput";
+import OtpInput from "../../components/custom/OtpInput";
 import { useVerifyEmail } from "@/hooks/useAuth";
 
 type Status = "idle" | "loading" | "success" | "error";

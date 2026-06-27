@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import RegisterForm from "../form/RegisterForm";
+import RegisterForm from "@/features/forms/RegisterForm";
 import { heroImages } from "@/utils/propertyData";
 
 export default function RegisterPage() {

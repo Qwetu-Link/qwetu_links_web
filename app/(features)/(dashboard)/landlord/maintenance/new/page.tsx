@@ -1,4 +1,4 @@
-import MaintenanceForm from "../../../../../../features/forms/AddMaintenanceForm";
+import MaintenanceForm from "@/features/forms/AddMaintenanceForm";
 
 export default function Page() {
   return (

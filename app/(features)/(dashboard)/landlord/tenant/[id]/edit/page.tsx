@@ -1,4 +1,4 @@
-import TenantFormPage from "@/app/(features)/(dashboard)/admin/tenant/_components/TenantFormPage";
+import TenantFormPage from "@/features/forms/TenantFormPage";
 import { getServerApi } from "@/lib/axios.server";
 
 interface PageProps {

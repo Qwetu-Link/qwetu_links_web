@@ -17,7 +17,7 @@ import {
   UserRound,
   Users2,
 } from "lucide-react";
-import DeleteModal from "@/components/custom/DeleteModal";
+import DeleteModal from "@/components/common/DeleteModal";
 import { useDelStaff, useGetStaffs } from "@/hooks/useStaff";
 import { Staff } from "@/types/staff.definations";
 import { formatDate, snakeFormater } from "@/utils/utils";
