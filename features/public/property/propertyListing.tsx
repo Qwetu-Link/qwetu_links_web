@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarCheck, Eye, MapPin } from "lucide-react";
+import {Eye, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -78,11 +78,10 @@ export default function PropertyListing({
                 key={tab.value}
                 type="button"
                 onClick={() => setActiveTab(tab.value)}
-                className={`rounded-md border px-5 py-2.5 text-sm font-semibold transition ${
-                  activeTab === tab.value
-                    ? "border-rental-primary bg-rental-primary text-white"
-                    : "border-rental-primary text-rental-primary hover:bg-rental-bg-light"
-                }`}
+                className={`rounded-md border px-5 py-2.5 text-sm font-semibold transition ${activeTab === tab.value
+                  ? "border-rental-primary bg-rental-primary text-white"
+                  : "border-rental-primary text-rental-primary hover:bg-rental-bg-light"
+                  }`}
               >
                 {tab.label}
               </button>
@@ -101,7 +100,7 @@ export default function PropertyListing({
                   <Image
                     src={
                       property.images?.[0]?.url &&
-                      property.images[0].url.trim() !== ""
+                        property.images[0].url.trim() !== ""
                         ? property.images[0].url
                         : "/images/placeholder.svg"
                     }
@@ -138,19 +137,21 @@ export default function PropertyListing({
                     >
                       <stat.icon className="h-4 w-4 shrink-0 text-rental-primary" />
                       <span>
-                        {
-                          property[
-                            stat.key as
-                              | "squareMeters"
-                              | "bedrooms"
-                              | "bathrooms"
-                          ]
-                        }
+                        {property[stat.key as "squareMeters" | "bedrooms" | "bathrooms"]}
+                        {stat.key === "squareMeters" && " m²"}
                       </span>
                     </div>
                   ))}
                 </div>
-                <div className="grid grid-cols-2 gap-3 border-t border-rental-border p-4">
+                <div className="grid grid-cols-2 items-center gap-3 border-t border-rental-border p-4">
+                  <div>
+                    {property.rentAmount && property.rentAmount !== "0.00" && (
+                      <h1 className="text-xl font-bold">
+                        KES {Number(property.rentAmount).toLocaleString("en-KE")}
+                      </h1>
+                    )}
+                  </div>
+
                   <Link
                     href={`/property/${property.slug}`}
                     className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-rental-primary px-3 text-sm font-semibold text-rental-primary transition hover:bg-rental-bg-light"
@@ -158,13 +159,6 @@ export default function PropertyListing({
                     <Eye className="h-4 w-4" />
                     View Details
                   </Link>
-                  <button
-                    type="button"
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-rental-primary px-3 text-sm font-semibold text-white transition hover:bg-orange-600"
-                  >
-                    <CalendarCheck className="h-4 w-4" />
-                    Book
-                  </button>
                 </div>
               </article>
             ))}

@@ -18,7 +18,7 @@ export const footerContacts = [
 ];
 
 export const propertyStats = [
-  { key: "square_meters", icon: Ruler },
+  { key: "squareMeters", icon: Ruler },
   { key: "bedrooms", icon: BedDouble },
   { key: "bathrooms", icon: Bath },
 ];

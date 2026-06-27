@@ -1,4 +1,3 @@
-
 // labels
 export const labelClass =
   "text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2 block";
@@ -16,3 +15,4 @@ export const fieldClass =
 
 export const textAreaClass =
   "min-h-28 w-full resize-y rounded-lg border border-orange-100 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+

@@ -22,6 +22,9 @@ import Link from "next/link";
 import { createElement, useState } from "react";
 
 import * as LucideIcons from "lucide-react";
+import { propertyStatusStylesB } from "@/components/custom/CustomBadges";
+import { useRouter } from "next/navigation";
+import { encodePropertyToken } from "@/components/custom/propertyToken";
 
 function getAmenityIcon(iconName: string): React.ElementType {
   if (!iconName) return LucideIcons.CheckCircle2;
@@ -80,12 +83,6 @@ function AmenityIcon({ icon, name }: { icon: string; name: string }) {
   );
 }
 
-const statusStyles: Record<string, string> = {
-  available: "bg-emerald-100 text-emerald-700 ring-emerald-200",
-  occupied: "bg-red-100 text-red-700 ring-red-200",
-  reserved: "bg-amber-100 text-amber-700 ring-amber-200",
-  maintenance: "bg-slate-100 text-slate-600 ring-slate-200",
-};
 
 export default function PropertyDetails({
   propertyData,
@@ -96,10 +93,20 @@ export default function PropertyDetails({
   const [activeImage, setActiveImage] = useState(0);
   const images = property.images ?? [];
   const amenities = property.amenities ?? [];
+  const router = useRouter();
 
   const statusClass =
-    statusStyles[property.status?.toLowerCase()] ??
+    propertyStatusStylesB[property.status?.toLowerCase()] ??
     "bg-slate-100 text-slate-600 ring-slate-200";
+
+  function handleBookViewing() {
+    const token = encodePropertyToken({
+      propertyId: property.id,
+      propertyName: property.name,
+    });
+    router.push(`/property/${property.slug}/booking/${token}`);
+  }
+
 
   return (
     <main className="min-h-screen bg-[#F7F8FA]">
@@ -195,11 +202,10 @@ export default function PropertyDetails({
                       key={img.id}
                       type="button"
                       onClick={() => setActiveImage(i)}
-                      className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-lg border-2 transition ${
-                        i === activeImage
-                          ? "border-orange-500"
-                          : "border-transparent opacity-60 hover:opacity-90"
-                      }`}
+                      className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-lg border-2 transition ${i === activeImage
+                        ? "border-orange-500"
+                        : "border-transparent opacity-60 hover:opacity-90"
+                        }`}
                     >
                       <Image
                         src={img.url}
@@ -346,13 +352,14 @@ export default function PropertyDetails({
             <div className="mt-6 space-y-3">
               <button
                 type="button"
+                onClick={handleBookViewing}
                 className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-orange-500 font-semibold text-white transition hover:bg-orange-600 active:scale-[0.98]"
               >
                 <CalendarCheck className="h-4 w-4" />
                 Book a Viewing
               </button>
               <Link
-                href="#"
+                href="/contact"
                 className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-orange-200 font-semibold text-orange-600 transition hover:bg-orange-50"
               >
                 <DoorOpen className="h-4 w-4" />

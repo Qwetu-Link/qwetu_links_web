@@ -22,3 +22,10 @@ export const propertyStatusStyles: Record<Property["status"], string> = {
     maintenance: "bg-amber-500 text-white",
     reserved: "bg-orange-600 text-white",
 };
+
+export const propertyStatusStylesB: Record<string, string> = {
+  available: "bg-emerald-100 text-emerald-700 ring-emerald-200",
+  occupied: "bg-red-100 text-red-700 ring-red-200",
+  reserved: "bg-amber-100 text-amber-700 ring-amber-200",
+  maintenance: "bg-slate-100 text-slate-600 ring-slate-200",
+};
