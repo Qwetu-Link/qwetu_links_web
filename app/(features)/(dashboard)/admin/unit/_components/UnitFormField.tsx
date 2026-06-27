@@ -12,10 +12,6 @@ const statusOptions: { label: string; value: string }[] = [
 interface UnitFormFieldsProps {
   form: ReturnType<typeof useForm<UnitFormValues>>;
 }
-// form: ReturnType<typeof useForm<UnitFormValues>>;
-//   businessId: string;
-//   initialImages?: { url: string; path: string }[];
-// }
 
 // ─── Shared fields (reused in both create and edit) ──────────────────────────
 export function UnitFormFields({ form }: UnitFormFieldsProps) {
@@ -114,12 +110,6 @@ export function UnitFormFields({ form }: UnitFormFieldsProps) {
           </div>
         ))}
       </div>
-
-      {/* <UnitImageUpload
-        businessId={businessId}
-        initialImages={initialImages}
-        onChange={(urls) => setValue("image", urls, { shouldDirty: true })}
-      /> */}
     </div>
   );
 }

@@ -38,22 +38,22 @@ export const links = {
       icon: Layers,
       label: "Property Features",
       children: [
-      {
-        label: "Amenities",
-        href: "/admin/amenities",
-      },
-      {
-        label: "Features",
-        href: "/admin/feature",
-      },
-    ],
+        {
+          label: "Amenities",
+          href: "/admin/amenities",
+        },
+        {
+          label: "Utility",
+          href: "/admin/utilities",
+        },
+      ],
     },
     {
       icon: Users2,
       label: "Tenants",
       href: "/admin/tenant",
     },
-     {
+    {
       icon: Wrench,
       label: "Maintenance",
       href: "/admin/maintenance",
