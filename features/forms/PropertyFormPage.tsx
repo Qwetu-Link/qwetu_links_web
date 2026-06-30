@@ -1,37 +1,26 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import {
   Loader2,
-  UploadCloud,
-  X,
   Building2,
   MapPin,
   Sliders,
+  AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Amenity } from "@/types/amenity.definations";
 import { useCreateProperty, useUpdateProperty } from "../../hooks/useProperty";
 import { useGetPropertyAmenities } from "@/hooks/useAmenities";
-import { propertyFormSchema } from "@/schemas/property.zod";
-import { PropertiesFormValues, Property } from "@/types/property.definations";
-import {
-  deleteFile,
-  uploadFiles,
-  UploadResult,
-} from "@/utils/firebaseStorage";
+import { PropertyFormInput, propertyFormSchema } from "@/schemas/property.zod";
+import { GalleryImage, PropertiesFormValues, Property } from "@/types/property.definations";
 import { inputClass, labelClass } from "@/components/custom/FormFields";
 import { propertyTypeGroups } from "@/utils/selectConstants";
-
-
-type PropertyFormInput = z.input<typeof propertyFormSchema>;
-
-type ExistingImage = { url: string; path: string };
+import PropertyImageGallery from "@/components/custom/PropertyImageGallery";
+import { handleFormErrors } from "@/utils/errors";
 
 interface PropertyFormPageProps {
   businessId: string;
@@ -51,21 +40,26 @@ export default function PropertyFormPage({
 
   const [search, setSearch] = useState("");
 
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [removedImagePaths, setRemovedImagePaths] = useState<Set<string>>(
-    new Set(),
-  );
+
+  const isEdit = mode === "edit";
+
+  const buildGalleryFromProperty = (): GalleryImage[] =>
+    isEdit && property?.images
+      ? property.images.map((img) => ({
+        ...img,
+        status: "done" as const,
+        progress: 100,
+      }))
+      : [];
+
+  const [images, setImages] = useState<GalleryImage[]>(buildGalleryFromProperty);
+
 
   const [lastPropertyId, setLastPropertyId] = useState(property?.id);
   if (property?.id !== lastPropertyId) {
     setLastPropertyId(property?.id);
-    setRemovedImagePaths(new Set());
+    setImages(buildGalleryFromProperty());
   }
-
-  const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-
-  const isEdit = mode === "edit";
 
   // Ensure default values cleanly populate standard type expectations
   const defaultValues = useMemo<PropertyFormInput>(() => {
@@ -98,7 +92,7 @@ export default function PropertyFormPage({
         squareMeters: currentProperty.squareMeters ?? 1,
         status: currentProperty.status ?? "available",
         amenityID: mappedAmenities,
-        image: [],
+        image: currentProperty.images ?? [],
         version: currentProperty.version,
       };
     }
@@ -125,6 +119,7 @@ export default function PropertyFormPage({
     handleSubmit,
     setValue,
     control,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<PropertyFormInput>({
     resolver: zodResolver(propertyFormSchema),
@@ -133,10 +128,26 @@ export default function PropertyFormPage({
 
   const selectedAmenities = useWatch({ control, name: "amenityID" }) ?? [];
 
-  const existingImages = useMemo<ExistingImage[]>(() => {
-    if (!isEdit || !property?.images) return [];
-    return property.images.filter((img) => !removedImagePaths.has(img.path));
-  }, [isEdit, property, removedImagePaths]);
+  // const existingImages = useMemo<ExistingImage[]>(() => {
+  //   if (!isEdit || !property?.images) return [];
+  //   return property.images.filter((img) => !removedImagePaths.has(img.path));
+  // }, [isEdit, property, removedImagePaths]);
+
+  // Keep RHF's `image` field (used by zod validation) in sync with the gallery
+  useEffect(() => {
+    const doneImages = images
+      .filter((img) => img.status === "done")
+      .map((img) => ({
+        id: img.id,
+        url: img.url,
+        path: img.path,
+        original_url: img.original_url,
+        watermarked_url: img.watermarked_url,
+        thumbnail_url: img.thumbnail_url,
+        webp_url: img.webp_url,
+      }));
+    setValue("image", doneImages, { shouldValidate: true });
+  }, [images, setValue]);
 
   const filteredAmenities = useMemo(() => {
     if (!search.trim()) return amenities?.data ?? [];
@@ -145,17 +156,17 @@ export default function PropertyFormPage({
     );
   }, [amenities, search]);
 
-  const removeExistingImage = (path: string) => {
-    setRemovedImagePaths((prev) => {
-      const next = new Set(prev);
-      next.add(path);
-      return next;
-    });
-  };
+  // const removeExistingImage = (path: string) => {
+  //   setRemovedImagePaths((prev) => {
+  //     const next = new Set(prev);
+  //     next.add(path);
+  //     return next;
+  //   });
+  // };
 
-  const removeSelectedFile = (fileName: string) => {
-    setSelectedFiles((prev) => prev.filter((f) => f.name !== fileName));
-  };
+  // const removeSelectedFile = (fileName: string) => {
+  //   setSelectedFiles((prev) => prev.filter((f) => f.name !== fileName));
+  // };
 
   // Safe programmatic state controller for robust Multi-Checkbox operations
   const handleAmenityToggle = (amenityId: string, isChecked: boolean) => {
@@ -170,60 +181,56 @@ export default function PropertyFormPage({
     }
   };
 
+  const isImagesUploading = images.some((img) => img.status === "uploading");
+
+
   const onSubmit = async (values: PropertyFormInput) => {
+    if (isImagesUploading) {
+      toast.error("Please wait for image uploads to finish.");
+      return;
+    }
     try {
-      setUploading(true);
-      const uploadModule = "property";
-      let uploadedImages: UploadResult[] = [];
-
-      if (selectedFiles.length > 0) {
-        uploadedImages = await uploadFiles({
-          files: selectedFiles,
-          businessId,
-          module: uploadModule,
-          onProgress: (progress) => setUploadProgress(progress),
-        });
-      }
-
-      setUploadProgress(100);
-
-      const finalImages: ExistingImage[] = [
-        ...existingImages,
-        ...uploadedImages.map((image: UploadResult) => ({
-          url: image.url,
-          path: image.path,
-        })),
-      ];
 
       const payload: PropertiesFormValues = {
         ...values,
         amenityID: (values.amenityID ?? []) as unknown as Amenity[],
-        image: finalImages,
+        image: images
+          .filter((img) => img.status === "done")
+          .map((img) => ({
+            id: img.id,
+            url: img.url,
+            path: img.path,
+            original_url: img.original_url,
+            watermarked_url: img.watermarked_url,
+            thumbnail_url: img.thumbnail_url,
+            webp_url: img.webp_url,
+          })),
       };
 
       if (isEdit && property) {
-        await updateProperty.mutateAsync({ id: property.id, data: payload });
+        await updateProperty.mutateAsync({ id: property.id, data: payload }
+          , {
+            onError: (error) => {
+              // Pushes field-level errors onto the matching inputs,
+              // and a general message onto `errors.root`
+              handleFormErrors<PropertyFormInput>(error, setError);
+            },
+          });
 
-        const removedImages =
-          property.images?.filter((img) => removedImagePaths.has(img.path)) ??
-          [];
-
-        await Promise.all(
-          removedImages.map((img) =>
-            deleteFile(img.path).catch((err) =>
-              console.warn("Failed to delete removed image:", err),
-            ),
-          ),
-        );
-
-        setRemovedImagePaths(new Set());
+        // setRemovedImagePaths(new Set());
         toast.success("Property updated successfully");
       } else {
-        await createProperty.mutateAsync(payload);
+        await createProperty.mutateAsync(payload, {
+          onError: (error) => {
+            // Pushes field-level errors onto the matching inputs,
+            // and a general message onto `errors.root`
+            handleFormErrors<PropertyFormInput>(error, setError);
+          },
+        });
         toast.success("Property created successfully");
       }
 
-      setSelectedFiles([]);
+      // setSelectedFiles([]);
       router.push("/admin/property");
     } catch (error) {
       toast.error(
@@ -233,13 +240,11 @@ export default function PropertyFormPage({
             ? "Failed to update property"
             : "Failed to create property",
       );
-    } finally {
-      setUploading(false);
-      setUploadProgress(0);
     }
   };
 
-  const isBusy = isSubmitting || uploading;
+  // const isBusy = isSubmitting || uploading;
+  const isBusy = isSubmitting || isImagesUploading;
 
   return (
     <form
@@ -257,6 +262,28 @@ export default function PropertyFormPage({
         </p>
       </div>
 
+      {errors.root?.message && (
+        <div
+          className={`mt-4 flex items-start gap-2 rounded-md border px-4 py-3 ${errors.root.type === "network"
+              ? "border-amber-200 bg-amber-50"
+              : "border-red-200 bg-red-50"
+            }`}
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <AlertCircle
+            className={`mt-0.5 h-4 w-4 shrink-0 ${errors.root.type === "network" ? "text-amber-500" : "text-red-500"
+              }`}
+          />
+          <p
+            className={`text-sm ${errors.root.type === "network" ? "text-amber-700" : "text-red-600"
+              }`}
+          >
+            {errors.root.message}
+          </p>
+        </div>
+      )}
+
       {/* Property Information */}
       <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm ring-1 ring-slate-100">
         <div className="mb-6 flex items-center gap-2 border-b pb-4">
@@ -266,13 +293,13 @@ export default function PropertyFormPage({
           </h2>
         </div>
 
-        <input
+        {/* <input
             type="hidden"
             {...register("version", {
               setValueAs: (v) =>
                 v === "" || v === undefined ? undefined : Number(v),
             })}
-          />
+          /> */}
 
         <div className="grid gap-5 md:grid-cols-2">
           <div>
@@ -451,11 +478,10 @@ export default function PropertyFormPage({
             return (
               <label
                 key={amenity.id}
-                className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 shadow-2xs transition-colors ${
-                  isChecked
-                    ? "border-blue-500 bg-blue-50/30 hover:bg-blue-50/50"
-                    : "border-slate-200 bg-white hover:bg-slate-50"
-                }`}
+                className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 shadow-2xs transition-colors ${isChecked
+                  ? "border-blue-500 bg-blue-50/30 hover:bg-blue-50/50"
+                  : "border-slate-200 bg-white hover:bg-slate-50"
+                  }`}
               >
                 <input
                   type="checkbox"
@@ -475,99 +501,16 @@ export default function PropertyFormPage({
         </div>
       </div>
 
-      {/* Images */}
-      <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm ring-1 ring-slate-100">
-        <div className="mb-6 flex items-center gap-2 border-b pb-4">
-          <UploadCloud className="h-5 w-5 text-blue-500" />
-          <h2 className="text-base font-bold text-slate-800">
-            Property Gallery
-          </h2>
-        </div>
-
-        <label className="group flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 p-8 transition-colors hover:border-blue-400 hover:bg-blue-50/20">
-          <UploadCloud className="mb-3 h-8 w-8 text-slate-400 transition-colors group-hover:text-blue-500" />
-          <span className="text-sm font-semibold text-slate-600 group-hover:text-blue-600">
-            Upload Property Images
-          </span>
-          <span className="mt-1 text-xs text-slate-400">
-            Drag and drop or tap to browse media files
-          </span>
-
-          <input
-            hidden
-            multiple
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              const files = Array.from(e.target.files ?? []);
-              setSelectedFiles((prev) => [...prev, ...files]);
-            }}
-          />
-        </label>
-
-        {(existingImages.length > 0 || selectedFiles.length > 0) && (
-          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-            {existingImages.map((image) => (
-              <div
-                key={image.path}
-                className="group relative aspect-square overflow-hidden rounded-xl border border-slate-100 shadow-2xs"
-              >
-                <Image
-                  src={image.url}
-                  alt={image.path}
-                  unoptimized
-                  fill
-                  className="object-cover transition duration-300 group-hover:scale-105"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeExistingImage(image.path)}
-                  className="absolute right-2 top-2 rounded-xl bg-slate-900/80 p-1.5 text-white opacity-0 blur-xs transition group-hover:opacity-100 group-hover:blur-none"
-                  aria-label="Remove image"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            ))}
-
-            {selectedFiles.map((file) => (
-              <div
-                key={file.name}
-                className="group relative aspect-square overflow-hidden rounded-xl border border-slate-100 shadow-2xs"
-              >
-                <Image
-                  src={URL.createObjectURL(file)}
-                  alt={file.name}
-                  fill
-                  className="object-cover transition duration-300 group-hover:scale-105"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeSelectedFile(file.name)}
-                  className="absolute right-2 top-2 rounded-xl bg-slate-900/80 p-1.5 text-white opacity-0 blur-xs transition group-hover:opacity-100 group-hover:blur-none"
-                  aria-label="Remove image"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Upload Progress */}
-      {uploading && (
-        <div className="rounded-xl border border-slate-100 bg-white p-4 shadow-xs">
-          <div className="h-2 w-full rounded-full bg-slate-100">
-            <div
-              className="h-full rounded-full bg-blue-500 transition-all duration-300"
-              style={{ width: `${uploadProgress}%` }}
-            />
-          </div>
-          <p className="mt-2 text-xs font-medium text-slate-600">
-            Uploading gallery components... {uploadProgress}%
-          </p>
-        </div>
+      {/* Images — now handled entirely by PropertyImageGallery */}
+      <PropertyImageGallery
+        businessId={businessId}
+        images={images}
+        onChange={setImages}
+      />
+      {errors.image && (
+        <p className="-mt-4 text-xs text-red-500">
+          {errors.image.message as string}
+        </p>
       )}
 
       {/* Actions */}

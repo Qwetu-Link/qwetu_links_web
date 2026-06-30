@@ -4,6 +4,8 @@ import { toast } from "sonner";
 import { useCreateUtility } from "@/hooks/useUtility";
 import { UtilityFormValues } from "@/schemas/utility.zod";
 import { UtilityBaseForm } from "./UtilityForm";
+import { handleFormErrors } from "@/utils/errors";
+import { useForm } from "react-hook-form";
 // import { handleFormErrors } from "@/app/lib/errors";
 
 interface CreateUtilityFormProps {
@@ -11,6 +13,8 @@ interface CreateUtilityFormProps {
 }
 
 export function CreateUtilityForm({ propertyID }: CreateUtilityFormProps) {
+
+    const { setError } = useForm();
 
     const createMutate = useCreateUtility()
 
@@ -30,13 +34,13 @@ export function CreateUtilityForm({ propertyID }: CreateUtilityFormProps) {
                 onSuccess: () => {
                     toast.success(`"${data.utilityName}" add to propery`);
                 },
-                onError: () => {
-                    toast.error("Failed to create tenant. Please try again.");
-                },
+                onError: (error) => {
+                    handleFormErrors<UtilityFormValues>(error, setError);
+                }
             });
         } catch (error) {
-            console.log(error)
-            //   handleFormErrors(error, setError);
+            // console.log(error)
+            handleFormErrors(error, setError);
 
         }
 

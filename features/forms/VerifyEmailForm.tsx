@@ -12,6 +12,7 @@ import {
 } from "@/schemas/auth.zod";
 import OtpInput from "../../components/custom/OtpInput";
 import { useVerifyEmail } from "@/hooks/useAuth";
+import { handleFormErrors } from "@/utils/errors";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -26,6 +27,7 @@ export default function VerifyEmailForm() {
   const {
     control,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<VerifyEmailFormData>({
     resolver: zodResolver(verifyEmailSchema),
@@ -60,14 +62,9 @@ export default function VerifyEmailForm() {
           setStatus("success");
           setMessage("Your email has been verified successfully.");
         },
-        onError: (err: unknown) => {
-          const error = err as { response?: { data?: { message?: string } } };
-          setStatus("error");
-          setMessage(
-            error.response?.data?.message ??
-            "Verification failed. The code may be invalid or expired.",
-          );
-        },
+        onError: (error) => {
+          handleFormErrors<VerifyEmailFormData>(error, setError);
+        }
       },
     );
   };
@@ -168,6 +165,29 @@ export default function VerifyEmailForm() {
           Back to login
         </Link>
       </div>
+
+      {/* Errors */}
+      {errors.root?.message && (
+        <div
+          className={`mt-4 flex items-start gap-2 rounded-md border px-4 py-3 ${errors.root.type === "network"
+            ? "border-amber-200 bg-amber-50"
+            : "border-red-200 bg-red-50"
+            }`}
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <AlertCircle
+            className={`mt-0.5 h-4 w-4 shrink-0 ${errors.root.type === "network" ? "text-amber-500" : "text-red-500"
+              }`}
+          />
+          <p
+            className={`text-sm ${errors.root.type === "network" ? "text-amber-700" : "text-red-600"
+              }`}
+          >
+            {errors.root.message}
+          </p>
+        </div>
+      )}
     </form>
   );
 }

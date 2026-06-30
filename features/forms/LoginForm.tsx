@@ -2,21 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { loginSchema } from "@/schemas/auth.zod";
+import { LoginFormData, loginSchema } from "@/schemas/auth.zod";
 import { AlertCircle, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { useLogin } from "@/hooks/useAuth";
-import { AxiosError } from "axios";
 import { useAuthStore } from "@/stores/useAuthStore";
-// import GoogleSignupButton from "../../_components/GoogleBtn";
-
-type ApiErrorResponse = {
-  message?: string;
-};
-
-type LoginFormData = z.infer<typeof loginSchema>;
+import { handleFormErrors } from "@/utils/errors";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -25,6 +17,7 @@ export default function LoginForm() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -35,7 +28,7 @@ export default function LoginForm() {
   });
 
   // useLogin returns: { mutate: login, isPending, isError, error, data }
-  const { mutate: login, isPending, isError, error } = useLogin();
+  const { mutate: login, isPending } = useLogin();
 
   useEffect(() => {
     if (isAuthenticated()) {
@@ -44,7 +37,13 @@ export default function LoginForm() {
   }, [isAuthenticated, router, getRedirectPath]);
 
   const onSubmit = (data: LoginFormData) => {
-    login(data); // useLogin handles redirect on success
+    login(data, {
+      onError: (error) => {
+        // Pushes field-level errors onto the matching inputs,
+        // and a general message onto `errors.root`
+        handleFormErrors<LoginFormData>(error, setError);
+      },
+    });
   };
 
   return (
@@ -138,16 +137,24 @@ export default function LoginForm() {
         {isPending ? "Logging in..." : "Login"}
       </button>
 
-      {isError && (
+      {errors.root?.message && (
         <div
-          className="mt-4 flex items-start gap-2 rounded-md border border-red-200 bg-red-50 px-4 py-3"
+          className={`mt-4 flex items-start gap-2 rounded-md border px-4 py-3 ${errors.root.type === "network"
+              ? "border-amber-200 bg-amber-50"
+              : "border-red-200 bg-red-50"
+            }`}
           aria-live="polite"
           aria-atomic="true"
         >
-          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
-          <p className="text-sm text-red-600">
-            {(error as AxiosError<ApiErrorResponse>)?.response?.data?.message ??
-              "Invalid credentials."}
+          <AlertCircle
+            className={`mt-0.5 h-4 w-4 shrink-0 ${errors.root.type === "network" ? "text-amber-500" : "text-red-500"
+              }`}
+          />
+          <p
+            className={`text-sm ${errors.root.type === "network" ? "text-amber-700" : "text-red-600"
+              }`}
+          >
+            {errors.root.message}
           </p>
         </div>
       )}

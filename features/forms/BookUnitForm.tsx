@@ -5,7 +5,7 @@ import { BookUnitFormValues, bookUnitSchema } from "@/schemas/contact.zod";
 import { bookUnitFormDefaultValues } from "@/types/booking.definations";
 import { handleFormErrors } from "@/utils/errors";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarDays } from "lucide-react";
+import { AlertCircle, CalendarDays } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -44,12 +44,11 @@ export default function BookUnitForm({ propertyID, propertyName }: BookUnitFormP
                     reset();
                     router.push("/property")
                 },
-                onError: () => {
-                    toast.error("Failed to submit the enquiry");
-                },
+                onError: (error) => {
+                    handleFormErrors<BookUnitFormValues>(error, setError);
+                }
             });
         } catch (error) {
-            console.log("", data.viewingDate)
             handleFormErrors(error, setError);
         }
     };
@@ -80,6 +79,28 @@ export default function BookUnitForm({ propertyID, propertyName }: BookUnitFormP
                 onSubmit={handleSubmit(onSubmit)}
                 className="grid gap-4 rounded-xl border border-rental-border bg-rental-bg-light p-6 sm:p-8"
             >
+                {/* Errors */}
+                {errors.root?.message && (
+                    <div
+                        className={`mt-4 flex items-start gap-2 rounded-md border px-4 py-3 ${errors.root.type === "network"
+                            ? "border-amber-200 bg-amber-50"
+                            : "border-red-200 bg-red-50"
+                            }`}
+                        aria-live="polite"
+                        aria-atomic="true"
+                    >
+                        <AlertCircle
+                            className={`mt-0.5 h-4 w-4 shrink-0 ${errors.root.type === "network" ? "text-amber-500" : "text-red-500"
+                                }`}
+                        />
+                        <p
+                            className={`text-sm ${errors.root.type === "network" ? "text-amber-700" : "text-red-600"
+                                }`}
+                        >
+                            {errors.root.message}
+                        </p>
+                    </div>
+                )}
                 {/* Hidden property ID */}
                 <input type="hidden" {...register("propertyID")} />
 

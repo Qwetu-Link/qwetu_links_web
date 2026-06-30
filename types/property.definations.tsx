@@ -12,7 +12,7 @@ export interface PropertyFilters {
   status: "all" | PropertyStatus;
 }
 
-export type Property = {
+export interface Property {
   id: string;
   name: string;
   slug: string;
@@ -38,9 +38,29 @@ export type Property = {
   utility?: Utility[],
 };
 
-type Images = {
+export interface Images {
+  id: string;
   url: string;
   path: string;
+  original_url?: string;
+  watermarked_url?: string;
+  thumbnail_url?: string;
+  webp_url?: string;
+};
+
+export type GalleryImage = Partial<
+  Pick<
+    Images,
+    "original_url" | "watermarked_url" | "thumbnail_url" | "webp_url"
+  >
+> & {
+  id: string;
+  url: string;
+  path: string;
+  status: "uploading" | "done" | "error";
+  progress: number; // 0–100
+  error?: string;
+  file?: File; // kept around so "Try again" can re-upload without re-picking
 };
 
 export interface PropertyImages extends Images {
@@ -50,7 +70,7 @@ export interface PropertyImages extends Images {
   version: number | null;
 }
 
-export type PropertiesFormValues = {
+export interface PropertiesFormValues {
   name: string;
   address: string;
   location: string;

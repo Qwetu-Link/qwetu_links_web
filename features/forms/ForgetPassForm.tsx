@@ -5,22 +5,20 @@ import { AlertCircle, Mail } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { AxiosError } from "axios";
 import {
   ForgotPasswordFormData,
   forgotPasswordSchema,
 } from "@/schemas/auth.zod";
 import { useForgotPassword } from "@/hooks/useAuth";
+import { handleFormErrors } from "@/utils/errors";
 
-type ApiErrorResponse = {
-  message?: string;
-};
 
 export default function ForgotPasswordForm() {
   const router = useRouter();
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
@@ -31,8 +29,6 @@ export default function ForgotPasswordForm() {
   const {
     mutate: requestPasswordReset,
     isPending,
-    isError,
-    error,
   } = useForgotPassword();
 
   const onSubmit: SubmitHandler<ForgotPasswordFormData> = ({ email }) => {
@@ -42,6 +38,9 @@ export default function ForgotPasswordForm() {
         onSuccess: () => {
           router.push(`/reset-password?email=${encodeURIComponent(email)}`);
         },
+        onError: (error) => {
+          handleFormErrors<ForgotPasswordFormData>(error, setError);
+        }
       },
     );
   };
@@ -89,22 +88,28 @@ export default function ForgotPasswordForm() {
         {isPending ? "Sending..." : "Send reset code"}
       </button>
 
-      <div
-        className="mt-4 min-h-11"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        {isError && (
-          <div className="flex items-start gap-2 rounded-md border border-red-200 bg-red-50 px-4 py-3">
-            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
-            <p className="text-sm leading-5 text-red-600">
-              {(error as AxiosError<ApiErrorResponse>)?.response?.data
-                ?.message ??
-                "We could not send a reset code. Please try again."}
-            </p>
-          </div>
-        )}
-      </div>
+      {/* Errors */}
+      {errors.root?.message && (
+        <div
+          className={`mt-4 flex items-start gap-2 rounded-md border px-4 py-3 ${errors.root.type === "network"
+            ? "border-amber-200 bg-amber-50"
+            : "border-red-200 bg-red-50"
+            }`}
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <AlertCircle
+            className={`mt-0.5 h-4 w-4 shrink-0 ${errors.root.type === "network" ? "text-amber-500" : "text-red-500"
+              }`}
+          />
+          <p
+            className={`text-sm ${errors.root.type === "network" ? "text-amber-700" : "text-red-600"
+              }`}
+          >
+            {errors.root.message}
+          </p>
+        </div>
+      )}
 
       <p className="mt-4 text-center text-sm text-gray-500 md:hidden">
         Remember your password?{" "}

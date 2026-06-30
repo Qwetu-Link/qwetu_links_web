@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Save } from "lucide-react";
+import { AlertCircle, ArrowLeft, Save } from "lucide-react";
 import ImageFileField from "@/components/custom/ImageFileField";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,6 +13,7 @@ import { TenantUserFormValues, tenantUserSchema } from "@/schemas/tenant.zod";
 import { emptyTenant, Tenant } from "@/types/tenant.definations";
 import { tenantFormSections } from "@/components/custom/FormSection";
 import { fieldClass, textAreaClass } from "@/components/custom/FormFields";
+import { handleFormErrors } from "@/utils/errors";
 
 
 type TenantFormPageProps = {
@@ -39,6 +40,7 @@ export default function TenantFormPage({
     handleSubmit,
     register,
     setValue,
+    setError,
     reset,
   } = useForm<TenantUserFormValues>({
     defaultValues: emptyTenant,
@@ -78,9 +80,9 @@ export default function TenantFormPage({
             toast.success("Tenant updated successfully");
             router.push(listHref);
           },
-          onError: () => {
-            toast.error("Failed to update tenant. Please try again.");
-          },
+          onError: (error) => {
+            handleFormErrors<TenantUserFormValues>(error, setError);
+          }
         },
       );
     } else {
@@ -122,6 +124,28 @@ export default function TenantFormPage({
           onSubmit={handleSubmit(onSubmit)}
           className="overflow-hidden rounded-lg border border-orange-100 bg-white shadow-sm"
         >
+          {/* Errors */}
+          {errors.root?.message && (
+            <div
+              className={`mt-4 flex items-start gap-2 rounded-md border px-4 py-3 ${errors.root.type === "network"
+                ? "border-amber-200 bg-amber-50"
+                : "border-red-200 bg-red-50"
+                }`}
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              <AlertCircle
+                className={`mt-0.5 h-4 w-4 shrink-0 ${errors.root.type === "network" ? "text-amber-500" : "text-red-500"
+                  }`}
+              />
+              <p
+                className={`text-sm ${errors.root.type === "network" ? "text-amber-700" : "text-red-600"
+                  }`}
+              >
+                {errors.root.message}
+              </p>
+            </div>
+          )}
           <div className="grid gap-6 p-4 sm:p-5 lg:grid-cols-2">
             {tenantFormSections.map((section) => (
               <section key={section.title} className="space-y-3">

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
-import { ArrowLeft, Save } from "lucide-react";
+import { AlertCircle, ArrowLeft, Save } from "lucide-react";
 import { toast } from "sonner";
 import ImageFileField from "@/components/custom/ImageFileField";
 import {
@@ -21,6 +21,7 @@ import { useCreateStaff, useUpdateStaff } from "@/hooks/useStaff";
 import { StaffFormPageProps } from "../private/staff/props";
 import { staffFormSections } from "@/components/custom/FormSection";
 import { fieldClass, textAreaClass } from "@/components/custom/FormFields";
+import { handleFormErrors } from "@/utils/errors";
 
 export default function StaffFormPage({ mode, businessId, existingStaff, listHref }: StaffFormPageProps) {
   const router = useRouter();
@@ -34,6 +35,7 @@ export default function StaffFormPage({ mode, businessId, existingStaff, listHre
     register,
     setValue,
     reset,
+    setError,
   } = useForm<StaffUserFormValues>({
     defaultValues: emptyStaff,
     resolver: zodResolver(staffUserSchema),
@@ -73,9 +75,9 @@ export default function StaffFormPage({ mode, businessId, existingStaff, listHre
             toast.success("Staff updated successfully");
             router.push(listHref);
           },
-          onError: () => {
-            toast.error("Failed to update staff. Please try again.");
-          },
+          onError: (error) => {
+            handleFormErrors<StaffUserFormValues>(error, setError);
+          }
         },
       );
     } else {
@@ -84,9 +86,9 @@ export default function StaffFormPage({ mode, businessId, existingStaff, listHre
           toast.success("Staff created successfully");
           router.push(listHref);
         },
-        onError: () => {
-          toast.error("Failed to create staff. Please try again.");
-        },
+        onError: (error) => {
+          handleFormErrors<StaffUserFormValues>(error, setError);
+        }
       });
     }
   };
@@ -116,6 +118,29 @@ export default function StaffFormPage({ mode, businessId, existingStaff, listHre
           className="overflow-hidden rounded-lg border border-orange-100 bg-white shadow-sm"
         >
           <div className="grid gap-6 p-4 sm:p-5 lg:grid-cols-2">
+
+            {/* Errors */}
+            {errors.root?.message && (
+              <div
+                className={`mt-4 flex items-start gap-2 rounded-md border px-4 py-3 ${errors.root.type === "network"
+                  ? "border-amber-200 bg-amber-50"
+                  : "border-red-200 bg-red-50"
+                  }`}
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                <AlertCircle
+                  className={`mt-0.5 h-4 w-4 shrink-0 ${errors.root.type === "network" ? "text-amber-500" : "text-red-500"
+                    }`}
+                />
+                <p
+                  className={`text-sm ${errors.root.type === "network" ? "text-amber-700" : "text-red-600"
+                    }`}
+                >
+                  {errors.root.message}
+                </p>
+              </div>
+            )}
 
             {/* Text field sections */}
             {staffFormSections.map((section) => (

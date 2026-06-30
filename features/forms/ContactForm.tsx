@@ -5,7 +5,7 @@ import { ContactFormValues, contactSchema } from "@/schemas/contact.zod";
 import { contactFormDefaultValues, enquiryTypeOptions } from "@/types/contact.definations";
 import { handleFormErrors } from "@/utils/errors";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Send } from "lucide-react";
+import { AlertCircle, Send } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -30,9 +30,9 @@ export default function ContactForm() {
           toast.success(`${data.enquiryType} enquiry submitted successfully`);
           reset();
         },
-        onError: () => {
-          toast.error("Failed to submit the enquiry");
-        },
+        onError: (error) => {
+          handleFormErrors<ContactFormValues>(error, setError);
+        }
       });
     } catch (error) {
       handleFormErrors(error, setError);
@@ -174,12 +174,28 @@ export default function ContactForm() {
           )}
         </div>
 
-        {/* Root error */}
-        {errors.root && (
-          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
-            <p className="text-sm text-red-600">{errors.root.message}</p>
-          </div>
-        )}
+        {/* Errors */}
+                    {errors.root?.message && (
+        <div
+          className={`mt-4 flex items-start gap-2 rounded-md border px-4 py-3 ${errors.root.type === "network"
+              ? "border-amber-200 bg-amber-50"
+              : "border-red-200 bg-red-50"
+            }`}
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <AlertCircle
+            className={`mt-0.5 h-4 w-4 shrink-0 ${errors.root.type === "network" ? "text-amber-500" : "text-red-500"
+              }`}
+          />
+          <p
+            className={`text-sm ${errors.root.type === "network" ? "text-amber-700" : "text-red-600"
+              }`}
+          >
+            {errors.root.message}
+          </p>
+        </div>
+      )}
 
         {/* Submit */}
         <div className="pt-1">

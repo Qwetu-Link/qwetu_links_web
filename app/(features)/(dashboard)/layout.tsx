@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Sidebar } from "@/components/layouts/SideBar";
 import { Topbar } from "@/components/layouts/TopBar";
+import FirebaseAuthProvider from "@/lib/FirebaseAuthProvider";
 
 export default function MainLayout({
   children,
@@ -33,7 +34,9 @@ export default function MainLayout({
 
         {/* Main content */}
         <main className="custom-scrollbar min-h-0 flex-1 overflow-y-auto">
+          <FirebaseAuthProvider>
           {children}
+          </FirebaseAuthProvider>
         </main>
       </div>
     </div>

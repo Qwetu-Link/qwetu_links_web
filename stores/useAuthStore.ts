@@ -55,6 +55,11 @@ export const useAuthStore = create<AuthState>()(
           user: null,
           token: null,
         });
+        // clear persisted cookie
+        if (typeof window !== "undefined") {
+          document.cookie =
+            "auth-store=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        }
       },
 
       /**

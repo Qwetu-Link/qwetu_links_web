@@ -4,13 +4,14 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { useCreateMaintenances, useGetPropertyMaintenance } from "../../hooks/useMaintenance";
-import { addMaintenanceFormSchema, AddMaintenanceFormValues } from "../../schemas/maintenance.zod";
+import { AlertCircle, ArrowLeft } from "lucide-react";
+import { useCreateMaintenances, useGetPropertyMaintenance } from "@/hooks/useMaintenance";
+import { addMaintenanceFormSchema, AddMaintenanceFormValues } from "@/schemas/maintenance.zod";
 import { MAINTENANCE_CATEGORIES, maintenancePriorityValues, maintenanceStatusValues } from "../../types/maintenance.definitions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { fieldClass } from "@/components/custom/FormFields";
+import { handleFormErrors } from "@/utils/errors";
 
 interface MaintenanceFormProps {
     basePath: string;
@@ -39,6 +40,7 @@ export default function MaintenanceForm({ basePath }: MaintenanceFormProps) {
     const {
         register,
         handleSubmit,
+        setError,
         formState: { errors, isSubmitting },
     } = useForm<AddMaintenanceFormValues>({
         resolver: zodResolver(addMaintenanceFormSchema),
@@ -55,11 +57,15 @@ export default function MaintenanceForm({ basePath }: MaintenanceFormProps) {
             onSuccess: () => {
                 toast.success("Maintenance created successfully");
                 router.push(basePath);
-            },
-            onError: () => {
-                toast.error("Failed to create Maintenance. Please try again.");
-            },
+            }, onError: (error) => {
+                // Pushes field-level errors onto the matching inputs,
+                // and a general message onto `errors.root`
+                handleFormErrors<AddMaintenanceFormValues>(error, setError);
+            }
         });
+
+        // setRemovedImagePaths(new Set());
+        toast.success("Property updated successfully");
     };
 
     return (
@@ -84,6 +90,29 @@ export default function MaintenanceForm({ basePath }: MaintenanceFormProps) {
                     onSubmit={handleSubmit(onSubmit)}
                     className="w-full max-w-4xl rounded-xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm space-y-5 mx-auto"
                 >
+
+                    {/* Errors */}
+                    {errors.root?.message && (
+                        <div
+                            className={`mt-4 flex items-start gap-2 rounded-md border px-4 py-3 ${errors.root.type === "network"
+                                ? "border-amber-200 bg-amber-50"
+                                : "border-red-200 bg-red-50"
+                                }`}
+                            aria-live="polite"
+                            aria-atomic="true"
+                        >
+                            <AlertCircle
+                                className={`mt-0.5 h-4 w-4 shrink-0 ${errors.root.type === "network" ? "text-amber-500" : "text-red-500"
+                                    }`}
+                            />
+                            <p
+                                className={`text-sm ${errors.root.type === "network" ? "text-amber-700" : "text-red-600"
+                                    }`}
+                            >
+                                {errors.root.message}
+                            </p>
+                        </div>
+                    )}
                     {/* Title */}
                     <div className="space-y-1.5">
                         <label className="text-sm font-semibold text-slate-700">Title</label>

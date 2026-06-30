@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/stores/useAuthStore";
 import axios from "axios";
 
 /**
@@ -46,15 +47,21 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (error) => {
-    if (error.response?.status === 401) {
-      // Safely ensure browser variables only run on client environments
-      if (isBrowser) {
-        // Remove the auth cookie and redirect to login
-        document.cookie =
-          "auth-store=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        window.location.href = "/login";
-      }
+    const status = error.response?.status;
+    const url = error.config?.url;
+
+    if (status === 401 && url?.includes("/login")) {
+      return Promise.reject(error);
+
     }
+
+    const { logout, token } = useAuthStore.getState();
+
+    // Only logout if user was actually logged in
+    if (status === 401 && token) {
+      logout();
+    }
+
     return Promise.reject(error);
   }
 );

@@ -14,6 +14,7 @@ import Image from "next/image";
 import { getBusinessFormSchema } from "../../app/(features)/(dashboard)/qwetulinks/accounts/utils";
 import { fieldClass, textAreaClass } from "@/components/custom/FormFields";
 import { businessRoleOptions } from "@/utils/selectConstants";
+import { handleFormErrors } from "@/utils/errors";
 
 const STORAGE_MODULE = "logo";
 
@@ -25,8 +26,6 @@ export default function RegisterBusinessForm() {
   const {
     mutate: registerBusiness,
     isPending: isCreating,
-    isError,
-    error,
   } = useRegister();
 
   const [pendingFile, setPendingFile] = useState<File | null>(null);
@@ -39,6 +38,7 @@ export default function RegisterBusinessForm() {
     handleSubmit,
     register,
     setValue,
+    setError,
   } = useForm<BusinessFormValues>({
     defaultValues: {
       name: "",
@@ -106,10 +106,12 @@ export default function RegisterBusinessForm() {
           `/qwetulinks/accounts/verify?email=${encodeURIComponent(values.email)}`,
         );
       },
+      onError: (error) => {
+        handleFormErrors<BusinessFormValues>(error, setError);
+      }
     });
   };
 
-  const apiError = error as { response?: { data?: { message?: string } } };
   const isPending = isSubmitting || isCreating;
 
   return (
@@ -371,12 +373,25 @@ export default function RegisterBusinessForm() {
               )}
             </section>
 
-            {isError && (
-              <div className="flex items-start gap-2 rounded-md border border-red-200 bg-red-50 px-4 py-3">
-                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
-                <p className="text-sm leading-5 text-red-600">
-                  {apiError?.response?.data?.message ??
-                    "Business could not be saved. Please try again."}
+            {/* Errors */}
+            {errors.root?.message && (
+              <div
+                className={`mt-4 flex items-start gap-2 rounded-md border px-4 py-3 ${errors.root.type === "network"
+                  ? "border-amber-200 bg-amber-50"
+                  : "border-red-200 bg-red-50"
+                  }`}
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                <AlertCircle
+                  className={`mt-0.5 h-4 w-4 shrink-0 ${errors.root.type === "network" ? "text-amber-500" : "text-red-500"
+                    }`}
+                />
+                <p
+                  className={`text-sm ${errors.root.type === "network" ? "text-amber-700" : "text-red-600"
+                    }`}
+                >
+                  {errors.root.message}
                 </p>
               </div>
             )}

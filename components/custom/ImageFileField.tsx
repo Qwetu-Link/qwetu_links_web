@@ -85,7 +85,8 @@ export default function ImageFileField({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
 
         {/* Avatar preview */}
-        <div className="relative mx-auto h-24 w-24 shrink-0 overflow-hidden rounded-xl border border-orange-100 bg-slate-50 sm:mx-0 sm:h-20 sm:w-20">
+        {/* <div className="relative mx-auto h-24 w-24 shrink-0 overflow-hidden rounded-xl border border-orange-100 bg-slate-50 sm:mx-0 sm:h-20 sm:w-20"> */}
+          <div className="relative mx-auto h-40 w-40 shrink-0 overflow-hidden rounded-xl border border-orange-100 bg-slate-50 sm:mx-0 sm:h-20 sm:w-20">
           {hasPreview ? (
             <>
               <Image

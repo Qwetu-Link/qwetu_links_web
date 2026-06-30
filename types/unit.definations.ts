@@ -2,16 +2,6 @@ import { PaginationLinks, PaginationMeta } from "./pagination.definations";
 
 export type UnitStatus = "available" | "occupied" | "maintenance" | "reserved";
 
-export type Images = {
-  id: string;
-  url: string;
-  path: string;
-  original_url?: string;
-  watermarked_url?: string;
-  thumbnail_url?: string;
-  webp_url?: string;
-};
-
 export interface UnitProperty {
   id: string;
   unitNumber: string;

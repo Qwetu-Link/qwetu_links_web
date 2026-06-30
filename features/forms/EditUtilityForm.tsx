@@ -6,12 +6,16 @@ import { UtilityFormValues } from "@/schemas/utility.zod";
 import { KNOWN_NAMES, UtilityBaseForm } from "./UtilityForm";
 import { useUpdateUtility } from "@/hooks/useUtility";
 import { toast } from "sonner";
+import { handleFormErrors } from "@/utils/errors";
+import { useForm } from "react-hook-form";
 
 interface EditUtilityFormProps {
   utility: Utility;
 }
 
 export function EditUtilityForm({ utility }: EditUtilityFormProps) {
+
+  const { setError } = useForm();
   const initialValues = useMemo<UtilityFormValues>(() => {
     return {
       propertyID: utility.propertyID,
@@ -36,13 +40,13 @@ export function EditUtilityForm({ utility }: EditUtilityFormProps) {
             toast.success(`"${data.utilityName}" updated successfully`);
           },
           onError: (error) => {
-            toast.error(error.message ?? "Failed to update utility.");
-          },
+            handleFormErrors<UtilityFormValues>(error, setError);
+          }
         },
       );
     } catch (error) {
-      console.log(error)
-      // handleFormErrors(error, setError);
+      // console.log(error)
+      handleFormErrors(error, setError);
     }
   };
 

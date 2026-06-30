@@ -12,11 +12,8 @@ import {
 } from "@/schemas/auth.zod";
 import OtpInput from "../../components/custom/OtpInput";
 import { useResetPassword } from "@/hooks/useAuth";
-import { AxiosError } from "axios";
+import { handleFormErrors } from "@/utils/errors";
 
-type ApiErrorResponse = {
-  message?: string;
-};
 
 export default function ResetPasswordForm() {
   const router = useRouter();
@@ -28,6 +25,7 @@ export default function ResetPasswordForm() {
     register,
     control,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
@@ -42,8 +40,6 @@ export default function ResetPasswordForm() {
   const {
     mutate: passwordReset,
     isPending,
-    isError,
-    error,
   } = useResetPassword();
 
   const onSubmit: SubmitHandler<ResetPasswordFormData> = (payload) => {
@@ -53,6 +49,9 @@ export default function ResetPasswordForm() {
         onSuccess: () => {
           router.push("/login");
         },
+        onError: (error) => {
+          handleFormErrors<ResetPasswordFormData>(error, setError);
+        }
       },
     );
   };
@@ -170,22 +169,28 @@ export default function ResetPasswordForm() {
         {isPending ? "Resetting..." : "Reset password"}
       </button>
 
-      <div
-        className="mt-4 min-h-11"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        {isError && (
-          <div className="flex items-start gap-2 rounded-md border border-red-200 bg-red-50 px-4 py-3">
-            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
-            <p className="text-sm leading-5 text-red-600">
-              {(error as AxiosError<ApiErrorResponse>)?.response?.data
-                ?.message ??
-                "We could not send a reset code. Please try again."}
-            </p>
-          </div>
-        )}
-      </div>
+      {/* Errors */}
+      {errors.root?.message && (
+        <div
+          className={`mt-4 flex items-start gap-2 rounded-md border px-4 py-3 ${errors.root.type === "network"
+            ? "border-amber-200 bg-amber-50"
+            : "border-red-200 bg-red-50"
+            }`}
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <AlertCircle
+            className={`mt-0.5 h-4 w-4 shrink-0 ${errors.root.type === "network" ? "text-amber-500" : "text-red-500"
+              }`}
+          />
+          <p
+            className={`text-sm ${errors.root.type === "network" ? "text-amber-700" : "text-red-600"
+              }`}
+          >
+            {errors.root.message}
+          </p>
+        </div>
+      )}
 
       <p className="mt-4 text-center text-sm text-gray-500 md:hidden">
         Back to sign in?{" "}

@@ -11,6 +11,8 @@ export const loginSchema = z.object({
     .max(24, "Password must not exceed 24 characters"),
 });
 
+export type LoginFormData = z.infer<typeof loginSchema>;
+
 export const registerSchema = z
   .object({
     name: z

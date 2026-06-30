@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 };
 
 import { Toaster } from "sonner";
+// import FirebaseAuthProvider from "@/lib/FirebaseAuthProvider";
 
 
 export default function RootLayout({
@@ -35,7 +36,9 @@ export default function RootLayout({
       >
         <QueryProvider>
           <NavBar />
-          {children}
+          {/* <FirebaseAuthProvider> */}
+            {children}
+          {/* </FirebaseAuthProvider> */}
           <PropertyFooter />
         </QueryProvider>
         <Toaster richColors position="top-right" />

@@ -3,7 +3,7 @@
 
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Save } from "lucide-react";
+import { AlertCircle, Save } from "lucide-react";
 import { UnitProperty } from "@/types/unit.definations";
 import { UnitFormFields } from "./UnitFormField";
 import { unitFormSchema, UnitFormValues } from "@/schemas/units.zod";
@@ -41,12 +41,6 @@ export default function UnitEditForm({ unit }: UnitEditFormProps) {
     formState: { isSubmitting, errors },
   } = form;
 
-  // useEffect(() => {
-  //   if (Object.keys(errors).length > 0) {
-  //     console.error("❌ Zod Validation Errors:", errors);
-  //   }
-  // }, [errors]);
-
   const { mutate: updateUnit } = useUpdateUnit();
 
   const onSubmit: SubmitHandler<UnitFormValues> = async (values) => {
@@ -58,8 +52,8 @@ export default function UnitEditForm({ unit }: UnitEditFormProps) {
             toast.success(`"${values.unitNumber}" updated successfully`);
           },
           onError: (error) => {
-            toast.error(error.message ?? "Failed to update unit.");
-          },
+            handleFormErrors<UnitFormValues>(error, setError);
+          }
         },
       );
     } catch (error) {
@@ -83,9 +77,26 @@ export default function UnitEditForm({ unit }: UnitEditFormProps) {
         <UnitFormFields
           form={form}
         />
-        {errors.root && (
-          <div className="rounded-md border border-red-200 bg-red-50 p-3">
-            <p className="text-sm text-red-600">{errors.root.message}</p>
+        {/* Errors */}
+        {errors.root?.message && (
+          <div
+            className={`mt-4 flex items-start gap-2 rounded-md border px-4 py-3 ${errors.root.type === "network"
+              ? "border-amber-200 bg-amber-50"
+              : "border-red-200 bg-red-50"
+              }`}
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <AlertCircle
+              className={`mt-0.5 h-4 w-4 shrink-0 ${errors.root.type === "network" ? "text-amber-500" : "text-red-500"
+                }`}
+            />
+            <p
+              className={`text-sm ${errors.root.type === "network" ? "text-amber-700" : "text-red-600"
+                }`}
+            >
+              {errors.root.message}
+            </p>
           </div>
         )}
 

@@ -3,6 +3,16 @@ import { propertyStatusValues, propertyTypeGroups } from "@/utils/selectConstant
 
 const propertyTypes = propertyTypeGroups.flatMap((group) => group.options);
 
+const imageSchema = z.object({
+  id: z.string(),
+  url: z.string(),
+  path: z.string(),
+  original_url: z.string().optional(),
+  watermarked_url: z.string().optional(),
+  thumbnail_url: z.string().optional(),
+  webp_url: z.string().optional(),
+});
+
 export const propertyFormSchema = z.object({
   name: z
     .string({ message: "Full name field is required" })
@@ -49,10 +59,15 @@ export const propertyFormSchema = z.object({
     .min(0, "Square meters cannot be negative")
     .nonnegative(),
   status: z.enum(propertyStatusValues, { message: "Status is required" }),
-  image: z.array(z.string()).default([]),
+  image: z.array(imageSchema).min(1, "At least one image is required").default([]),
   amenityID: z.array(z.string()).default([]),
-  version: z
-    .number().optional()
+  version: z.number().optional(),
 });
 
-export type PropertyFormValues = z.infer<typeof propertyFormSchema>;
+// What RHF actually holds field-by-field while the user is filling the form —
+// `image`/`amenityID` are optional here because of `.default([])`.
+export type PropertyFormInput = z.input<typeof propertyFormSchema>;
+
+// What you get back after the resolver validates — defaults applied,
+// so `image`/`amenityID` are guaranteed arrays. Use this in onSubmit.
+export type PropertyFormValues = z.output<typeof propertyFormSchema>;
