@@ -14,7 +14,7 @@ export const unitFormSchema = z.object({
         .max(25, "Unit floor must not exceed 25 characters")
         .trim(),
     status: z.enum(unitStatusValues, { message: "Status is required" }),
-    size: z.string().min(0, "Size cannot be negative"),
+    size: z.number().min(0, "Size cannot be negative"),
     parking: z.number().int().min(0, "Parking cannot be negative").nonnegative(),
     bedrooms: z
         .number()
