@@ -9,7 +9,7 @@ export const unitKeys = {
     detail: (id: string) => [...unitKeys.all, , "detail", id] as const,
 };
 
-// export const useGetUnits = (page = 1) => {
+// export const useGetUnits = (page = 1, search) => {
 //     return useQuery({
 //         queryKey: unitKeys.list(page),
 //         queryFn: () => getUnits(page),
