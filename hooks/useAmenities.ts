@@ -4,17 +4,18 @@ import { createAmenity, delAmenity, getAmenities, updateAmenity } from "../servi
 
 export const amenityKeys = {
     all: ["amenities"] as const,
-    list: (page: number) => [...amenityKeys.all, page] as const,
+    list: (page: number, perPage: number) => [...amenityKeys.all, page, perPage] as const,
 };
 
-export const useGetAmenities = (page = 1) => {
+
+export const useGetAmenities = (page = 1, perPage = 15) => {
     return useQuery({
-        queryKey: amenityKeys.list(page),
-        queryFn: () => getAmenities(page),
+        queryKey: amenityKeys.list(page, perPage),
+        queryFn: () => getAmenities(page, perPage),
         staleTime: 1000 * 60 * 5,
         gcTime: 1000 * 60 * 30,
     });
-}
+};
 
 // Hook — fetch ALL amenities once, never search the DB
 export const useGetPropertyAmenities = () => {

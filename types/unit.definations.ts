@@ -7,7 +7,7 @@ export interface UnitProperty {
   unitNumber: string;
   unitFloor: string;
   status: UnitStatus;
-  size: string; // Stored as a decimal string in DB (e.g., "50.00")
+  size: number; // Stored as a decimal string in DB (e.g., "50.00")
   sizeUnit: string; // e.g., "sqm" or "sqft"
   bedrooms: number;
   parking: number;

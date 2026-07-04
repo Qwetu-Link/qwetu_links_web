@@ -136,6 +136,11 @@ export const links = {
       href: "/qwetulinks/accounts",
     },
     {
+      icon: Layers,
+      label: "Amenities",
+      href: "/qwetulinks/amenities",
+    },
+    {
       icon: CreditCard,
       label: "Payments",
       href: "/qwetulinks/payments",

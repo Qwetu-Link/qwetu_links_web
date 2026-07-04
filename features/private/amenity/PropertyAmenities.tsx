@@ -14,10 +14,14 @@ import {
 } from "@/hooks/useAmenities";
 import { toast } from "sonner";
 import Pagination from "@/components/common/Pagination";
+import { AmenityPageSkeleton } from "@/components/skeletons/amenities";
 
 export default function PropertyAmenities() {
   // get amenities
-  const { data: amenities } = useGetAmenities();
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(15);
+  const { data: amenities, isLoading } = useGetAmenities(page, perPage);
+
 
   //create and update amenity
   const createAmenity = useCreateAmenity();
@@ -98,6 +102,12 @@ export default function PropertyAmenities() {
     setDeleteTarget(null);
   }
 
+  const handlePerPage = (newPerPage: number) => {
+    setPerPage(newPerPage);
+    setPage(1); // reset to page 1 whenever page size changes
+  };
+
+
   return (
     <div className="space-y-6 rounded-xl bg-gray-50 p-6">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
@@ -137,8 +147,9 @@ export default function PropertyAmenities() {
           </p>
         )}
       </div>
-
-      {filtered.length > 0 ? (
+      {isLoading ? (
+        <AmenityPageSkeleton />
+      ) : filtered.length > 0 ? (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {filtered.map((amenity) => (
             <AmenityCard
@@ -196,6 +207,8 @@ export default function PropertyAmenities() {
           totalPages={amenities.meta.last_page}
           total={amenities.meta.total}
           perPage={amenities.meta.per_page}
+          onPage={setPage}
+          onPerPage={handlePerPage}
         />
       )}
 

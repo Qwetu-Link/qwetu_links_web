@@ -11,9 +11,15 @@ export const createAmenity = async (
     return amenity.data;
 };
 
-export const getAmenities = async (page = 1, apiInstance: AxiosInstance = api,): Promise<AmenitiesResponse> => {
-    const { data } = await apiInstance.get<AmenitiesResponse>(`${AMENITY_URL}?page=${page}`);
-    return data;
+export const getAmenities = async (
+  page = 1,
+  perPage = 15,
+  apiInstance: AxiosInstance = api,
+): Promise<AmenitiesResponse> => {
+  const { data } = await apiInstance.get<AmenitiesResponse>(
+    `${AMENITY_URL}?page=${page}&per_page=${perPage}`
+  );
+  return data;
 };
 
 export const updateAmenity = async (

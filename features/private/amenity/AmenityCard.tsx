@@ -3,6 +3,7 @@
 import { Pencil, Trash2, Tag } from "lucide-react";
 import { DynamicIcon, iconNames } from "lucide-react/dynamic";
 import { Amenity } from "@/types/amenity.definations";
+import { usePathname } from "next/navigation";
 
 const DEFAULT_ICON = "tag";
 
@@ -41,6 +42,10 @@ function AmenityFallbackIcon() {
 }
 
 export default function AmenityCard({ amenity, onEdit, onDelete }: Props) {
+
+  const pathname = usePathname();
+  const canManage = pathname.startsWith("/qwetulinks/amenities");
+
   return (
     <div className="group bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 p-5">
       {/* Header row */}
@@ -63,22 +68,24 @@ export default function AmenityCard({ amenity, onEdit, onDelete }: Props) {
         </div>
 
         {/* Action buttons */}
-        <div className="flex gap-1 opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100">
-          <button
-            onClick={() => onEdit(amenity)}
-            className="p-2 text-blue-600 hover:bg-blue-50 rounded-full transition"
-            title="Edit amenity"
-          >
-            <Pencil size={20} />
-          </button>
-          <button
-            onClick={() => onDelete(amenity.id, amenity.name)}
-            className="p-2 text-red-600 hover:bg-red-50 rounded-full transition"
-            title="Delete amenity"
-          >
-            <Trash2 size={16} />
-          </button>
-        </div>
+        {canManage && (
+          <div className="flex gap-1 opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100">
+            <button
+              onClick={() => onEdit(amenity)}
+              className="p-2 text-blue-600 hover:bg-blue-50 rounded-full transition"
+              title="Edit amenity"
+            >
+              <Pencil size={20} />
+            </button>
+            <button
+              onClick={() => onDelete(amenity.id, amenity.name)}
+              className="p-2 text-red-600 hover:bg-red-50 rounded-full transition"
+              title="Delete amenity"
+            >
+              <Trash2 size={16} />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Description */}

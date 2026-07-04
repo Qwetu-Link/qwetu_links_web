@@ -22,7 +22,6 @@ export default function Pagination({
   totalItems,
   perPage,
   onPage,
-  onPerPage,
 }: PaginationProps) {
   const itemTotal = total ?? totalItems ?? 0;
 
@@ -113,22 +112,6 @@ export default function Pagination({
         >
           <ChevronLast size={14} />
         </button>
-      </div>
-
-      {/* Per page */}
-      <div className="flex items-center gap-2 text-blue-600">
-        <select
-          value={perPage}
-          onChange={(e) => onPerPage?.(Number(e.target.value))}
-          className="rounded-lg border border-blue-200 bg-white px-2 py-1 text-sm text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          {[5, 10, 25, 50, 100].map((value) => (
-            <option key={value} value={value}>
-              {value}
-            </option>
-          ))}
-        </select>
-        per page
       </div>
     </div>
   );
