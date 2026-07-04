@@ -12,14 +12,18 @@ export const createAmenity = async (
 };
 
 export const getAmenities = async (
-  page = 1,
-  perPage = 15,
-  apiInstance: AxiosInstance = api,
+    page = 1,
+    search: string = "",
+    apiInstance: AxiosInstance = api,
 ): Promise<AmenitiesResponse> => {
-  const { data } = await apiInstance.get<AmenitiesResponse>(
-    `${AMENITY_URL}?page=${page}&per_page=${perPage}`
-  );
-  return data;
+    const { data } = await apiInstance.get<AmenitiesResponse>(
+        AMENITY_URL, {
+            params: {
+                page,
+                search,
+            }
+    });
+    return data;
 };
 
 export const updateAmenity = async (

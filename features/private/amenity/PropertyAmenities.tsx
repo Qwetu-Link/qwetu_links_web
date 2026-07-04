@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Building2, PackageSearch, Plus, Search } from "lucide-react";
 import AmenityCard from "./AmenityCard";
 import AmenityModal from "./AmenityModal";
@@ -15,12 +15,17 @@ import {
 import { toast } from "sonner";
 import Pagination from "@/components/common/Pagination";
 import { AmenityPageSkeleton } from "@/components/skeletons/amenities";
+import { useDebounce } from "use-debounce";
 
 export default function PropertyAmenities() {
   // get amenities
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(15);
-  const { data: amenities, isLoading } = useGetAmenities(page, perPage);
+  const [search, setSearch] = useState("")
+
+  // Wait 500ms before searching
+  const [debouncedSearch] = useDebounce(search, 500);
+
+  const { data: amenities, isLoading } = useGetAmenities(page, debouncedSearch);
 
 
   //create and update amenity
@@ -29,26 +34,11 @@ export default function PropertyAmenities() {
 
   //delete amenity
   const deleteAmenity = useAmenityDel();
-
-  const [search, setSearch] = useState("");
   const [editTarget, setEditTarget] = useState<Amenity | null | "new">(null);
   const [deleteTarget, setDeleteTarget] = useState<{
     id: string;
     name: string;
   } | null>(null);
-
-  const filtered: Amenity[] = useMemo(() => {
-    const list: Amenity[] = amenities?.data ?? [];
-    const query = search.trim().toLowerCase();
-    if (!query) return list;
-
-    return list.filter((amenity) =>
-      [amenity.name, amenity.description]
-        .join(" ")
-        .toLowerCase()
-        .includes(query),
-    );
-  }, [amenities, search]);
 
   const isSearching = search.trim().length > 0;
 
@@ -102,8 +92,7 @@ export default function PropertyAmenities() {
     setDeleteTarget(null);
   }
 
-  const handlePerPage = (newPerPage: number) => {
-    setPerPage(newPerPage);
+  const handlePerPage = () => {
     setPage(1); // reset to page 1 whenever page size changes
   };
 
@@ -135,23 +124,20 @@ export default function PropertyAmenities() {
           <input
             type="text"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
             placeholder="Search amenities by name or description..."
             className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-4 text-black outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        {isSearching && (
-          <p className="mt-2 text-xs text-gray-400">
-            Searching within the current page only (
-            {amenities?.data.length ?? 0} items).
-          </p>
-        )}
       </div>
       {isLoading ? (
         <AmenityPageSkeleton />
-      ) : filtered.length > 0 ? (
+      ) : amenities?.data.length ? (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((amenity) => (
+          {amenities.data.map((amenity: Amenity) => (
             <AmenityCard
               key={amenity.id}
               amenity={amenity}
@@ -165,20 +151,22 @@ export default function PropertyAmenities() {
           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-blue-500">
             <PackageSearch size={28} />
           </div>
+
           {isSearching ? (
             <>
               <h3 className="text-lg font-semibold text-gray-700">
-                No amenities match &quot;{search}&quot;
+                No amenities match `{search}`
               </h3>
+
               <p className="max-w-sm text-sm text-gray-500">
-                Try a different search term, or clear the search to see all
-                amenities.
+                Try a different search term.
               </p>
+
               <button
                 onClick={() => setSearch("")}
                 className="mt-1 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
               >
-                Clear search
+                Clear Search
               </button>
             </>
           ) : (
@@ -186,22 +174,24 @@ export default function PropertyAmenities() {
               <h3 className="text-lg font-semibold text-gray-700">
                 No amenities yet
               </h3>
+
               <p className="max-w-sm text-sm text-gray-500">
-                Add your first amenity to start showcasing what this property
-                offers.
+                Add your first amenity.
               </p>
+
               <button
                 onClick={() => setEditTarget("new")}
-                className="mt-1 flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-sky-600 px-5 py-2.5 text-sm font-medium text-white transition hover:shadow-lg"
+                className="mt-1 flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-sky-600 px-5 py-2.5 text-sm font-medium text-white"
               >
-                <Plus size={16} /> Add Amenity
+                <Plus size={16} />
+                Add Amenity
               </button>
             </>
           )}
         </div>
       )}
 
-      {!isSearching && amenities && amenities.data.length > 0 && (
+      {amenities && amenities.data.length > 0 && (
         <Pagination
           currentPage={amenities.meta.current_page}
           totalPages={amenities.meta.last_page}

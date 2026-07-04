@@ -1,21 +1,22 @@
-import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { createStaff, deleteStaff, getStaffs, staffDetails, updateStaff } from "../services/staff.endpoint"
 
 export const staffKeys = {
     all: ["staff"] as const,
-    list: (page: number) => [...staffKeys.all, page] as const,
+    list: (page: number, search: string) => [...staffKeys.all, page, search] as const,
     detail: (id: string) => [...staffKeys.all, "detail", id] as const,
 }
 
-export const useGetStaffs = (page = 1) => {
-    return useSuspenseQuery({
-        queryKey: staffKeys.list(page),
-        queryFn: () => getStaffs(page),
+export const useGetStaffs = (page = 1, search = "") => {
+    return useQuery({
+        queryKey: staffKeys.list(page, search),
+        queryFn: () => getStaffs(page, search),
         staleTime: 1000 * 60 * 5,
-        retry: 2,
-    })
-}
+        gcTime: 1000 * 60 * 30,
+        placeholderData: (previousData) => previousData, // keep old rows visible while refetching
+    });
+};
 
 export const useGetStaffDetails = (id: string) => {
     return useQuery({

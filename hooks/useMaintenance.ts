@@ -1,19 +1,20 @@
-import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { createMaintenance, deleteMaintenance, getMaintenances, maintenanceDetails, updateMaintenance } from "../services/maintenance.endpoint"
 
 
 export const maintenancekeys = {
     all: ["maintenance"] as const,
-    list: (page: number) => [...maintenancekeys.all, page] as const,
+    list: (page: number, search:string) => [...maintenancekeys.all, page, search] as const,
     detail: (id: string) => [...maintenancekeys.all, "detail", id] as const,
 }
 
-export const useGetMaintenances = (page = 1) => {
-    return useSuspenseQuery({
-        queryKey: maintenancekeys.list(page),
-        queryFn: () => getMaintenances(page),
+export const useGetMaintenances = (page = 1, search:string) => {
+    return useQuery({
+        queryKey: maintenancekeys.list(page, search),
+        queryFn: () => getMaintenances(page, search),
         staleTime: 1000 * 60 * 5,
         retry: 2,
+        placeholderData: (previousData) => previousData,
     })
 }
 

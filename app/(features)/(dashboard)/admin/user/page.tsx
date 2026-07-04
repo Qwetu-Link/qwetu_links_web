@@ -9,12 +9,13 @@ import { staffKeys } from "@/hooks/useStaff";
 import { getStaffs } from "@/services/staff.endpoint";
 
 interface PageProps {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string, search: string }>;
 };
 
 export default async function Page({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
   const page = Number(resolvedParams?.page ?? 1);
+  const search = resolvedParams.search ?? "";
 
   const serverApi = await getServerApi();
 
@@ -27,8 +28,8 @@ export default async function Page({ searchParams }: PageProps) {
   });
 
   await queryClient.prefetchQuery({
-    queryKey: staffKeys.list(page),
-    queryFn: () => getStaffs(page, serverApi),
+    queryKey: staffKeys.list(page, search),
+    queryFn: () => getStaffs(page,search, serverApi),
   });
 
   return (

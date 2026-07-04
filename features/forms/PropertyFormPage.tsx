@@ -9,18 +9,21 @@ import {
   MapPin,
   Sliders,
   AlertCircle,
+  Plus,
+  PackageSearch,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Amenity } from "@/types/amenity.definations";
 import { useCreateProperty, useUpdateProperty } from "../../hooks/useProperty";
-import { useGetPropertyAmenities } from "@/hooks/useAmenities";
 import { PropertyFormInput, propertyFormSchema } from "@/schemas/property.zod";
 import { GalleryImage, PropertiesFormValues, Property } from "@/types/property.definations";
 import { inputClass, labelClass } from "@/components/custom/FormFields";
 import { propertyTypeGroups } from "@/utils/selectConstants";
 import PropertyImageGallery from "@/components/custom/PropertyImageGallery";
 import { handleFormErrors } from "@/utils/errors";
+import { useGetAmenities } from "@/hooks/useAmenities";
+import { useDebounce } from "use-debounce";
 
 interface PropertyFormPageProps {
   businessId: string;
@@ -36,10 +39,10 @@ export default function PropertyFormPage({
   const router = useRouter();
   const createProperty = useCreateProperty();
   const updateProperty = useUpdateProperty();
-  const { data: amenities } = useGetPropertyAmenities();
-
   const [search, setSearch] = useState("");
-
+  const [page] = useState(1);
+  const [debouncedSearch] = useDebounce(search, 500);
+  const { data: amenities } = useGetAmenities(page, debouncedSearch);
 
   const isEdit = mode === "edit";
 
@@ -149,24 +152,6 @@ export default function PropertyFormPage({
     setValue("image", doneImages, { shouldValidate: true });
   }, [images, setValue]);
 
-  const filteredAmenities = useMemo(() => {
-    if (!search.trim()) return amenities?.data ?? [];
-    return (amenities?.data ?? []).filter((amenity) =>
-      amenity.name.toLowerCase().includes(search.toLowerCase()),
-    );
-  }, [amenities, search]);
-
-  // const removeExistingImage = (path: string) => {
-  //   setRemovedImagePaths((prev) => {
-  //     const next = new Set(prev);
-  //     next.add(path);
-  //     return next;
-  //   });
-  // };
-
-  // const removeSelectedFile = (fileName: string) => {
-  //   setSelectedFiles((prev) => prev.filter((f) => f.name !== fileName));
-  // };
 
   // Safe programmatic state controller for robust Multi-Checkbox operations
   const handleAmenityToggle = (amenityId: string, isChecked: boolean) => {
@@ -265,8 +250,8 @@ export default function PropertyFormPage({
       {errors.root?.message && (
         <div
           className={`mt-4 flex items-start gap-2 rounded-md border px-4 py-3 ${errors.root.type === "network"
-              ? "border-amber-200 bg-amber-50"
-              : "border-red-200 bg-red-50"
+            ? "border-amber-200 bg-amber-50"
+            : "border-red-200 bg-red-50"
             }`}
           aria-live="polite"
           aria-atomic="true"
@@ -471,34 +456,99 @@ export default function PropertyFormPage({
             className={inputClass}
           />
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
-          {filteredAmenities.map((amenity: Amenity) => {
-            const isChecked = selectedAmenities.includes(amenity.id);
 
-            return (
-              <label
-                key={amenity.id}
-                className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 shadow-2xs transition-colors ${isChecked
-                  ? "border-blue-500 bg-blue-50/30 hover:bg-blue-50/50"
-                  : "border-slate-200 bg-white hover:bg-slate-50"
-                  }`}
-              >
-                <input
-                  type="checkbox"
-                  value={amenity.id}
-                  checked={isChecked}
-                  className="h-4 w-4 rounded-sm border-slate-300 text-blue-600 focus:ring-blue-500"
-                  onChange={(e) =>
-                    handleAmenityToggle(amenity.id, e.target.checked)
-                  }
-                />
-                <span className="text-sm font-medium text-slate-700">
-                  {amenity.name}
-                </span>
-              </label>
-            );
-          })}
-        </div>
+        {amenities?.data.length ? (
+          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+            {amenities.data.map((amenity: Amenity) => {
+              const isChecked = selectedAmenities.includes(amenity.id);
+
+              return (
+                <label
+                  key={amenity.id}
+                  className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition-colors ${isChecked
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-slate-200 bg-white hover:bg-slate-50"
+                    }`}
+                >
+                  <input
+                    type="checkbox"
+                    value={amenity.id}
+                    checked={isChecked}
+                    className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                    onChange={(e) =>
+                      handleAmenityToggle(amenity.id, e.target.checked)
+                    }
+                  />
+
+                  <span className="text-sm font-medium text-slate-700">
+                    {amenity.name}
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-white px-6 py-10 text-center">
+            <PackageSearch
+              size={48}
+              className="mb-4 text-slate-300"
+            />
+
+            {search.trim() ? (
+              <>
+                <h3 className="text-lg font-semibold text-slate-800">
+                  No amenities found
+                </h3>
+
+                <p className="mt-2 max-w-sm text-sm text-slate-500">
+                  We couldnt find any amenities matching{" "}
+                  <span className="font-medium text-slate-700">
+                    `{search}`            </span>
+                  .
+                </p>
+
+                <div className="mt-5 flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setSearch("")}
+                    className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium hover:bg-slate-50"
+                  >
+                    Clear Search
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => window.open("/admin/amenities", "_blank")}
+                    className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                  >
+                    <Plus size={16} />
+                    Create Amenity
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h3 className="text-lg font-semibold text-slate-800">
+                  No amenities available
+                </h3>
+
+                <p className="mt-2 max-w-sm text-sm text-slate-500">
+                  Create your first amenity before assigning amenities to
+                  this property.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => window.open("/admin/amenities", "_blank")}
+                  className="mt-5 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                >
+                  <Plus size={16} />
+                  Create Amenity
+                </button>
+              </>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Images — now handled entirely by PropertyImageGallery */}

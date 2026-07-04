@@ -11,14 +11,14 @@ import PropertyAmenities from "@/features/private/amenity/PropertyAmenities";
 type PageProps = {
   searchParams?: Promise<{
     page?: string;
-    perPage?: string;
+    search?: string;
   }>;
 };
 
 export default async function Page({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
   const page = Number(resolvedParams?.page ?? 1);
-  const perPage = Number(resolvedParams?.perPage ?? 15);
+  const search = resolvedParams?.search ?? "";
 
   const serverApi = await getServerApi();
 
@@ -31,8 +31,8 @@ export default async function Page({ searchParams }: PageProps) {
   });
 
   await queryClient.prefetchQuery({
-    queryKey: amenityKeys.list(page, perPage),
-    queryFn: () => getAmenities(page, perPage, serverApi),
+    queryKey: amenityKeys.list(page, search),
+    queryFn: () => getAmenities(page, search, serverApi),
   });
 
   return (

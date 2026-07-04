@@ -3,30 +3,26 @@ import { Role } from "@/types/auth.definitions";
 // Where each user type lands after login
 export const USER_TYPE_DASHBOARDS: Record<Role, string> = {
   owner: "/dashboard",
-  staff: "/dashboard",
-  // caretaker: "/dashboard",
-  tenant: "/dashboard",
   qwetulinks: "/dashboard",
+};
+
+export const ROLE_LABELS: Record<Role, string> = {
+  owner: "Administrator",
+  qwetulinks: "Qwetu Links",
 };
 
 export const USER_TYPE_MAINTENANCE_PATHS: Record<Role, string> = {
   owner: "/admin/maintenance",
-  staff: "/landlord/maintenance",
-  // caretaker: "/caretaker/maintenance",
-  tenant: "/tenant/maintenance",
   qwetulinks: "/dashboard",
 };
 
 
 export const USER_TYPE_PATH_PERMISSIONS: Record<string, Role[]> = {
-  "/dashboard": ["owner", "staff", "tenant", "qwetulinks"],
-  "/maintenance": ["owner", "staff", "tenant"],
+  "/dashboard": ["owner", "qwetulinks"],
+  "/maintenance": ["owner"],
   "/admin": ["owner"],
-  "/landlord": ["staff"],
-  // "/caretaker": ["caretaker"],
-  "/tenant": ["tenant"],
   "/qwetulinks": ["qwetulinks"],
-  "/help": ["owner", "staff", "tenant", "qwetulinks"],
+  "/help": ["owner", "qwetulinks"],
 };
 
 export function getDashboardForRole(usertype: Role): string {

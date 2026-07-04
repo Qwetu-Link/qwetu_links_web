@@ -8,15 +8,20 @@ import { getServerApi } from "@/lib/axios.server";
 import { propertykeys } from "@/hooks/useProperty";
 import { getProperties } from "@/services/property.endpoints";
 
-type PageProps = {
+interface PageProps {
   searchParams?: Promise<{
     page?: string;
+    search: string;
   }>;
 };
 
 export default async function Page({ searchParams }: PageProps) {
-  const resolvedParams = await searchParams;
-  const page = Number(resolvedParams?.page ?? 1);
+  // const resolvedParams = await searchParams;
+  const params = await searchParams;
+
+  const page = Number(params?.page ?? 1);
+  const search = params?.search ?? "";
+
   const serverApi = await getServerApi();
 
   const queryClient = new QueryClient({
@@ -28,8 +33,8 @@ export default async function Page({ searchParams }: PageProps) {
   });
 
   await queryClient.prefetchQuery({
-    queryKey: propertykeys.list(page),
-    queryFn: () => getProperties(page, serverApi),
+    queryKey: propertykeys.list(page, search),
+    queryFn: () => getProperties(page, search, serverApi),
   });
 
   return (

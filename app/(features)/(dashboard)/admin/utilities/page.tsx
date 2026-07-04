@@ -11,12 +11,14 @@ import UtilityManagementPage from "@/features/private/utility/UtilityMgt";
 type PageProps = {
   searchParams?: Promise<{
     page?: string;
+    search?: string;
   }>;
 };
 
 export default async function Page({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
   const page = Number(resolvedParams?.page ?? 1);
+  const search = resolvedParams?.search ?? "";
   const serverApi = await getServerApi();
 
   const queryClient = new QueryClient({
@@ -28,13 +30,13 @@ export default async function Page({ searchParams }: PageProps) {
   });
 
   await queryClient.prefetchQuery({
-    queryKey: propertykeys.list(page),
-    queryFn: () => getProperties(page, serverApi),
+    queryKey: propertykeys.list(page, search),
+    queryFn: () => getProperties(page, search, serverApi),
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <UtilityManagementPage/>
+      <UtilityManagementPage />
     </HydrationBoundary>
   );
 }

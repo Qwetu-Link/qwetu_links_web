@@ -1,107 +1,131 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
+import Link from "next/link";
+import { Building2, Plus } from "lucide-react";
+import { useDebounce } from "use-debounce";
+
 import PropertyListings from "./PropertyListing";
 import UnitListing from "./UnitListing";
+
 import { useGetProperties } from "@/hooks/useProperty";
 import { Property } from "@/types/property.definations";
-import { Building2, Plus } from "lucide-react";
-import Link from "next/link";
 
 export default function UnitsPage() {
-  const { data: properties, isLoading } = useGetProperties();
-  const listing: Property[] = properties?.data ?? [];
+  const [page] = useState(1);
 
-  const [selectedProperty, setSelectedProperty] = useState<Property | null>(
-    null,
+  // Search only
+  const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 500);
+  const { data: properties } = useGetProperties(page, debouncedSearch);
+
+  const listing = useMemo<Property[]>(
+    () => properties?.data ?? [],
+    [properties]
   );
+
+  const [selectedProperty, setSelectedProperty] =
+    useState<Property | null>(null);
+
   const [showDetail, setShowDetail] = useState(false);
 
-  const activeProperty = selectedProperty ?? listing[0] ?? null;
-  
+  // Active property
+  const activeProperty =
+    selectedProperty &&
+      listing.some((p) => p.id === selectedProperty.id)
+      ? selectedProperty
+      : listing[0] ?? null;
 
-  if (isLoading) {
+  if (!properties) {
     return (
-      <div className="flex h-full items-center justify-center bg-white">
-        <div className="text-center">
-          <Building2 className="mx-auto mb-3 text-gray-300" size={40} />
-          <p className="text-sm font-medium text-gray-500">
-            Loading properties...
-          </p>
-          <p className="mt-1 text-xs text-gray-400">
-            Please wait while we fetch your data.
-          </p>
-        </div>
+      <div className="flex h-full items-center justify-center">
+        Loading...
       </div>
     );
   }
 
-  if (listing.length === 0) {
-    return (
-      <div className="flex h-full items-center justify-center bg-white">
-        <div className="text-center max-w-sm px-6">
-          <Building2 className="mx-auto mb-4 text-gray-200" size={48} />
-          <h3 className="text-base font-semibold text-gray-700">
-            No properties yet
-          </h3>
-          <p className="mt-2 text-sm text-gray-400">
-            You havent added any properties. Head over to the Properties section
-            to create one, then come back here to manage its units.
-          </p>
-          <Link
-            href="/admin/property"
-            className="mt-5 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
-          >
-            <Plus size={15} />
-            Go to Properties
-          </Link>
-        </div>
-      </div>
-    );
-  }
   return (
-    <div className="flex h-full min-h-0 flex-col bg-white md:flex-row">
-      <div className={`${showDetail ? "hidden" : "flex"} md:flex`}>
-        <Suspense>
-          <PropertyListings
-            listings={listing}
-            selectedId={activeProperty?.id ?? null}
-            onSelect={(p) => {
-              setSelectedProperty(p);
-              setShowDetail(true);
-            }}
-          />
-        </Suspense>
-      </div>
-      <div
-        className={`${showDetail ? "flex" : "hidden"} min-h-0 flex-1 overflow-hidden md:flex`}
-      >
-        <Suspense>
-          {selectedProperty ? (
-            <UnitListing
-              key={selectedProperty.id}
-              property={selectedProperty}
-              onBack={() => {
-                setShowDetail(false);
-                setSelectedProperty(null);
-              }}
+    <div className="flex h-full min-h-0 flex-col bg-white">
+      {listing.length === 0 ? (
+        <div className="flex flex-1 items-center justify-center">
+          <div className="max-w-sm text-center">
+            <Building2
+              className="mx-auto mb-4 text-gray-300"
+              size={50}
             />
-          ) : (
-            <div className="flex flex-1 flex-col items-center justify-center gap-3 bg-gray-50 p-8 text-center">
-              <Building2 className="text-gray-200" size={52} />
-              <div>
-                <h3 className="text-sm font-semibold text-gray-600">
-                  No property selected
-                </h3>
-                <p className="mt-1 text-xs text-gray-400">
-                  Pick a property from the list on the left to view and manage
-                  its units.
-                </p>
-              </div>
-            </div>
-          )}
-        </Suspense>
-      </div>
+
+            <h3 className="text-lg font-semibold">
+              {search
+                ? "No matching properties"
+                : "No properties available"}
+            </h3>
+
+            <p className="mt-2 text-sm text-gray-500">
+              {search
+                ? "Try a different search term."
+                : "Create a property first before managing units."}
+            </p>
+
+            {!search && (
+              <Link
+                href="/admin/property"
+                className="mt-6 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+              >
+                <Plus size={16} />
+                Go to Properties
+              </Link>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="flex min-h-0 flex-1 flex-col md:flex-row">
+          {/* Left */}
+          <div className={`${showDetail ? "hidden" : "flex"} md:flex`}>
+            <Suspense fallback={null}>
+              <PropertyListings
+                listings={listing}
+                selectedId={activeProperty?.id ?? null}
+                search={search}
+                onSearchChange={setSearch}
+                onSelect={(property) => {
+                  setSelectedProperty(property);
+                  setShowDetail(true);
+                }}
+              />
+            </Suspense>
+          </div>
+
+          {/* Right */}
+          <div
+            className={`${showDetail ? "flex" : "hidden"} min-h-0 flex-1 overflow-hidden md:flex`}
+          >
+            <Suspense fallback={null}>
+              {activeProperty ? (
+                <UnitListing
+                  key={activeProperty.id}
+                  property={activeProperty}
+                  onBack={() => {
+                    setShowDetail(false);
+                  }}
+                />
+              ) : (
+                <div className="flex flex-1 items-center justify-center">
+                  <div className="text-center">
+                    <Building2
+                      className="mx-auto mb-4 text-gray-300"
+                      size={48}
+                    />
+
+                    <p className="text-gray-500">
+                      Select a property to manage its units.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </Suspense>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

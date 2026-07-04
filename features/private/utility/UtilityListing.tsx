@@ -1,7 +1,7 @@
 "use client";
 
-import { ArrowLeft, Building2, Coins, HomeIcon, Plus, Wallet } from "lucide-react";
-import { useCallback, useState } from "react";
+import { ArrowLeft, Building2, Coins, HomeIcon, Plus, Search, Wallet } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
 import DeleteModal from "@/components/common/DeleteModal";
 import { Property } from "@/types/property.definations";
 import Link from "next/link";
@@ -16,10 +16,6 @@ interface Props {
 export default function UtilityListing({ property, onBack }: Props) {
     const [utility, setUtility] = useState(property?.utility ?? []);
     const { mutate: deleteUnit } = useDeleteUtility();
-
-    console.log("Available utility", utility);
-    console.log("Propert Business Id", property.business.id);
-    console.log("Propert Business Id", property);
 
     const [deleteTarget, setDeleteTarget] = useState<{
         id: string;
@@ -40,6 +36,23 @@ export default function UtilityListing({ property, onBack }: Props) {
             },
         );
     }, [deleteTarget, deleteUnit]);
+
+    const [search, setSearch] = useState("");
+    const filteredUtilities = useMemo(() => {
+        const query = search.trim().toLowerCase();
+
+        if (!query) return utility;
+
+        return utility.filter((item) =>
+            [
+                item.utilityName,
+            ]
+                .filter(Boolean)
+                .join(" ")
+                .toLowerCase()
+                .includes(query)
+        );
+    }, [utility, search]);
     return (
         <div className="custom-scrollbar flex h-full min-h-0 flex-1 flex-col overflow-y-auto bg-white">
             <div className="shrink-0 bg-white">
@@ -79,6 +92,22 @@ export default function UtilityListing({ property, onBack }: Props) {
                 </div>
             </div>
 
+            <div className="px-4 mb-4 shrink-0 flex items-center gap-3">
+                <div className="relative flex-1">
+                    <Search
+                        size={16}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"
+                    />
+                    <input
+                        type="text"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder="Search Utility Here..."
+                        className="w-full pl-10 pr-4 py-3 bg-white border border-blue-200 rounded-xl text-sm text-zinc-700 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    />
+                </div>
+            </div>
+
             <div className="bg-gray-50 font-sans">
                 <div className="flex flex-col gap-3 border-b border-gray-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
@@ -98,32 +127,48 @@ export default function UtilityListing({ property, onBack }: Props) {
                     </Link>
                 </div>
 
-                <div className="gap-3 border-b border-gray-100 px-5 py-4 mb-5">
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 lg:grid-cols-2">
-                        {utility.length === 0 ? (
+                <div className="mb-5 border-b border-gray-100 px-5 py-4">
+                    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                        {filteredUtilities.length === 0 ? (
                             <div className="col-span-full flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-200 bg-white py-16 text-center">
-                                <Building2 className="mb-3 text-gray-300" size={40} />
+                                <Building2
+                                    className="mb-3 text-gray-300"
+                                    size={40}
+                                />
+
                                 <p className="text-sm font-medium text-gray-500">
-                                    No utility found
+                                    {utility.length === 0
+                                        ? "No utilities found"
+                                        : "No matching utilities"}
                                 </p>
+
                                 <p className="mt-1 text-xs text-gray-400">
-                                    Add a utility to get started with this property.
+                                    {utility.length === 0
+                                        ? "Add a utility to get started with this property."
+                                        : "Try a different search term."}
                                 </p>
-                                <Link
-                                    href={`/admin/utilities/new/${property.id}`}
-                                    type="button"
-                                    className="mt-5 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
-                                >
-                                    <Plus size={15} />
-                                    Add Utility
-                                </Link>
+
+                                {utility.length === 0 && (
+                                    <Link
+                                        href={`/admin/utilities/new/${property.id}`}
+                                        className="mt-5 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+                                    >
+                                        <Plus size={15} />
+                                        Add Utility
+                                    </Link>
+                                )}
                             </div>
                         ) : (
-                            utility.map((data) => (
+                            filteredUtilities.map((item) => (
                                 <UtilityCard
-                                    key={data.id}
-                                    utility={data}
-                                    onDelete={(id, name) => setDeleteTarget({ id, name })}
+                                    key={item.id}
+                                    utility={item}
+                                    onDelete={(id, name) =>
+                                        setDeleteTarget({
+                                            id,
+                                            name,
+                                        })
+                                    }
                                 />
                             ))
                         )}

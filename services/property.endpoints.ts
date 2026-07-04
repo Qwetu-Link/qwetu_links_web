@@ -5,10 +5,17 @@ import { AxiosInstance } from "axios";
 const PROPERTY_URL = "businesses/properties"
 const PUBLIC_PROPERTY_URL = "public/properties"
 
-export const getProperties = async (page = 1, apiInstance: AxiosInstance = api) => {
-    const { data } = await apiInstance.get<PropertyResponse>(`${PROPERTY_URL}?page=${page}`);
+export const getProperties = async (page = 1, search = "", apiInstance: AxiosInstance = api) => {
+    const { data } = await apiInstance.get<PropertyResponse>(PROPERTY_URL, {
+        params: {
+            page,
+            search,
+        }
+    });
     return data;
 }
+
+
 
 export const createProperty = async (data: PropertiesFormValues): Promise<Property> => {
     const response = await api.post(PROPERTY_URL, data);
@@ -43,6 +50,6 @@ export const propertyPublicDetails = async ({ id }: { id: string }) => {
 }
 
 export const propertyPublicSlugDetails = async ({ slug }: { slug: string }) => {
-    const {data}= await api.get(`${PUBLIC_PROPERTY_URL}/slug/${slug}`)
+    const { data } = await api.get(`${PUBLIC_PROPERTY_URL}/slug/${slug}`)
     return data;
 }

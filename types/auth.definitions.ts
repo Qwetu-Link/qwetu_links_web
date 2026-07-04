@@ -1,5 +1,5 @@
 // validations and types
-export type Role = "owner" | "staff" | "tenant" | "qwetulinks";
+export type Role = "owner"| "qwetulinks";
 
 export type User = {
   id: string;

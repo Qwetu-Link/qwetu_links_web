@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createUtility, deleteUtility, getUtility, updateUtility } from "../services/utility.endpoints";
 import { useRouter } from "next/navigation";
+import { propertykeys } from "./useProperty";
 
 
 export const utilityKeys = {
@@ -36,8 +37,14 @@ export function useCreateUtility() {
 
     return useMutation({
         mutationFn: createUtility,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: utilityKeys.all })
+        onSuccess: async () => {
+            await Promise.all([
+                queryClient.invalidateQueries({ queryKey: utilityKeys.all }),
+                queryClient.invalidateQueries({
+                    queryKey: propertykeys.all,
+                }),
+            ]);
+
             router.push("/admin/utilities")
         },
 

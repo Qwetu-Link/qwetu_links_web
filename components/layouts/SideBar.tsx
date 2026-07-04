@@ -22,6 +22,7 @@ import { helpLinks, links } from "@/utils/sidebar.config";
 import { Role } from "@/types/auth.definitions";
 import { useLogout } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { ROLE_LABELS } from "@/utils/roles";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -29,15 +30,6 @@ interface SidebarProps {
   mobileOpen?: boolean;
   onMobileOpenChange?: (open: boolean) => void;
 }
-
-// Friendly label for each usertype shown in the profile chip
-const ROLE_LABELS: Record<Role, string> = {
-  owner: "Administrator",
-  // caretaker: "Caretaker",
-  tenant: "Tenant",
-  staff: "Staff",
-  qwetulinks: "Qwetu Links",
-};
 
 const SidebarBody = ({
   collapsed,
@@ -53,30 +45,27 @@ const SidebarBody = ({
   onClose?: () => void;
 }) => {
   const pathname = usePathname();
-  // const router = useRouter();
 
   const user = useAuthStore((state) => state.user);
-  // const logout = useAuthStore((state) => state.logout);
+  const usertype = user?.userType as Role | undefined;
 
-  // const usertype: Role = user?.userType ?? "tenant";
-  // const mainMenu = links[usertype];
-  // const bottomMenu = helpLinks[usertype];
-  const usertype = (user?.userType ?? "tenant") as Role;
-  const mainMenu = links[usertype];
-  const bottomMenu = helpLinks[usertype];
+  // Fallback to [] until auth state hydrates or if the role has no config entry
+  const mainMenu = (usertype ? links[usertype] : undefined) ?? [];
+  const bottomMenu = (usertype ? helpLinks[usertype] : undefined) ?? [];
 
   const { mutate: logoutUser, isPending: isLoggingOut } = useLogout();
 
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
 
-  const initials = user?.name
-    ?.trim()
-    .split(/\s+/)
-    .map((word: string) => word.charAt(0))
-    .join("")
-    .slice(0, 2)
-    .toUpperCase() ?? "?";
+  const initials =
+    user?.name
+      ?.trim()
+      .split(/\s+/)
+      .map((word: string) => word.charAt(0))
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() ?? "?";
 
   return (
     <div className="flex h-full flex-col">
@@ -141,12 +130,13 @@ const SidebarBody = ({
         <ul className="space-y-0.5">
           {mainMenu.map((item) => {
             const Icon = item.icon;
-            const hasChildren = "children" in item && item.children;
+            const hasChildren = Boolean(
+              item.children && item.children.length > 0,
+            );
 
-            if (hasChildren) {
-              const active = item.children.some((child) =>
-                isActive(child.href),
-              );
+            if (hasChildren && item.children) {
+              const children = item.children;
+              const active = children.some((child) => isActive(child.href));
 
               return (
                 <li key={item.label}>
@@ -178,7 +168,7 @@ const SidebarBody = ({
                       </summary>
 
                       <ul className="mt-1 space-y-0.5 pl-9">
-                        {item.children.map((child) => {
+                        {children.map((child) => {
                           const childActive = isActive(child.href);
 
                           return (
@@ -244,6 +234,7 @@ const SidebarBody = ({
             <ul className="space-y-0.5 pb-4">
               {bottomMenu.map((item) => {
                 const Icon = item.icon;
+                if (!item.href) return null;
                 const active = isActive(item.href);
 
                 return (
@@ -306,7 +297,7 @@ const SidebarBody = ({
                   {user?.name ?? "User"}
                 </p>
                 <p className="text-[11px] text-muted-foreground">
-                  {ROLE_LABELS[usertype]}
+                  {usertype ? ROLE_LABELS[usertype] : ""}
                 </p>
               </div>
             </div>

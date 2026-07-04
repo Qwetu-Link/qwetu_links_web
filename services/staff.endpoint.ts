@@ -6,8 +6,13 @@ import { StaffUserFormValues } from "../schemas/staff.zod";
 
 const STAFF_URL = "businesses/staff"
 
-export const getStaffs = async (page = 1, apiInstance: AxiosInstance = api) => {
-    const { data } = await apiInstance.get<StaffResponse>(`${STAFF_URL}?page=${page}`);
+export const getStaffs = async (page = 1, search: string = "", apiInstance: AxiosInstance = api) => {
+    const { data } = await apiInstance.get<StaffResponse>(STAFF_URL, {
+        params: {
+            page,
+            ...(search ? { search } : {}),
+        }
+    });
     return data;
 }
 

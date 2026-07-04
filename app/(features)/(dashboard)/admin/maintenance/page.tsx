@@ -1,12 +1,12 @@
 import { getServerApi } from "@/lib/axios.server";
-import MaintenanceRequestsPage from "../../../../../features/private/maintenance/MaintenanceRequestsPage";
+import MaintenanceRequestsPage from "@/features/private/maintenance/MaintenanceRequestsPage";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { maintenancekeys } from "@/hooks/useMaintenance";
 import { getMaintenances } from "@/services/maintenance.endpoint";
 
 
 interface PageProps {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string, search?: string }>;
 };
 
 
@@ -14,6 +14,7 @@ export default async function Page({ searchParams }: PageProps) {
 
   const resolvedParams = await searchParams;
   const page = Number(resolvedParams?.page ?? 1);
+  const search = resolvedParams?.search ?? "";
 
   const serverApi = await getServerApi();
 
@@ -26,8 +27,8 @@ export default async function Page({ searchParams }: PageProps) {
   });
 
   await queryClient.prefetchQuery({
-    queryKey: maintenancekeys.list(page),
-    queryFn: () => getMaintenances(page, serverApi),
+    queryKey: maintenancekeys.list(page, search),
+    queryFn: () => getMaintenances(page,search, serverApi),
   });
 
   return (

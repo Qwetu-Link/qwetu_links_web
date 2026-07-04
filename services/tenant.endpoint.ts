@@ -6,24 +6,29 @@ import { deleteFile } from "@/utils/firebaseStorage";
 
 const TENANT_URL = "businesses/tenants"
 
-export const getTenants = async (page = 1, apiInstance: AxiosInstance = api) => {
-    const { data } = await apiInstance.get<TenantResponse>(`${TENANT_URL}?page=${page}`);
-    return data;
+export const getTenants = async (page = 1, search: string = "", apiInstance: AxiosInstance = api) => {
+  const { data } = await apiInstance.get<TenantResponse>(TENANT_URL, {
+    params: {
+      page,
+      search
+    }
+  });
+  return data;
 }
 
 export const createTenant = async (data: TenantUserFormValues): Promise<Tenant> => {
-    const response = await api.post(TENANT_URL, data);
-    return response.data;
+  const response = await api.post(TENANT_URL, data);
+  return response.data;
 }
 
 export const updateTenant = async ({ id, data }: { data: TenantUserFormValues, id: string }): Promise<Tenant> => {
-    const response = await api.put(`${TENANT_URL}/${id}`, data);
-    return response.data;
+  const response = await api.put(`${TENANT_URL}/${id}`, data);
+  return response.data;
 }
 
 export const tenantDetails = async ({ id }: { id: string }) => {
-    const response = await api.get(`${TENANT_URL}/${id}`)
-    return response.data?.data
+  const response = await api.get(`${TENANT_URL}/${id}`)
+  return response.data?.data
 }
 
 // export const deleteTenant = async ({ id }: { id: string }) => {

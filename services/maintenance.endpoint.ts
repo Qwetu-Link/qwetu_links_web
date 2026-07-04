@@ -5,12 +5,17 @@ import { MaintenanceRequest, MaintenanceResponse } from "../types/maintenance.de
 
 const MAINTENANCE_URL = "businesses/maintainance"
 
-export const getMaintenances = async (page = 1, apiInstance: AxiosInstance = api) => {
-    const { data } = await apiInstance.get<MaintenanceResponse>(`${MAINTENANCE_URL}?page=${page}`);
+export const getMaintenances = async (page = 1, search = "", apiInstance: AxiosInstance = api) => {
+    const { data } = await apiInstance.get<MaintenanceResponse>(MAINTENANCE_URL, {
+        params: {
+            page,
+            search,
+        }
+    });
     return data;
 }
 
-export const createMaintenance = async (data:  AddMaintenanceFormValues): Promise<MaintenanceRequest> => {
+export const createMaintenance = async (data: AddMaintenanceFormValues): Promise<MaintenanceRequest> => {
     const response = await api.post(MAINTENANCE_URL, data);
     return response.data;
 }

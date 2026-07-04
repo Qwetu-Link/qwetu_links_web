@@ -1,19 +1,20 @@
-import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { createTenant, deleteTenant, getTenants, tenantDetails, updateTenant } from "../services/tenant.endpoint"
 import { toast } from "sonner"
 
 export const tenantKeys = {
     all: ["tenants"] as const,
-    list: (page: number) => [...tenantKeys.all, page] as const,
+    list: (page: number, search: string) => [...tenantKeys.all, page, search] as const,
     detail: (id: string) => [...tenantKeys.all, "detail", id] as const,
 }
 
-export const useGetTenants = (page = 1) => {
-    return useSuspenseQuery({
-        queryKey: tenantKeys.list(page),
-        queryFn: () => getTenants(page),
+export const useGetTenants = (page: number, search: string) => {
+    return useQuery({
+        queryKey: tenantKeys.list(page, search),
+        queryFn: () => getTenants(page, search),
         staleTime: 1000 * 60 * 5,
         retry: 2,
+        placeholderData: (previousData) => previousData,
     })
 }
 

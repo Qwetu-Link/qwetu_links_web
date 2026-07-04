@@ -4,19 +4,29 @@ import {
   Users2,
   Users,
   CreditCard,
-  Home,
-  FileText,
   Wrench,
-  // Wallet,
   Layers,
   Headphones,
   Settings,
   HomeIcon,
   Sparkles,
   Cog,
+  LucideIcon,
 } from "lucide-react";
 
-export const links = {
+export interface MenuChild {
+  label: string;
+  href: string;
+}
+
+export interface MenuItem {
+  icon: LucideIcon;
+  label: string;
+  href?: string;
+  children?: MenuChild[];
+}
+
+export const links: Record<string, MenuItem[]> = {
   owner: [
     {
       icon: LayoutGrid,
@@ -43,20 +53,6 @@ export const links = {
       label: "Utility",
       href: "/admin/utilities",
     },
-    // {
-    //   icon: Layers,
-    //   label: "Property Features",
-    //   children: [
-    //     {
-    //       label: "Amenities",
-    //       href: "/admin/amenities",
-    //     },
-    //     {
-    //       label: "Utility",
-    //       href: "/admin/utilities",
-    //     },
-    //   ],
-    // },
     {
       icon: Users2,
       label: "Tenants",
@@ -67,70 +63,11 @@ export const links = {
       label: "Maintenance",
       href: "/admin/maintenance",
     },
-    // {
-    //   icon: CreditCard,
-    //   label: "Finance",
-    //   href: "/admin/finance/payments",
-    // },
     {
       icon: Users,
       label: "Accounts",
       href: "/admin/user",
     },
-
-    // {
-    //   icon: FileBox,
-    //   label: "Documents",
-    //   href: "/admin/document",
-    // },
-    // {
-    //   icon: BarChart3,
-    //   label: "Reports",
-    //   href: "/admin/reports",
-    // },
-  ],
-
-  staff: [
-    {
-      icon: LayoutGrid,
-      label: "Dashboard",
-      href: "/dashboard",
-    },
-    {
-      icon: Building2,
-      label: "Properties",
-      href: "/landlord/property",
-    },
-    {
-      icon: Home,
-      label: "Units",
-      href: "/landlord/unit",
-    },
-    {
-      icon: Users2,
-      label: "Tenants",
-      href: "/landlord/tenant",
-    },
-    {
-      icon: FileText,
-      label: "Invoices",
-      href: "/landlord/invoices",
-    },
-    {
-      icon: Wrench,
-      label: "Maintenance",
-      href: "/landlord/maintenance",
-    },
-    // {
-    //   icon: Wallet,
-    //   label: "Transactions",
-    //   href: "/landlord/transactions",
-    // },
-    // {
-    //   icon: BarChart3,
-    //   label: "Reports",
-    //   href: "/landlord/reports",
-    // },
   ],
 
   qwetulinks: [
@@ -155,94 +92,10 @@ export const links = {
       href: "/qwetulinks/payments",
     },
   ],
-
-  caretaker: [
-    {
-      icon: LayoutGrid,
-      label: "Dashboard",
-      href: "/dashboard",
-    },
-    {
-      icon: Building2,
-      label: "Properties",
-      href: "/caretaker/property",
-    },
-    {
-      icon: Home,
-      label: "Units",
-      href: "/caretaker/unit",
-    },
-    {
-      icon: Wrench,
-      label: "Maintenance",
-      href: "/caretaker/maintenance",
-    },
-    {
-      icon: Users2,
-      label: "Tenants",
-      href: "/caretaker/tenant",
-    },
-  ],
-
-  tenant: [
-    {
-      icon: LayoutGrid,
-      label: "Dashboard",
-      href: "/dashboard",
-    },
-    {
-      icon: Building2,
-      label: "Available Properties",
-      href: "/tenant/property",
-    },
-    {
-      icon: Home,
-      label: "My Unit",
-      href: "/tenant/my-unit",
-    },
-    {
-      icon: FileText,
-      label: "Invoices",
-      href: "/tenant/invoices",
-    },
-    {
-      icon: CreditCard,
-      label: "Payments",
-      href: "/tenant/payments",
-    },
-    {
-      icon: Wrench,
-      label: "Maintenance",
-      href: "/tenant/maintenance",
-    },
-  ],
 };
 
-export const helpLinks = {
+export const helpLinks: Record<string, MenuItem[]> = {
   owner: [
-    // {
-    //   icon: BookOpen,
-    //   label: "User Guide",
-    //   href: "/help/guide",
-    // },
-    // {
-    //   icon: Headphones,
-    //   label: "Support",
-    //   href: "/help/support",
-    // },
-    {
-      icon: Settings,
-      label: "Settings",
-      href: "/help/settings",
-    },
-  ],
-
-  staff: [
-    // {
-    //   icon: Headphones,
-    //   label: "Support",
-    //   href: "/help/support",
-    // },
     {
       icon: Settings,
       label: "Settings",
@@ -260,22 +113,6 @@ export const helpLinks = {
       icon: Settings,
       label: "Settings",
       href: "/help/settings",
-    },
-  ],
-
-  caretaker: [
-    {
-      icon: Headphones,
-      label: "Support",
-      href: "/help/support",
-    },
-  ],
-
-  tenant: [
-    {
-      icon: Headphones,
-      label: "Support",
-      href: "/help/support",
     },
   ],
 };

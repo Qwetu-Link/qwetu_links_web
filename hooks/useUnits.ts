@@ -31,16 +31,24 @@ export const useUnitDetails = (id: string) => {
 export const useCreateUnit = () => {
     const queryClient = useQueryClient();
     const router = useRouter();
+
     return useMutation({
         mutationFn: createUnit,
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: unitKeys.all
-            })
-            router.push("/admin/unit");
-        }
-    })
-}
+
+        onSuccess: async () => {
+            await Promise.all([
+                queryClient.invalidateQueries({
+                    queryKey: unitKeys.all,
+                }),
+                queryClient.invalidateQueries({
+                    queryKey: propertykeys.all,
+                }),
+            ]);
+
+            router.replace("/admin/unit");
+        },
+    });
+};
 
 export const useUpdateUnit = () => {
     const queryClient = useQueryClient();
