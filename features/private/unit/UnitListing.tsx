@@ -5,7 +5,9 @@ import UnitCard from "./UnitsCard";
 import { Property } from "@/types/property.definations";
 import { useUnitDel } from "@/hooks/useUnits";
 import Link from "next/link";
+import Pagination from "@/components/common/Pagination";
 
+export const PER_PAGE = 20;
 interface Props {
   property: Property;
   onBack: () => void;
@@ -38,6 +40,8 @@ export default function UnitListing({ property, onBack }: Props) {
     );
   }, [deleteTarget, deleteUnit]);
 
+  // Search and Pagination
+  const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const filteredUnits = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -54,6 +58,21 @@ export default function UnitListing({ property, onBack }: Props) {
         .includes(query)
     );
   }, [units, search]);
+
+  const totalItems = filteredUnits.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / PER_PAGE));
+  const currentPage = Math.min(page, totalPages);
+
+  const paginatedUnits = useMemo(() => {
+    const start = (currentPage - 1) * PER_PAGE;
+    return filteredUnits.slice(start, start + PER_PAGE);
+  }, [filteredUnits, currentPage]);
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setPage(1); // reset to page 1 whenever the search changes
+  };
+
   return (
     <div className="custom-scrollbar flex h-full min-h-0 flex-1 flex-col overflow-y-auto bg-white">
       <div className="shrink-0 bg-white">
@@ -105,7 +124,7 @@ export default function UnitListing({ property, onBack }: Props) {
           <input
             type="text"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
             placeholder="Search Utility Here..."
             className="w-full pl-10 pr-4 py-3 bg-white border border-blue-200 rounded-xl text-sm text-zinc-700 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
           />
@@ -133,7 +152,7 @@ export default function UnitListing({ property, onBack }: Props) {
 
         <div className="gap-3 border-b border-gray-100 px-5 py-4 mb-5">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 lg:grid-cols-2">
-            {filteredUnits.length === 0 ? (
+            {paginatedUnits.length === 0 ? (
               <div className="col-span-full flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-200 bg-white py-16 text-center">
                 <Building2
                   className="mb-3 text-gray-300"
@@ -165,7 +184,7 @@ export default function UnitListing({ property, onBack }: Props) {
 
               </div>
             ) : (
-              filteredUnits.map((unit) => (
+              paginatedUnits.map((unit) => (
                 <UnitCard
                   key={unit.id}
                   unit={unit}
@@ -175,6 +194,18 @@ export default function UnitListing({ property, onBack }: Props) {
             )}
           </div>
         </div>
+
+        {totalItems > 0 && (
+          <div className="px-5 pb-5">
+            <Pagination
+              currentPage={currentPage}
+              totalItems={totalItems}
+              total={totalItems}
+              perPage={PER_PAGE}
+              onPage={setPage}
+            />
+          </div>
+        )}
       </div>
 
       {deleteTarget && (

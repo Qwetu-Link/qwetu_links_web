@@ -7,6 +7,8 @@ import { Property } from "@/types/property.definations";
 import Link from "next/link";
 import UtilityCard from "./UtilityCard";
 import { useDeleteUtility } from "@/hooks/useUtility";
+import { PER_PAGE } from "../unit/UnitListing";
+import Pagination from "@/components/common/Pagination";
 
 interface Props {
     property: Property;
@@ -37,6 +39,8 @@ export default function UtilityListing({ property, onBack }: Props) {
         );
     }, [deleteTarget, deleteUnit]);
 
+    // Search and Pagination
+    const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
     const filteredUtilities = useMemo(() => {
         const query = search.trim().toLowerCase();
@@ -53,6 +57,20 @@ export default function UtilityListing({ property, onBack }: Props) {
                 .includes(query)
         );
     }, [utility, search]);
+
+    const totalItems = filteredUtilities.length;
+    const totalPages = Math.max(1, Math.ceil(totalItems / PER_PAGE));
+    const currentPage = Math.min(page, totalPages);
+
+    const paginatedUtitlities = useMemo(() => {
+        const start = (currentPage - 1) * PER_PAGE;
+        return filteredUtilities.slice(start, start + PER_PAGE);
+    }, [filteredUtilities, currentPage]);
+
+    const handleSearchChange = (value: string) => {
+        setSearch(value);
+        setPage(1); // reset to page 1 whenever the search changes
+    };
     return (
         <div className="custom-scrollbar flex h-full min-h-0 flex-1 flex-col overflow-y-auto bg-white">
             <div className="shrink-0 bg-white">
@@ -101,7 +119,7 @@ export default function UtilityListing({ property, onBack }: Props) {
                     <input
                         type="text"
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={(e) => handleSearchChange(e.target.value)}
                         placeholder="Search Utility Here..."
                         className="w-full pl-10 pr-4 py-3 bg-white border border-blue-200 rounded-xl text-sm text-zinc-700 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                     />
@@ -129,7 +147,7 @@ export default function UtilityListing({ property, onBack }: Props) {
 
                 <div className="mb-5 border-b border-gray-100 px-5 py-4">
                     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                        {filteredUtilities.length === 0 ? (
+                        {paginatedUtitlities.length === 0 ? (
                             <div className="col-span-full flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-200 bg-white py-16 text-center">
                                 <Building2
                                     className="mb-3 text-gray-300"
@@ -159,7 +177,7 @@ export default function UtilityListing({ property, onBack }: Props) {
                                 )}
                             </div>
                         ) : (
-                            filteredUtilities.map((item) => (
+                            paginatedUtitlities.map((item) => (
                                 <UtilityCard
                                     key={item.id}
                                     utility={item}
@@ -174,6 +192,18 @@ export default function UtilityListing({ property, onBack }: Props) {
                         )}
                     </div>
                 </div>
+
+                {totalItems > 0 && (
+                    <div className="px-5 pb-5">
+                        <Pagination
+                            currentPage={currentPage}
+                            totalItems={totalItems}
+                            total={totalItems}
+                            perPage={PER_PAGE}
+                            onPage={setPage}
+                        />
+                    </div>
+                )}
             </div>
 
             {deleteTarget && (
