@@ -1,33 +1,35 @@
-import Link from "next/link";
-import { Edit3, Eye, Trash2 } from "lucide-react";
-import { TenantActionsProps } from "./props";
+"use client";
 
-export default function TenantActions({
-  viewHref,
-  editHref,
-  onDelete,
-}: TenantActionsProps) {
+import Link from "next/link";
+import { Eye, Pencil, Trash2 } from "lucide-react";
+
+type TenantActionsProps = {
+  viewHref: string;
+  editHref: string;
+  onDelete: () => void;
+};
+
+export default function TenantActions({ viewHref, editHref, onDelete }: TenantActionsProps) {
   return (
-    <div className="flex gap-2 sm:justify-end">
+    <div className="flex items-center gap-2">
       <Link
         href={viewHref}
-        title="View tenant"
-        className="inline-flex size-8 items-center justify-center rounded-lg border border-orange-100 text-slate-600 transition hover:bg-orange-50 hover:text-orange-600"
+        className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition"
       >
         <Eye size={15} />
+        View
       </Link>
       <Link
         href={editHref}
-        title="Edit tenant"
-        className="inline-flex size-8 items-center justify-center rounded-lg border border-orange-100 text-slate-600 transition hover:bg-blue-50 hover:text-blue-600"
+        className="inline-flex items-center justify-center rounded-lg border border-slate-200 px-3 py-2.5 text-slate-600 transition hover:border-slate-300 hover:bg-slate-50"
       >
-        <Edit3 size={15} />
+        <Pencil size={15} />
       </Link>
       <button
         type="button"
         onClick={onDelete}
-        title="Delete tenant"
-        className="inline-flex size-8 items-center justify-center rounded-lg border border-orange-100 text-slate-600 transition hover:bg-red-50 hover:text-red-600"
+        title="Delete Tenant"
+        className="inline-flex items-center justify-center rounded-lg border border-slate-200 px-3 py-2.5 text-slate-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600"
       >
         <Trash2 size={15} />
       </button>

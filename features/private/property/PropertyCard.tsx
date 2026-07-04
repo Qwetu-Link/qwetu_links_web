@@ -9,9 +9,10 @@ import { propertyStatusStyles } from "@/components/custom/CustomBadges";
 interface Props {
   property: Property;
   onDelete: (id: string, name: string) => void;
+  priority?: boolean;
 }
 
-export default function PropertyCard({ property, onDelete }: Props) {
+export default function PropertyCard({ property, onDelete, priority = false }: Props) {
   const imageUrl =
     property.images?.[0]?.url && property.images[0].url.trim() !== ""
       ? property.images[0].url
@@ -24,9 +25,14 @@ export default function PropertyCard({ property, onDelete }: Props) {
           src={imageUrl}
           alt={property.name}
           fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className="object-cover group-hover:scale-105 transition-transform duration-300"
-          unoptimized
+          priority={priority}
+          loading={priority ? undefined : "lazy"}
+          placeholder="blur"
+          blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZTVlN2ViIi8+PC9zdmc+"
         />
+
         <div
           className={`absolute right-3 top-3 rounded-full px-3 py-1 text-xs font-semibold ${propertyStatusStyles[property.status]}`}
         >

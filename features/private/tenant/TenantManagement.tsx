@@ -11,16 +11,11 @@ import {
   Users2,
 } from "lucide-react";
 import { useDebounce } from "use-debounce";
-
 import DeleteModal from "@/components/common/DeleteModal";
 import Pagination from "@/components/common/Pagination";
-
 import { useDelTenants, useGetTenants } from "@/hooks/useTenant";
-
 import StatCard from "./StatCard";
 import TenantCard from "./TenantCard";
-import TenantTable from "./TenantTable";
-
 import { Tenant } from "@/types/tenant.definations";
 
 export default function TenantManagement() {
@@ -31,17 +26,11 @@ export default function TenantManagement() {
 
   // Debounce search
   const [debouncedSearch] = useDebounce(search, 300);
-
   const { data: tenantsData } = useGetTenants(page, debouncedSearch);
-
   const deleteTenant = useDelTenants();
-
   const tenants: Tenant[] = tenantsData?.data ?? [];
-
   const [deleteTarget, setDeleteTarget] = useState<Tenant | null>(null);
-
   const activeCount = tenants.filter((tenant) => tenant.isActive).length;
-
   const isSearching = search.trim().length > 0;
 
   function confirmDelete() {
@@ -125,9 +114,7 @@ export default function TenantManagement() {
 
         {/* Results */}
         {tenants.length > 0 ? (
-          <>
-            {/* Mobile */}
-            <div className="grid gap-3 xl:hidden">
+            <div className="grid gap-3">
               {tenants.map((tenant) => (
                 <TenantCard
                   key={tenant.id}
@@ -137,14 +124,6 @@ export default function TenantManagement() {
                 />
               ))}
             </div>
-
-            {/* Desktop */}
-            <TenantTable
-              tenants={tenants}
-              pathname={pathname}
-              onDelete={setDeleteTarget}
-            />
-          </>
         ) : (
           <div className="rounded-xl border border-dashed border-orange-100 bg-white px-6 py-14 text-center shadow-sm">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-orange-50">

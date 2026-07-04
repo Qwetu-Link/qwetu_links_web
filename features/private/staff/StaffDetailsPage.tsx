@@ -14,8 +14,8 @@ import {
 import { useGetStaffDetails } from "@/hooks/useStaff";
 import { employmentTypeLabels, DEPARTMENTS, EmploymentType } from "@/utils/selectConstants";
 import { StaffDetailsPageProps } from "./props";
-
-
+import Image from "next/image";
+import { useState } from "react";
 
 function DetailItem({
   label,
@@ -80,6 +80,7 @@ function SkeletonSection() {
 
 export default function StaffDetailsPage({ staffId, listHref, editHref }: StaffDetailsPageProps) {
   const { data: staff, isPending, isError } = useGetStaffDetails(staffId);
+  const [imageError, setImageError] = useState(false);
 
   const departmentName =
     DEPARTMENTS.find((d) => d.code === staff?.department)?.name ?? staff?.department ?? "—";
@@ -123,6 +124,10 @@ export default function StaffDetailsPage({ staffId, listHref, editHref }: StaffD
   const userName = staff?.user?.name ?? "Unknown Staff";
   const avatarUrl = staff?.user?.avatar;
 
+  
+  const hasValidAvatar = Boolean(avatarUrl && avatarUrl.trim() !== "" && !imageError);
+
+
   return (
     <div className="min-h-0 overflow-y-auto bg-slate-50 p-3 sm:p-5 lg:p-6">
       <div className="mx-auto w-full max-w-6xl space-y-5">
@@ -139,14 +144,25 @@ export default function StaffDetailsPage({ staffId, listHref, editHref }: StaffD
             </Link>
             <div className="mt-4 flex min-w-0 items-start gap-3">
               <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-blue-50 overflow-hidden border border-blue-100">
-                {avatarUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={avatarUrl} alt="" className="size-full object-cover" />
-                ) : (
-                  <span className="text-base font-bold text-blue-600">
-                    {userName.slice(0, 2).toUpperCase()}
-                  </span>
-                )}
+                <div className="relative size-10 shrink-0 overflow-hidden rounded-full bg-blue-100">
+                  {hasValidAvatar ? (
+                    <Image
+                      src={avatarUrl}
+                      alt={userName || "User avatar"}
+                      fill
+                      sizes="40px"
+                      className="object-cover"
+                      onError={() => setImageError(true)}
+                      unoptimized
+                    />
+                  ) : (
+                    <div className="flex size-full items-center justify-center">
+                      <span className="text-base font-bold text-blue-600">
+                        {userName?.slice(0, 2).toUpperCase() ?? "?"}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="min-w-0">
                 <h1 className="break-words text-2xl font-bold text-blue-600 sm:text-3xl">

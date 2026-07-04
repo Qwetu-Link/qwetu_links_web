@@ -20,13 +20,12 @@ export default function PropertyCard({
   return (
     <div
       onClick={onClick}
-      className={`flex-shrink-0 flex gap-3 bg-white h-30 rounded-xl overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-md ${
-        isSelected ? "ring-2 ring-blue-500 shadow-md" : "shadow-sm"
-      }`}
+      className={`flex-shrink-0 flex gap-3 bg-white h-30 rounded-xl overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-md ${isSelected ? "ring-2 ring-blue-500 shadow-md" : "shadow-sm"
+        }`}
     >
       <div className="flex gap-3 p-2">
         {/* Property Image */}
-        <Image
+        {/* <Image
           src={imageUrl}
           alt={property.name}
           width={100}
@@ -34,7 +33,17 @@ export default function PropertyCard({
           className="object-cover rounded-lg flex-shrink-0"
           loading="eager"
           unoptimized
-        />
+        /> */}
+        <div className="relative h-[100px] w-[100px] flex-shrink-0 overflow-hidden rounded-lg">
+          <Image
+            src={imageUrl}
+            alt={property.name}
+            fill
+            className="object-cover"
+            loading="eager"
+            unoptimized
+          />
+        </div>
         <div className="flex-1 min-w-0">
           <h3 className="font-bold text-gray-800 text-base leading-tight line-clamp-2 flex-1 mr-2 mb-2 line-clamp-2">
             {property.name}
