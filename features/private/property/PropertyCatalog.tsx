@@ -4,7 +4,7 @@ import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import PropertyCard from "./PropertyCard";
 import { Building2, Package, Plus, Search } from "lucide-react";
-import { Property, PropertyFilters} from "@/types/property.definations";
+import { Property, PropertyFilters } from "@/types/property.definations";
 import DeleteModal from "@/components/common/DeleteModal";
 import { useDelProperty, useGetProperties } from "@/hooks/useProperty";
 import Pagination from "@/components/common/Pagination";
@@ -21,8 +21,8 @@ const STATUSES: PropertyStatus[] = [
 export default function PropertyCatalog() {
   // const [properties, setProperties] = useState<Property[]>(seededProperties);
   //get property
-  const { data: properties } = useGetProperties();
-  console.log("properties", properties);
+  const [page, setPage] = useState(1);
+  const { data: properties } = useGetProperties(page);
 
   const delProperty = useDelProperty();
 
@@ -169,7 +169,9 @@ export default function PropertyCatalog() {
         <Pagination
           currentPage={properties.meta.current_page}
           totalItems={properties.meta.total}
+          total={properties.meta.total}
           perPage={properties.meta.per_page}
+          onPage={setPage}
         />
       )}
 

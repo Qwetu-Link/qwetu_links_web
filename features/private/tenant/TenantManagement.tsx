@@ -10,11 +10,13 @@ import StatCard from "./StatCard";
 import TenantCard from "./TenantCard";
 import TenantTable from "./TenantTable";
 import { Tenant } from "@/types/tenant.definations";
+import Pagination from "@/components/common/Pagination";
 
 export default function TenantManagement() {
   const pathname = usePathname();
 
-  const { data: tenantsData } = useGetTenants();
+  const [page, setPage] = useState(1);
+  const { data: tenantsData } = useGetTenants(page);
   const deleteTenant = useDelTenants();
 
   const tenants: Tenant[] = tenantsData.data;
@@ -121,6 +123,16 @@ export default function TenantManagement() {
           </div>
         )}
       </div>
+
+      {tenantsData && tenantsData.data.length > 0 && (
+        <Pagination
+          currentPage={tenantsData.meta.current_page}
+          totalItems={tenantsData.meta.total}
+          total={tenantsData.meta.total}
+          perPage={tenantsData.meta.per_page}
+          onPage={setPage}
+        />
+      )}
 
       {deleteTarget && (
         <DeleteModal

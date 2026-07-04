@@ -4,17 +4,16 @@ import {
   Users2,
   Users,
   CreditCard,
-  BarChart3,
   Home,
   FileText,
   Wrench,
-  Wallet,
+  // Wallet,
   Layers,
-  FileBox,
-  BookOpen,
   Headphones,
   Settings,
   HomeIcon,
+  Sparkles,
+  Cog,
 } from "lucide-react";
 
 export const links = {
@@ -35,19 +34,29 @@ export const links = {
       href: "/admin/unit",
     },
     {
-      icon: Layers,
-      label: "Property Features",
-      children: [
-        {
-          label: "Amenities",
-          href: "/admin/amenities",
-        },
-        {
-          label: "Utility",
-          href: "/admin/utilities",
-        },
-      ],
+      icon: Sparkles,
+      label: "Amenities",
+      href: "/admin/amenities",
     },
+    {
+      icon: Cog,
+      label: "Utility",
+      href: "/admin/utilities",
+    },
+    // {
+    //   icon: Layers,
+    //   label: "Property Features",
+    //   children: [
+    //     {
+    //       label: "Amenities",
+    //       href: "/admin/amenities",
+    //     },
+    //     {
+    //       label: "Utility",
+    //       href: "/admin/utilities",
+    //     },
+    //   ],
+    // },
     {
       icon: Users2,
       label: "Tenants",
@@ -69,16 +78,16 @@ export const links = {
       href: "/admin/user",
     },
 
-    {
-      icon: FileBox,
-      label: "Documents",
-      href: "/admin/document",
-    },
-    {
-      icon: BarChart3,
-      label: "Reports",
-      href: "/admin/reports",
-    },
+    // {
+    //   icon: FileBox,
+    //   label: "Documents",
+    //   href: "/admin/document",
+    // },
+    // {
+    //   icon: BarChart3,
+    //   label: "Reports",
+    //   href: "/admin/reports",
+    // },
   ],
 
   staff: [
@@ -112,16 +121,16 @@ export const links = {
       label: "Maintenance",
       href: "/landlord/maintenance",
     },
-    {
-      icon: Wallet,
-      label: "Transactions",
-      href: "/landlord/transactions",
-    },
-    {
-      icon: BarChart3,
-      label: "Reports",
-      href: "/landlord/reports",
-    },
+    // {
+    //   icon: Wallet,
+    //   label: "Transactions",
+    //   href: "/landlord/transactions",
+    // },
+    // {
+    //   icon: BarChart3,
+    //   label: "Reports",
+    //   href: "/landlord/reports",
+    // },
   ],
 
   qwetulinks: [
@@ -211,16 +220,16 @@ export const links = {
 
 export const helpLinks = {
   owner: [
-    {
-      icon: BookOpen,
-      label: "User Guide",
-      href: "/help/guide",
-    },
-    {
-      icon: Headphones,
-      label: "Support",
-      href: "/help/support",
-    },
+    // {
+    //   icon: BookOpen,
+    //   label: "User Guide",
+    //   href: "/help/guide",
+    // },
+    // {
+    //   icon: Headphones,
+    //   label: "Support",
+    //   href: "/help/support",
+    // },
     {
       icon: Settings,
       label: "Settings",
@@ -229,11 +238,11 @@ export const helpLinks = {
   ],
 
   staff: [
-    {
-      icon: Headphones,
-      label: "Support",
-      href: "/help/support",
-    },
+    // {
+    //   icon: Headphones,
+    //   label: "Support",
+    //   href: "/help/support",
+    // },
     {
       icon: Settings,
       label: "Settings",

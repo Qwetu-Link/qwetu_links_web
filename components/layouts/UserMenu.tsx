@@ -20,11 +20,11 @@ export default function UserMenu() {
 
   const initials = user?.name
     ? user.name
-        .split(" ")
-        .map((n : string) => n[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2)
+      .split(" ")
+      .map((n: string) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2)
     : "QL";
 
   return (
@@ -57,7 +57,7 @@ export default function UserMenu() {
 
         {/* Account Settings */}
         <DropdownMenuItem asChild>
-          <Link href="/settings" className="group cursor-pointer">
+          <Link href="/help/settings" className="group cursor-pointer">
             <Settings className="mr-2 h-4 w-4 transition-transform duration-300 group-hover:rotate-45" />
             Account Settings
           </Link>

@@ -9,6 +9,7 @@ import MaintenanceTable from "./MaintenanceTable";
 import { useDelMaintenances, useGetMaintenances } from "@/hooks/useMaintenance";
 import DeleteModal from "@/components/common/DeleteModal";
 import { toast } from "sonner";
+import Pagination from "@/components/common/Pagination";
 
 type MaintenanceRequestsPageProps = {
   basePath?: string;
@@ -19,7 +20,8 @@ export default function MaintenanceRequestsPage({
   basePath = "/maintenance",
 }: MaintenanceRequestsPageProps) {
 
-  const { data: maintenanceData } = useGetMaintenances();
+  const [page, setPage] = useState(1);
+  const { data: maintenanceData } = useGetMaintenances(page);
   const requests = maintenanceData.data;
   const deleteMaintenance = useDelMaintenances();
 
@@ -91,6 +93,16 @@ export default function MaintenanceRequestsPage({
           />
           <MaintenanceTable requests={filteredRequests} basePath={basePath} onDelete={setDeleteTarget} />
         </section>
+
+        {maintenanceData && maintenanceData.data.length > 0 && (
+          <Pagination
+            currentPage={maintenanceData.meta.current_page}
+            totalItems={maintenanceData.meta.total}
+            total={maintenanceData.meta.total}
+            perPage={maintenanceData.meta.per_page}
+            onPage={setPage}
+          />
+        )}
 
         {deleteTarget && (
           <DeleteModal

@@ -21,6 +21,7 @@ import DeleteModal from "@/components/common/DeleteModal";
 import { useDelStaff, useGetStaffs } from "@/hooks/useStaff";
 import { Staff } from "@/types/staff.definations";
 import { formatDate, snakeFormater } from "@/utils/utils";
+import Pagination from "@/components/common/Pagination";
 
 function StatCard({
   label,
@@ -118,7 +119,8 @@ function StaffActions({
 }
 
 export default function StaffManagement() {
-  const { data: staffResponse } = useGetStaffs()
+  const [page, setPage] = useState(1);
+  const { data: staffResponse } = useGetStaffs(page)
   const deleteStaff = useDelStaff()
   const staffList = staffResponse.data;
   const [query, setQuery] = useState("");
@@ -345,6 +347,16 @@ export default function StaffManagement() {
           </div>
         )}
       </div>
+
+      {staffResponse && staffResponse.data.length > 0 && (
+        <Pagination
+          currentPage={staffResponse.meta.current_page}
+          totalItems={staffResponse.meta.total}
+          total={staffResponse.meta.total}
+          perPage={staffResponse.meta.per_page}
+          onPage={setPage}
+        />
+      )}
 
       {deleteTarget && (
         <DeleteModal
