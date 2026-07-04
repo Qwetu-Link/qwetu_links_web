@@ -12,7 +12,6 @@ export function formatDate(value: string) {
 
   return new Intl.DateTimeFormat("en-KE", {
     dateStyle: "medium",
-    timeStyle: value.includes("T") ? "short" : undefined,
   }).format(date);
 }
 
