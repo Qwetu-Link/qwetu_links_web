@@ -7,14 +7,14 @@ export const featureChecks = [
 ];
 
 export const contactActions = [
-  { label: "Make A Call", icon: Phone, href: "tel:+254700000000" },
+  { label: "Make A Call", icon: Phone, href: "tel:" },
   { label: "Get Appointment", icon: CalendarDays, href: "#" },
 ];
 
 export const footerContacts = [
-  { label: "Westlands, Nairobi, Kenya", icon: MapPin },
-  { label: "+254 700 000 000", icon: Phone },
-  { label: "info@qwetulinks.co.ke", icon: Mail },
+  { label: "Qwetu Links Office, Marikani", icon: MapPin },
+  // { label: "+254 700 000 000", icon: Phone },
+  { label: "info@rms.qwetulinks.co.ke", icon: Mail },
 ];
 
 export const propertyStats = [

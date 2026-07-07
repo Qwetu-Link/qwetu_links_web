@@ -334,6 +334,7 @@ export default function PropertyDetails({
             <div className="mt-6 space-y-3 divide-y divide-slate-50">
               {[
                 { label: "Type", value: property.apartmentType },
+                { label: "Rent Amount", value: property.rentAmount },
                 { label: "Address", value: property.address },
                 { label: "Location", value: property.location },
                 { label: "Units", value: property.unit ?? 0 },

@@ -1,6 +1,6 @@
 "use client";
 
-import {Eye, MapPin } from "lucide-react";
+import { Eye, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -146,10 +146,14 @@ export default function PropertyListing({
                 <div className="grid grid-cols-2 items-center gap-3 border-t border-rental-border p-4">
                   <div>
                     {property.rentAmount && property.rentAmount !== "0.00" && (
-                      <h1 className="text-xl font-bold">
-                        KES {Number(property.rentAmount).toLocaleString("en-KE")}
-                      </h1>
+                      <div>
+                        <h1 className="text-xl font-bold">
+                          KES {Number(property.rentAmount).toLocaleString("en-KE")}
+                        </h1>
+                        <p>/per Month</p>
+                      </div>
                     )}
+
                   </div>
 
                   <Link

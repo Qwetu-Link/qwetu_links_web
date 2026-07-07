@@ -9,9 +9,9 @@ import { footerContacts } from "../../utils/footer.config";
 
 // Define your arrays outside the components so they are static
 const quickLinks = [
-  { label: "About Us", href: "/#about" },
-  { label: "Contact Us", href: "/#contact" },
-  { label: "Our Services", href: "/#services" },
+  { label: "About Us", href: "/about" },
+  { label: "Contact Us", href: "/contact" },
+  { label: "Our Services", href: "/services" },
   { label: "Properties", href: "/property" },
   { label: "Overview", href: "/overview" },
 ];

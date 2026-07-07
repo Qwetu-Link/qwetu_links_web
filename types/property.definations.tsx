@@ -121,6 +121,7 @@ export interface PropertyData {
   unit: string;
   status: PropertyStatus;
   occupanyRate: number;
+  rentAmount: string;
   businessId: string;
   images: PropertyImages[];
   business: Business;

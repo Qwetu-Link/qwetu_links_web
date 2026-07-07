@@ -4,19 +4,19 @@ import Link from "next/link";
 const contactCards = [
   {
     title: "Whatsapp",
-    text: "+254 700 000 000",
-    href: "tel:+254700000000",
+    text: "",
+    href: "tel:",
     icon: Phone,
   },
   {
     title: "Email support",
     text: "info@qwetulinks.co.ke",
-    href: "mailto:info@qwetulinks.co.ke",
+    href: "mailto:info@rms.qwetulinks.co.ke",
     icon: Mail,
   },
   {
     title: "Visit office",
-    text: "Voi, Mwatate",
+    text: "Qwetu Links Office, Marikani",
     href: "#office",
     icon: MapPin,
   },
