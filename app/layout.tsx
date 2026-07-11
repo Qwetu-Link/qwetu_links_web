@@ -7,18 +7,22 @@ import QueryProvider from "@/lib/query-provider";
 import NavBar from "../components/layouts/NavBar";
 import PropertyFooter from "../components/layouts/PropertyFooter";
 
+import { Toaster } from "sonner";
+
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Qwetu Links",
-  description: "Property and rental management platform",
-  icons: {
-    icon: "/logos/qwetu_logo.webp",
+  title: {
+    default: "Qwetu Links",
+    template: "%s-Qwetu Links"
+
   },
+  description: "Property and rental management platform",
+  twitter: {
+    card: "summary_large_image"
+  }
 };
 
-import { Toaster } from "sonner";
-// import FirebaseAuthProvider from "@/lib/FirebaseAuthProvider";
 
 
 export default function RootLayout({
@@ -36,9 +40,7 @@ export default function RootLayout({
       >
         <QueryProvider>
           <NavBar />
-          {/* <FirebaseAuthProvider> */}
-            {children}
-          {/* </FirebaseAuthProvider> */}
+          {children}
           <PropertyFooter />
         </QueryProvider>
         <Toaster richColors position="top-right" />

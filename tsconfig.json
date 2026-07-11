@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "../_org/later/manifest.ts", "../_org/later/not-found.ts", "../_org/later/icon.tsx", "../_org/later/robots.ts", "../_org/later/sitemap.ts"  ],
   "exclude": ["node_modules"]
 }
