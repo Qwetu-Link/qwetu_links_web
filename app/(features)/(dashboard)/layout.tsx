@@ -1,44 +1,19 @@
-"use client";
+import { createPageMetadata } from "@/lib/metadata";
+import type { Metadata } from "next";
+import DashboardLayoutClient from "./dashboard-layout-client";
 
-import { useState } from "react";
-import { Sidebar } from "@/components/layouts/SideBar";
-import { Topbar } from "@/components/layouts/TopBar";
-import FirebaseAuthProvider from "@/lib/FirebaseAuthProvider";
+export const metadata: Metadata = createPageMetadata({
+  title: "Dashboard | Qwetu Links",
+  description:
+    "Private Qwetu Links dashboard for managing property listings, tenants, payments, maintenance, and rental operations.",
+  path: "/dashboard",
+  index: false,
+});
 
 export default function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [collapsed, setCollapsed] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  return (
-    <div className="flex h-dvh overflow-hidden bg-background">
-      {/* Sidebar */}
-      <div className="fixed">
-        <Sidebar
-          collapsed={collapsed}
-          onToggle={() => setCollapsed((c) => !c)}
-          mobileOpen={mobileOpen}
-          onMobileOpenChange={setMobileOpen}
-        />
-      </div>
-
-      <div
-        className={`flex min-w-0 flex-1 flex-col overflow-hidden transition-[margin-left] duration-300 ${
-          collapsed ? "md:ml-16" : "md:ml-64"
-        }`}
-      >
-        <Topbar onMenuClick={() => setMobileOpen((open) => !open)} />
-
-        {/* Main content */}
-        <main className="custom-scrollbar min-h-0 flex-1 overflow-y-auto">
-          <FirebaseAuthProvider>
-          {children}
-          </FirebaseAuthProvider>
-        </main>
-      </div>
-    </div>
-  );
+  return <DashboardLayoutClient>{children}</DashboardLayoutClient>;
 }

@@ -4,6 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import RegisterForm from "@/features/forms/RegisterForm";
 import { heroImages } from "@/utils/propertyData";
+import { createPageMetadata } from "@/lib/metadata";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = createPageMetadata({
+  title: "Register | Qwetu Links",
+  description:
+    "Create a Qwetu Links account to manage property listings, enquiries, and rental activity.",
+  path: "/register",
+  index: false,
+});
 
 export default function RegisterPage() {
   return (

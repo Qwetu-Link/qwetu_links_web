@@ -2,6 +2,16 @@ import { Suspense } from "react";
 import AuthImagePanel from "@/features/auth/AuthImagePanel";
 import AuthMobileHeader from "@/features/auth/AuthMobileHeader";
 import VerifyEmailForm from "@/features/forms/VerifyEmailForm";
+import { createPageMetadata } from "@/lib/metadata";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = createPageMetadata({
+  title: "Verify Email | Qwetu Links",
+  description:
+    "Verify your email address to activate your Qwetu Links rental management account.",
+  path: "/verify-email",
+  index: false,
+});
 
 export default function VerifyEmailPage() {
   return (

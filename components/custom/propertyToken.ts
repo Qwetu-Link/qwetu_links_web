@@ -1,6 +1,7 @@
 interface PropertyToken {
   propertyId: string;
   propertyName: string;
+  propertySlug: string;
 }
 
 /**
@@ -9,7 +10,7 @@ interface PropertyToken {
  * → "eyJwcm9wZXJ0eUlkIjoiYWJjIiwicHJvcGVydHlOYW1lIjoiS2lsaW1hbmkgSGVpZ2h0cyJ9"
  */
 export function encodePropertyToken(data: PropertyToken): string {
-  const json = JSON.stringify(data);
+  const json = encodeURIComponent(JSON.stringify(data));
   // btoa works in both browser and Node (Next.js edge/server)
   return btoa(json)
     .replace(/\+/g, "-")  // make URL-safe
@@ -34,12 +35,13 @@ export function decodePropertyToken(token: string): PropertyToken | null {
       "="
     );
 
-    const json = atob(padded);
+    const json = decodeURIComponent(atob(padded));
     const parsed = JSON.parse(json);
 
     if (
       typeof parsed?.propertyId !== "string" ||
-      typeof parsed?.propertyName !== "string"
+      typeof parsed?.propertyName !== "string" ||
+      typeof parsed?.propertySlug !== "string"
     ) {
       return null;
     }

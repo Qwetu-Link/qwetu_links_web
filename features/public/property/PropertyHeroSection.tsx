@@ -1,9 +1,9 @@
 "use client";
 
 import { heroImages } from "@/utils/propertyData";
-import { ArrowDown, Home, MapPin, ShieldCheck } from "lucide-react";
+// import { ArrowDown, Home, MapPin, ShieldCheck } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+// import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const pageHeroSlides = [
@@ -24,11 +24,11 @@ const pageHeroSlides = [
   },
 ];
 
-const highlights = [
-  { label: "Verified listings", icon: ShieldCheck },
-  { label: "Homes and rentals", icon: Home },
-  { label: "Prime locations", icon: MapPin },
-];
+// const highlights = [
+//   { label: "Verified listings", icon: ShieldCheck },
+//   { label: "Homes and rentals", icon: Home },
+//   { label: "Prime locations", icon: MapPin },
+// ];
 
 export default function PropertyPageHeroSection() {
   const [activeSlide, setActiveSlide] = useState(0);
@@ -52,9 +52,8 @@ export default function PropertyPageHeroSection() {
           loading="eager"
           priority={index === 0}
           sizes="100vw"
-          className={`object-cover transition-opacity duration-700 ${
-            activeSlide === index ? "opacity-100" : "opacity-0"
-          }`}
+          className={`object-cover transition-opacity duration-700 ${activeSlide === index ? "opacity-100" : "opacity-0"
+            }`}
           unoptimized
         />
       ))}
@@ -75,7 +74,7 @@ export default function PropertyPageHeroSection() {
             {pageHeroSlides[activeSlide].text}
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
+          {/* <div className="mt-8 flex flex-wrap gap-3">
             {highlights.map((item) => (
               <div
                 key={item.label}
@@ -85,18 +84,18 @@ export default function PropertyPageHeroSection() {
                 {item.label}
               </div>
             ))}
-          </div>
+          </div> */}
 
-          <Link
+          {/* <Link
             href="#property-listing"
             className="mt-8 inline-flex items-center gap-2 rounded-md bg-rental-primary px-6 py-3 font-semibold text-white transition hover:bg-orange-600"
           >
             View Properties
             <ArrowDown className="h-4 w-4" />
-          </Link>
+          </Link> */}
         </div>
 
-        <div className="absolute bottom-20 left-4 flex gap-3 sm:bottom-24 sm:left-6 lg:left-8">
+        {/* <div className="absolute bottom-20 left-4 flex gap-3 sm:bottom-24 sm:left-6 lg:left-8">
           {pageHeroSlides.map((slide, index) => (
             <button
               key={slide.heading}
@@ -110,7 +109,7 @@ export default function PropertyPageHeroSection() {
               }`}
             />
           ))}
-        </div>
+        </div> */}
       </div>
     </section>
   );

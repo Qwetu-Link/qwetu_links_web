@@ -5,6 +5,12 @@ import { AxiosInstance } from "axios";
 const PROPERTY_URL = "businesses/properties"
 const PUBLIC_PROPERTY_URL = "public/properties"
 
+type PublicPropertyResponse = PropertyResponse | { data: PropertyResponse };
+
+function isPropertyResponse(data: PublicPropertyResponse): data is PropertyResponse {
+    return Array.isArray(data.data);
+}
+
 export const getProperties = async (page = 1, search = "", apiInstance: AxiosInstance = api) => {
     const { data } = await apiInstance.get<PropertyResponse>(PROPERTY_URL, {
         params: {
@@ -39,9 +45,16 @@ export const deleteProperty = async ({ id }: { id: string }) => {
 
 //PUBLIC PROPERTY
 
-export const getPublicProperties = async (page = 1, apiInstance: AxiosInstance = api) => {
-    const { data } = await apiInstance.get<PropertyResponse>(`${PUBLIC_PROPERTY_URL}?page=${page}`);
-    return data;
+export const getPublicProperties = async (page = 1, apiInstance: AxiosInstance = api): Promise<PropertyResponse> => {
+    const { data } = await apiInstance.get<PublicPropertyResponse>(PUBLIC_PROPERTY_URL, {
+        params: { page },
+    });
+
+    if (isPropertyResponse(data)) {
+        return data;
+    }
+
+    return data.data;
 }
 
 export const propertyPublicDetails = async ({ id }: { id: string }) => {

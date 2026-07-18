@@ -1,28 +1,14 @@
-"use client";
+import { createPageMetadata } from "@/lib/metadata";
+import type { Metadata } from "next";
+import PropertyClientPage from "./client-page";
 
-import { useState } from "react";
-import PropertyListing from "../../../../features/public/property/propertyListing";
-import type { PropertyFilters } from "../../../../features/public/property/propertyPage";
-import PropertyPageHeroSection from "../../../../features/public/property/PropertyHeroSection";
-import { usePublicProperties } from "@/hooks/useProperty";
-import PropertySearch from "../../../../features/public/property/PropertySearch";
+export const metadata: Metadata = createPageMetadata({
+  title: "Properties for Rent | Qwetu Links",
+  description:
+    "Browse verified rental homes, apartments, villas, and commercial spaces with clear property details and easy viewing access.",
+  path: "/property",
+});
 
 export default function PropertyPage() {
-  const [filters, setFilters] = useState<PropertyFilters>({
-    keyword: "",
-    apartmentType: "",
-    county: "",
-  });
-
-  const { data: properties } = usePublicProperties();
-    const propertyList = properties?.data ?? [];
-
-  
-  return (
-    <div>
-      <PropertyPageHeroSection />
-      <PropertySearch filters={filters} onFiltersChange={setFilters} properties={propertyList} />
-      <PropertyListing filters={filters} showBrowseMore={false}  properties={propertyList}/>
-    </div>
-  );
+  return <PropertyClientPage />;
 }

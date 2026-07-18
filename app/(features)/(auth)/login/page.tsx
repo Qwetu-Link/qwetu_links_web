@@ -4,6 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import LoginForm from "@/features/forms/LoginForm";
 import { heroImages } from "@/utils/propertyData";
+import { createPageMetadata } from "@/lib/metadata";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = createPageMetadata({
+  title: "Log In | Qwetu Links",
+  description:
+    "Log in to Qwetu Links to manage listings, enquiries, tenants, and rental activity.",
+  path: "/login",
+  index: false,
+});
 
 export default function LoginPage() {
   return (

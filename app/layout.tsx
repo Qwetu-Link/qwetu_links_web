@@ -6,22 +6,18 @@ import { cn } from "@/lib/utils";
 import QueryProvider from "@/lib/query-provider";
 import NavBar from "../components/layouts/NavBar";
 import PropertyFooter from "../components/layouts/PropertyFooter";
+import { createPageMetadata } from "@/lib/metadata";
 
 import { Toaster } from "sonner";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
-export const metadata: Metadata = {
-  title: {
-    default: "Qwetu Links",
-    template: "%s-Qwetu Links"
-
-  },
-  description: "Property and rental management platform",
-  twitter: {
-    card: "summary_large_image"
-  }
-};
+export const metadata: Metadata = createPageMetadata({
+  title: "Qwetu Links | Rental Property Management",
+  description:
+    "Find verified rental properties, book viewings, and manage rental activity with Qwetu Links.",
+  path: "/",
+});
 
 
 

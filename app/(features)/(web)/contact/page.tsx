@@ -2,6 +2,15 @@ import ContactCards from "@/features/public/contact/ContactCards";
 import ContactForm from "@/features/forms/ContactForm";
 import ContactHero from "@/features/public/contact/ContactHero";
 import ContactSidebar from "@/features/public/contact/ContactSidebar";
+import { createPageMetadata } from "@/lib/metadata";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = createPageMetadata({
+  title: "Contact Qwetu Links | Property and Rental Support",
+  description:
+    "Contact Qwetu Links for rental property enquiries, viewing requests, landlord support, and property management questions.",
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (

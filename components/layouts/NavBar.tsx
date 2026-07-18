@@ -81,7 +81,7 @@ export default function NavBar() {
         </nav>
 
         <Link
-          href="/login"
+          href="/contact"
           className="hidden items-center gap-2 rounded-md bg-rental-primary px-5 py-3 text-base font-semibold text-white transition hover:bg-orange-600 sm:inline-flex lg:px-6"
         >
           <span className="hidden lg:inline">List Your Property</span>
@@ -124,7 +124,7 @@ export default function NavBar() {
               </Link>
             ))}
             <Link
-              href="/login"
+              href="/contact"
               onClick={() => setMobileOpen(false)}
               className="mt-2 inline-flex items-center justify-center gap-2 rounded-md bg-rental-primary px-4 py-3 font-semibold text-white transition hover:bg-orange-600"
             >

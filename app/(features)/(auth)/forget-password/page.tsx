@@ -1,6 +1,16 @@
 import AuthImagePanel from "@/features/auth/AuthImagePanel";
 import AuthMobileHeader from "@/features/auth/AuthMobileHeader";
 import ForgotPasswordForm from "@/features/forms/ForgetPassForm";
+import { createPageMetadata } from "@/lib/metadata";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = createPageMetadata({
+  title: "Recover Password | Qwetu Links",
+  description:
+    "Recover access to your Qwetu Links account and continue managing rental property activity.",
+  path: "/forget-password",
+  index: false,
+});
 
 export default function ForgotPasswordPage() {
   return (

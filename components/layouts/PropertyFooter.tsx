@@ -23,12 +23,12 @@ const footerMenu = [
   { label: "FAQs", href: "/overview#faq" },
 ];
 
-const socials = [
-  { label: "X", href: "#" },
-  { label: "Facebook", href: "#" },
-  { label: "YouTube", href: "#" },
-  { label: "LinkedIn", href: "#" },
-];
+// const socials = [
+//   { label: "X", href: "#" },
+//   { label: "Facebook", href: "#" },
+//   { label: "YouTube", href: "#" },
+//   { label: "LinkedIn", href: "#" },
+// ];
 
 const hiddenRoutes = [
   "/admin",
@@ -66,7 +66,7 @@ function FooterContent() {
 
   return (
     <footer id="contact" className="mt-auto bg-brand-dark pt-16 text-slate-400">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 pb-12 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 pb-12 sm:px-6 md:grid-cols-2 lg:grid-cols-3 lg:px-8">
         <div>
           <Link
             href="/"
@@ -92,7 +92,7 @@ function FooterContent() {
               </p>
             ))}
           </div>
-          <div className="mt-5 flex gap-2">
+          {/* <div className="mt-5 flex gap-2">
             {socials.map((item) => (
               <a
                 key={item.label}
@@ -103,7 +103,7 @@ function FooterContent() {
                 {item.label.slice(0, 2)}
               </a>
             ))}
-          </div>
+          </div> */}
         </div>
 
         <div>
@@ -126,10 +126,10 @@ function FooterContent() {
             Photo Gallery
           </h3>
           <div className="grid grid-cols-3 gap-2">
-            {propertyList.slice(0, 5).map((property) => {
+            {propertyList.slice(0, 3).map((property) => {
               const imageUrl =
                 property.images?.[0]?.url &&
-                property.images[0].url.trim() !== ""
+                  property.images[0].url.trim() !== ""
                   ? property.images[0].url
                   : "/images/placeholder.svg";
 
@@ -144,35 +144,13 @@ function FooterContent() {
                     src={imageUrl}
                     alt={property.name}
                     fill
-                    sizes="100px"
+                    sizes="50px"
                     className="object-cover p-1"
                     unoptimized
                   />
                 </Link>
               );
             })}
-          </div>
-        </div>
-
-        <div>
-          <h3 className="mb-5 text-lg font-semibold text-white">Newsletter</h3>
-          <p>Get the latest property updates and viewing opportunities.</p>
-          <div className="relative mt-5">
-            <label htmlFor="footer-email" className="sr-only">
-              Email address
-            </label>
-            <input
-              id="footer-email"
-              className="h-14 w-full rounded-md border border-white/20 bg-transparent px-4 pr-28 text-white outline-none focus:border-rental-primary"
-              placeholder="Your email"
-              type="email"
-            />
-            <button
-              type="button"
-              className="absolute right-2 top-2 rounded-md bg-rental-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600"
-            >
-              Sign Up
-            </button>
           </div>
         </div>
       </div>

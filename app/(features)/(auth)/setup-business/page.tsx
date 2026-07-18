@@ -4,6 +4,16 @@ import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { heroImages } from "@/utils/propertyData";
+import { createPageMetadata } from "@/lib/metadata";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = createPageMetadata({
+  title: "Set Up Business | Qwetu Links",
+  description:
+    "Set up a Qwetu Links business profile to manage property listings, enquiries, tenants, and rental activity.",
+  path: "/setup-business",
+  index: false,
+});
 
 export default function SetUpBusinessPage() {
   //   return <SetupBusinessForm />;
