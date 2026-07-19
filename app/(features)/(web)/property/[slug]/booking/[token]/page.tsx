@@ -28,26 +28,26 @@ export async function generateMetadata({
   });
 }
 
-export async function generateStaticParams() {
-  const firstPage = await getPublicProperties();
-  const totalPages = firstPage?.meta?.last_page ?? 1;
-  const remainingPages = await Promise.all(
-    Array.from({ length: Math.max(totalPages - 1, 0) }, (_, index) =>
-      getPublicProperties(index + 2),
-    ),
-  );
+// export async function generateStaticParams() {
+//   const firstPage = await getPublicProperties();
+//   const totalPages = firstPage?.meta?.last_page ?? 1;
+//   const remainingPages = await Promise.all(
+//     Array.from({ length: Math.max(totalPages - 1, 0) }, (_, index) =>
+//       getPublicProperties(index + 2),
+//     ),
+//   );
 
-  return [firstPage, ...remainingPages].flatMap((page) =>
-    (page?.data ?? []).map((property) => ({
-      slug: property.slug,
-      token: encodePropertyToken({
-        propertyId: property.id,
-        propertyName: property.name,
-        propertySlug: property.slug,
-      }),
-    })),
-  );
-}
+//   return [firstPage, ...remainingPages].flatMap((page) =>
+//     (page?.data ?? []).map((property) => ({
+//       slug: property.slug,
+//       token: encodePropertyToken({
+//         propertyId: property.id,
+//         propertyName: property.name,
+//         propertySlug: property.slug,
+//       }),
+//     })),
+//   );
+// }
 
 export default async function BookingPage({ params }: BookingPageProps) {
   const { slug, token } = await params;
